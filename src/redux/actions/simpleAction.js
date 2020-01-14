@@ -39,6 +39,40 @@ export const simpleAction = filename => dispatch => {
     });
 };
 
+export const saveAction = file => dispatch => {
+  dispatch({
+    type: "SAVE_ACTION",
+    payload: file
+  });
+};
+
+export const postAction = file => dispatch => {
+  const h = "web";
+
+  console.log("POST FILE?", file);
+
+  const endpointForPostFile = serverUrl + `savefile/${h}`;
+
+  axios({
+    method: "post",
+    url: endpointForPostFile,
+    headers: { Pragma: "no-cache" },
+    data: file
+  })
+    .then(function(response) {
+      dispatch({
+        type: "file/POST_FILE",
+        payload: response.data
+      });
+    })
+    .catch(function(error) {
+      dispatch({
+        type: "file/POST_FILE_ERROR",
+        payload: error.response
+      });
+    });
+};
+
 // export const getUserFacilities = ({ user34, authToken }) => dispatch => {
 //     const endpointForAuthUser = serverUrl + `User/GetUserFacilities/${user34}`
 //

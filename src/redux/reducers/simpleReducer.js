@@ -2,7 +2,8 @@ const initialState = {
   file: null,
   fetching: false,
   error: null,
-  result: null
+  result: null,
+  editedFile: null
 };
 
 export default (state = initialState, action) => {
@@ -24,6 +25,13 @@ export default (state = initialState, action) => {
         ...state,
         result: action.payload
       };
+    case "SAVE_ACTION":
+      return {
+        ...state,
+        editedFile: action.payload
+      };
+    case "file/POST_FILE_ERROR":
+      return { ...state, error: action.payload, fetching: false };
     default:
       return state;
   }
