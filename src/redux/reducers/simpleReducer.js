@@ -27,7 +27,7 @@ export default (state = initialState, action) => {
         result: action.payload
       };
     case "SAVE_NAME_CHANGE_ACTION":
-      const edited = state.editedFile;
+      const edited = Object.assign({}, state.file);
 
       const nodeEdit = edited.nodes[state.currentNode];
 
@@ -45,7 +45,7 @@ export default (state = initialState, action) => {
         editedFile: action.payload
       };
     case "ADD_ACTION":
-      const eedited = state.file;
+      const eedited = Object.assign({}, state.file);
 
       const length = state.file.nodes.length;
       eedited.nodes.push({

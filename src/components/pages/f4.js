@@ -272,7 +272,7 @@ class Graph extends React.Component {
 
     let force = d3
       .forceSimulation(this.props.data.nodes)
-      .force("charge", d3.forceManyBody().strength(50))
+      .force("charge", d3.forceManyBody().strength(-20))
       .force("link", d3.forceLink(this.props.data.links).distance(90))
       .force(
         "center",
