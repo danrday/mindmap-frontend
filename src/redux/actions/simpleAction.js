@@ -46,6 +46,34 @@ export const saveAction = file => dispatch => {
   });
 };
 
+export const addAction = () => dispatch => {
+  dispatch({
+    type: "ADD_ACTION",
+    payload: ""
+  });
+};
+
+export const deleteAction = () => dispatch => {
+  dispatch({
+    type: "DELETE_ACTION",
+    payload: ""
+  });
+};
+
+export const saveNameChangeAction = text => dispatch => {
+  dispatch({
+    type: "SAVE_NAME_CHANGE_ACTION",
+    payload: text
+  });
+};
+
+export const selectNode = node => dispatch => {
+  dispatch({
+    type: "SELECT_NODE",
+    payload: node
+  });
+};
+
 export const postAction = file => dispatch => {
   const h = "web";
 

@@ -4,19 +4,37 @@ import styled from "styled-components";
 import navLinks from "./NavLinks";
 
 import { connect } from "react-redux";
-import { simpleAction, postAction } from "../redux/actions/simpleAction";
+import {
+  simpleAction,
+  postAction,
+  addAction,
+  deleteAction,
+  saveNameChangeAction
+} from "../redux/actions/simpleAction";
 
 class NavAndHeader extends Component {
   state = {
     selected: null,
-    selectedSubItem: null
+    selectedSubItem: null,
+    nameValue: "null"
   };
   handleSelected(i) {
     this.setState({ selected: i });
   }
   handleSelectedSubItem(i) {
+    console.log("firing?", this);
     this.setState({ selectedSubItem: i });
   }
+
+  handleNameChange(event) {
+    console.log("H>", this);
+    this.setState({ nameValue: event.target.value });
+  }
+
+  handleSaveNameChange() {
+    this.saveNameChangeAction(this.state.nameValue);
+  }
+
   render(data) {
     return (
       <StyledHeader openNav={this.props.navIsOpen}>
@@ -26,6 +44,16 @@ class NavAndHeader extends Component {
             <i className="close icon ion-close" />
           </div>
         </div>
+
+        <input
+          type="text"
+          value={this.state.nameValue}
+          onChange={this.handleNameChange.bind(this)}
+        />
+
+        <button onClick={this.handleSaveNameChange.bind(this)}>
+          save to {this.props.currSelNode}
+        </button>
 
         <div className="projectTitle">
           <h4 style={{ color: "#d1e8e3" }}>Force Mapper</h4>
@@ -47,6 +75,10 @@ class NavAndHeader extends Component {
           >
             save
           </button>
+          <br />
+          <button onClick={this.addAction}>add</button>
+          <br />
+          <button onClick={this.deleteAction}>delete</button>
           {navLinks.map((item, i) => {
             const isSelected = i === this.state.selected;
             const subItems = item.subItems;
@@ -101,6 +133,12 @@ class NavAndHeader extends Component {
   };
   postAction = file => {
     this.props.postAction(file);
+  };
+  saveNameChangeAction = text => {
+    this.props.saveNameChangeAction(text);
+  };
+  addAction = () => {
+    this.props.addAction();
   };
 }
 
@@ -239,10 +277,14 @@ const NavItem = styled.div`
 `;
 
 const mapStateToProps = state => ({
-  ...state
+  ...state,
+  currSelNode: state.simpleReducer.currentNode
 });
 const mapDispatchToProps = dispatch => ({
   simpleAction: () => dispatch(simpleAction()),
-  postAction: file => dispatch(postAction(file))
+  postAction: file => dispatch(postAction(file)),
+  addAction: file => dispatch(addAction(file)),
+  deleteAction: file => dispatch(deleteAction(file)),
+  saveNameChangeAction: text => dispatch(saveNameChangeAction(text))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(NavAndHeader);

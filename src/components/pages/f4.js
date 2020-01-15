@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 
 import forceData from "./data";
-import { saveAction } from "../../redux/actions/simpleAction";
+import { saveAction, selectNode } from "../../redux/actions/simpleAction";
 
 let d3 = require("d3");
 let React = require("react");
@@ -114,6 +114,10 @@ class App extends React.Component {
     this.props.saveAction(file);
   };
 
+  selectNode = node => {
+    this.props.selectNode(node);
+  };
+
   componentDidUpdate() {
     if (!this.state.fileLoaded) {
       this.setState({ data: this.props.file, fileLoaded: true });
@@ -155,8 +159,10 @@ class App extends React.Component {
       const newData = { nodes: this.state.data.nodes, links: newLinks };
       this.setState({ data: newData });
       this.setState({ lastClickedNode: null });
+      this.selectNode(null);
     } else {
       this.setState({ lastClickedNode: currentClickedNode });
+      this.selectNode(currentClickedNode);
     }
   };
 
@@ -223,6 +229,33 @@ class Graph extends React.Component {
         return color(d.name);
       });
     }
+
+    let force = window.force;
+
+    function dragStarted(d) {
+      if (!d3.event.active) force.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    }
+
+    function dragging(d) {
+      d.fx = d3.event.x;
+      d.fy = d3.event.y;
+    }
+
+    function dragEnded(d) {
+      if (!d3.event.active) force.alphaTarget(0);
+      d.fx = null;
+      d.fy = null;
+    }
+
+    const node = d3.selectAll("g.node").call(
+      d3
+        .drag()
+        .on("start", dragStarted)
+        .on("drag", dragging)
+        .on("end", dragEnded)
+    );
   }
   componentDidMount() {
     console.log("find dom node", this);
@@ -343,6 +376,11 @@ class Node extends React.Component {
   }
 
   componentDidUpdate() {
+    this.d3Node = d3
+      .select(ReactDOM.findDOMNode(this))
+      .datum(this.props.data)
+      .call(enterNode);
+
     this.d3Node.datum(this.props.data).call(updateNode);
   }
 
@@ -357,8 +395,8 @@ class Node extends React.Component {
         <g>
           <rect />
           <text>{this.props.data.name}</text>
-          <text>{this.props.data.x}</text>
-          <text>{this.props.data.y}</text>
+          {/*<text>{this.props.data.x}</text>*/}
+          {/*<text>{this.props.data.y}</text>*/}
         </g>
       </g>
     );
@@ -371,7 +409,8 @@ const mapStateToProps = (state, props) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  saveAction: file => dispatch(saveAction(file))
+  saveAction: file => dispatch(saveAction(file)),
+  selectNode: node => dispatch(selectNode(node))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
