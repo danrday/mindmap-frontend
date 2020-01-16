@@ -65,6 +65,13 @@ const enterNode = selection => {
     });
 };
 
+const enterLink = selection => {
+  selection
+    .attr("stroke-width", 2)
+    .style("stroke", "brown")
+    .style("opacity", ".2");
+};
+
 const updateNode = selection => {
   // console.log('selection', selection)
 
@@ -72,13 +79,6 @@ const updateNode = selection => {
     // console.log('update', d)
     return "translate(" + d.x + "," + d.y + ")";
   });
-};
-
-const enterLink = selection => {
-  selection
-    .attr("stroke-width", 2)
-    .style("stroke", "brown")
-    .style("opacity", ".2");
 };
 
 const updateLink = selection => {
@@ -208,11 +208,9 @@ class App extends React.Component {
 
 class Graph extends React.Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
-    // if (prevProps.data.links.length !== this.props.data.links.length) {
     window.force
       .force("link", d3.forceLink(this.props.data.links).distance(90))
       .restart();
-    // }
 
     const lastClicked = typeof this.props.lastClickedNode === "number";
     if (lastClicked) {

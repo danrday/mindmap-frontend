@@ -23,11 +23,13 @@ module.exports.controller = function(app) {
     const e = req.body;
 
     e.nodes.forEach(obj => {
-      delete obj["vx"];
-      delete obj["x"];
-      delete obj["vy"];
-      delete obj["y"];
-      delete obj["index"];
+      obj["vx"] = 0;
+      obj["vy"] = 0;
+      // delete obj["vx"];
+      // delete obj["x"];
+      // delete obj["vy"];
+      // delete obj["y"];
+      // delete obj["index"];
     });
 
     e.links.forEach(obj => {
@@ -35,6 +37,7 @@ module.exports.controller = function(app) {
       obj.target = obj.target.index;
       delete obj.source["index"];
       delete obj.target["index"];
+
       // delete obj.source["y"];
       // delete obj.source["vx"];
       // delete obj.source["vy"];
