@@ -25,7 +25,6 @@ module.exports.controller = function(app) {
     e.nodes.forEach(obj => {
       obj["vx"] = 0;
       obj["vy"] = 0;
-      obj.fixed = true;
       // delete obj["vx"];
       // delete obj["x"];
       // delete obj["vy"];

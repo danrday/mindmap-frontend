@@ -245,6 +245,8 @@ class Graph extends React.Component {
       if (!d3.event.active) force.alphaTarget(0);
       d.fx = null;
       d.fy = null;
+      d.fx = d3.event.x;
+      d.fy = d3.event.y;
     }
 
     const node = d3.selectAll("g.node").call(
@@ -296,6 +298,8 @@ class Graph extends React.Component {
       if (!d3.event.active) force.alphaTarget(0);
       d.fx = null;
       d.fy = null;
+      d.fx = d3.event.x;
+      d.fy = d3.event.y;
     }
 
     const node = d3.selectAll("g.node").call(
