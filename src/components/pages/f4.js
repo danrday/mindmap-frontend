@@ -8,97 +8,9 @@ import { saveAction, selectNode } from "../../redux/actions/simpleAction";
 let d3 = require("d3");
 let React = require("react");
 
-/////// Functions and variables
-
 const width = 1500;
 const height = 1000;
 const color = d3.scaleOrdinal(d3.schemeCategory10);
-
-const enterNode = selection => {
-  selection
-    .select("circle")
-    .attr("r", function(d) {
-      if (
-        d.id === 0 ||
-        d.id === 3 ||
-        d.id === 7 ||
-        d.id === 8 ||
-        d.id === 11 ||
-        d.id === 15
-      ) {
-        return 30;
-      } else {
-        return 15;
-      }
-    })
-    .style("fill", function(d) {
-      return color(d.name);
-    });
-
-  selection.select("text").attr("dy", ".95em");
-  // .style('transform', 'translateX(-50%,-90%')
-
-  selection
-    .select("rect")
-    // .style('transform', 'translateX(-90%,-50%')
-    .style("fill", function(d) {
-      if (
-        d.id === 0 ||
-        d.id === 3 ||
-        d.id === 7 ||
-        d.id === 8 ||
-        d.id === 11 ||
-        d.id === 15
-      ) {
-        return "orange";
-      } else {
-        return "yellow";
-      }
-    })
-    .attr("width", function(d) {
-      console.log("hi", d);
-      let width = d.name.length * 7;
-      return width;
-    })
-    .attr("height", function(d) {
-      return "20";
-    });
-};
-
-const enterLink = selection => {
-  selection
-    .attr("stroke-width", 2)
-    .style("stroke", "brown")
-    .style("opacity", ".2");
-};
-
-const updateNode = selection => {
-  // console.log('selection', selection)
-
-  selection.attr("transform", d => {
-    // console.log('update', d)
-    return "translate(" + d.x + "," + d.y + ")";
-  });
-};
-
-const updateLink = selection => {
-  // selection
-  //     .attr('x1', d => Math.max(30, Math.min(1000 - 30, d.source.x)))
-  //     .attr('y1', d => Math.max(30, Math.min(600 - 30, d.source.y)))
-  //     .attr('x2', d => Math.max(30, Math.min(1000 - 30, d.target.x)))
-  //     .attr('y2', d => Math.max(30, Math.min(600 - 30, d.target.y)))
-
-  selection
-    .attr("x1", d => d.source.x)
-    .attr("y1", d => d.source.y)
-    .attr("x2", d => d.target.x)
-    .attr("y2", d => d.target.y);
-};
-
-const updateGraph = selection => {
-  selection.selectAll(".node").call(updateNode);
-  selection.selectAll(".link").call(updateLink);
-};
 
 /////// App component. Hold graph data in state and renders Graph component.
 /////// Graph component in turn renders Link and Node components.
@@ -249,7 +161,7 @@ class Graph extends React.Component {
       d.fy = d3.event.y;
     }
 
-    const node = d3.selectAll("g.node").call(
+    d3.selectAll("g.node").call(
       d3
         .drag()
         .on("start", dragStarted)
@@ -348,7 +260,7 @@ class Graph extends React.Component {
   }
 }
 
-/////// Link component
+///////
 
 class Link extends React.Component {
   componentDidMount() {
@@ -367,7 +279,27 @@ class Link extends React.Component {
   }
 }
 
-/////// Node component
+const enterLink = selection => {
+  selection
+    .attr("stroke-width", 2)
+    .style("stroke", "brown")
+    .style("opacity", ".2");
+};
+
+const updateLink = selection => {
+  selection
+    .attr("x1", d => d.source.x)
+    .attr("y1", d => d.source.y)
+    .attr("x2", d => d.target.x)
+    .attr("y2", d => d.target.y);
+};
+
+const updateGraph = selection => {
+  selection.selectAll(".node").call(updateNode);
+  selection.selectAll(".link").call(updateLink);
+};
+
+///////
 
 class Node extends React.Component {
   componentDidMount() {
@@ -404,6 +336,71 @@ class Node extends React.Component {
     );
   }
 }
+
+const enterNode = selection => {
+  selection
+    .select("circle")
+    .attr("r", function(d) {
+      if (
+        d.id === 0 ||
+        d.id === 3 ||
+        d.id === 7 ||
+        d.id === 8 ||
+        d.id === 11 ||
+        d.id === 15
+      ) {
+        return 30;
+      } else {
+        return 15;
+      }
+    })
+    .style("fill", function(d) {
+      return color(d.name);
+    });
+
+  selection.select("text").attr("dy", ".95em");
+  // .style('transform', 'translateX(-50%,-90%')
+
+  selection
+    .select("rect")
+    // .style('transform', 'translateX(-90%,-50%')
+    .style("fill", function(d) {
+      if (
+        d.id === 0 ||
+        d.id === 3 ||
+        d.id === 7 ||
+        d.id === 8 ||
+        d.id === 11 ||
+        d.id === 15
+      ) {
+        return "orange";
+      } else {
+        return "yellow";
+      }
+    })
+    .attr("width", function(d) {
+      console.log("hi", d);
+      let width = d.name.length * 7;
+      return width;
+    })
+    .attr("height", function(d) {
+      return "20";
+    });
+};
+
+const updateNode = selection => {
+  // console.log('selection', selection)
+
+  selection.attr("transform", d => {
+    // console.log('update', d)
+    return "translate(" + d.x + "," + d.y + ")";
+  });
+};
+
+////////
+////////
+////////
+////////
 
 const mapStateToProps = (state, props) => ({
   // ...state,
