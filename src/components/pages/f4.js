@@ -42,36 +42,41 @@ class App extends React.Component {
     const { lastClickedNode } = this.state;
 
     if (typeof lastClickedNode === "number") {
-      const newLink = {
-        source: lastClickedNode,
-        target: currentClickedNode
-      };
-
-      const linkAlreadyExists = this.state.data.links.find(function(
-        currentClickedNode
-      ) {
-        return (
-          // Check for target -> source AND source -> target
-          (currentClickedNode.source.id === newLink.source &&
-            currentClickedNode.target.id === newLink.target) ||
-          (currentClickedNode.source.id === newLink.target &&
-            currentClickedNode.target.id === newLink.source)
-        );
-      });
-
-      let newLinks;
-      if (linkAlreadyExists) {
-        newLinks = this.state.data.links.filter(function(e) {
-          return e !== linkAlreadyExists;
-        });
+      if (lastClickedNode === currentClickedNode) {
+        this.setState({ lastClickedNode: null });
+        this.selectNode(null);
       } else {
-        newLinks = [...this.state.data.links, newLink];
-      }
+        const newLink = {
+          source: lastClickedNode,
+          target: currentClickedNode
+        };
 
-      const newData = { nodes: this.state.data.nodes, links: newLinks };
-      this.setState({ data: newData });
-      this.setState({ lastClickedNode: null });
-      this.selectNode(null);
+        const linkAlreadyExists = this.state.data.links.find(function(
+          currentClickedNode
+        ) {
+          return (
+            // Check for target -> source AND source -> target
+            (currentClickedNode.source.id === newLink.source &&
+              currentClickedNode.target.id === newLink.target) ||
+            (currentClickedNode.source.id === newLink.target &&
+              currentClickedNode.target.id === newLink.source)
+          );
+        });
+
+        let newLinks;
+        if (linkAlreadyExists) {
+          newLinks = this.state.data.links.filter(function(e) {
+            return e !== linkAlreadyExists;
+          });
+        } else {
+          newLinks = [...this.state.data.links, newLink];
+        }
+
+        const newData = { nodes: this.state.data.nodes, links: newLinks };
+        this.setState({ data: newData });
+        this.setState({ lastClickedNode: null });
+        this.selectNode(null);
+      }
     } else {
       this.setState({ lastClickedNode: currentClickedNode });
       this.selectNode(currentClickedNode);
@@ -139,36 +144,8 @@ class Graph extends React.Component {
         return color(d.name);
       });
     }
-
-    let force = window.force;
-
-    function dragStarted(d) {
-      if (!d3.event.active) force.alphaTarget(0.3).restart();
-      d.fx = d.x;
-      d.fy = d.y;
-    }
-
-    function dragging(d) {
-      d.fx = d3.event.x;
-      d.fy = d3.event.y;
-    }
-
-    function dragEnded(d) {
-      if (!d3.event.active) force.alphaTarget(0);
-      d.fx = null;
-      d.fy = null;
-      d.fx = d3.event.x;
-      d.fy = d3.event.y;
-    }
-
-    d3.selectAll("g.node").call(
-      d3
-        .drag()
-        .on("start", dragStarted)
-        .on("drag", dragging)
-        .on("end", dragEnded)
-    );
   }
+
   componentDidMount() {
     console.log("find dom node", this);
 
@@ -179,6 +156,7 @@ class Graph extends React.Component {
     this.d3Graph.call(d3.zoom().on("zoom", zoomed));
 
     function zoomed() {
+      console.log("ZZOM>", d3.event.transform);
       d3.select(".frameForZoom").attr("transform", d3.event.transform);
     }
 
@@ -197,24 +175,60 @@ class Graph extends React.Component {
 
     function dragStarted(d) {
       if (!d3.event.active) force.alphaTarget(0.3).restart();
+
+      if (d.fx) {
+        d.sticky = true;
+      }
+
       d.fx = d.x;
       d.fy = d.y;
     }
 
-    function dragging(d) {
+    let dragging = d => {
+      console.log("DRAGGING");
+
+      if (d.sticky) {
+        if (this.props.lastClickedNode && this.props.lastClickedNode === d.id) {
+          this.props.handleClick(d);
+          d.sticky = false;
+        } else {
+          // needed for some reason
+          d.sticky = "f";
+        }
+      }
+
       d.fx = d3.event.x;
       d.fy = d3.event.y;
-    }
+    };
 
-    function dragEnded(d) {
+    let dragEnded = d => {
+      console.log("DRAG ENDED", d);
       if (!d3.event.active) force.alphaTarget(0);
-      d.fx = null;
-      d.fy = null;
-      d.fx = d3.event.x;
-      d.fy = d3.event.y;
-    }
+      if (this.props.lastClickedNode && this.props.lastClickedNode === d.id) {
+        console.log("last node", this.props.lastClickedNode, d);
+        if (d.sticky === "f") {
+          d.fx = null;
+          d.fy = null;
+          d.sticky = false;
+        } else {
+          console.log("no d.fx");
+          d.fx = d3.event.x;
+          d.fy = d3.event.y;
+          d.sticky = false;
+        }
+      } else {
+        if (d.sticky) {
+          console.log("STIKCY");
+          d.fx = d3.event.x;
+          d.fy = d3.event.y;
+        } else {
+          d.fx = null;
+          d.fy = null;
+        }
+      }
+    };
 
-    const node = d3.selectAll("g.node").call(
+    d3.selectAll("g.node").call(
       d3
         .drag()
         .on("start", dragStarted)
