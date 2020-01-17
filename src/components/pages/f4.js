@@ -144,6 +144,71 @@ class Graph extends React.Component {
         return color(d.name);
       });
     }
+
+    let force = window.force;
+
+    let dragStarted = d => {
+      if (!d3.event.active) force.alphaTarget(0.3).restart();
+
+      if (d.fx) {
+        d.sticky = true;
+      }
+
+      d.fx = d.x;
+      d.fy = d.y;
+    };
+
+    let dragging = d => {
+      console.log("DRAGGING");
+
+      if (d.sticky) {
+        if (this.props.lastClickedNode && this.props.lastClickedNode === d.id) {
+          this.props.handleClick(d);
+          d.sticky = false;
+        } else {
+          // needed for some reason
+          d.sticky = "f";
+        }
+      }
+
+      d.fx = d3.event.x;
+      d.fy = d3.event.y;
+    };
+
+    let dragEnded = d => {
+      console.log("DRAG ENDED", d);
+      if (!d3.event.active) force.alphaTarget(0);
+      if (this.props.lastClickedNode && this.props.lastClickedNode === d.id) {
+        console.log("last node", this.props.lastClickedNode, d);
+        if (d.sticky === "f") {
+          d.fx = null;
+          d.fy = null;
+          d.sticky = false;
+        } else {
+          console.log("no d.fx");
+          d.fx = d3.event.x;
+          d.fy = d3.event.y;
+          d.sticky = false;
+        }
+      } else {
+        if (d.sticky) {
+          console.log("STIKCY");
+          d.fx = d3.event.x;
+          d.fy = d3.event.y;
+        } else {
+          d.fx = null;
+          d.fy = null;
+        }
+      }
+    };
+
+    d3.selectAll("g.node").call(
+      d3
+        .drag()
+        .on("start", dragStarted)
+        .on("drag", dragging)
+        .on("end", dragEnded)
+    );
   }
 
   componentDidMount() {
@@ -366,6 +431,13 @@ const enterNode = selection => {
         return 30;
       } else {
         return 15;
+      }
+    })
+    .attr("stroke", function(d) {
+      if (d.fx) {
+        return "black";
+      } else {
+        return "orange";
       }
     })
     .style("fill", function(d) {
