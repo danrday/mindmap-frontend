@@ -447,12 +447,20 @@ const enterNode = selection => {
       return color(d.name);
     });
 
-  selection.select("text").attr("dy", ".95em");
-  // .style('transform', 'translateX(-50%,-90%')
+  selection
+    .select("text")
+    .style("font-size", "30px")
+    .attr("dy", ".95em")
+    .call(getBoundingBox);
+
+  function getBoundingBox(selection) {
+    selection.each(function(d) {
+      d.bbox = this.getBBox();
+    });
+  }
 
   selection
     .select("rect")
-    // .style('transform', 'translateX(-90%,-50%')
     .style("fill", function(d) {
       if (
         d.id === 0 ||
@@ -468,13 +476,21 @@ const enterNode = selection => {
       }
     })
     .attr("width", function(d) {
-      console.log("hi", d);
-      let width = d.name.length * 7;
-      return width;
+      console.log("DDDDD", d);
+      return d.bbox.width;
     })
     .attr("height", function(d) {
-      return "20";
+      return d.bbox.height;
     });
+
+  // .attr("width", function(d) {
+  //   console.log("hi", d);
+  //   let width = d.name.length * 7;
+  //   return width;
+  // })
+  // .attr("height", function(d) {
+  //   return "20";
+  // });
 };
 
 const updateNode = selection => {
