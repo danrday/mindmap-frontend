@@ -1,8 +1,6 @@
 import ReactDOM from "react-dom";
-
 import { connect } from "react-redux";
 
-import forceData from "./data";
 import { saveAction, selectNode } from "../../redux/actions/simpleAction";
 
 let d3 = require("d3");
@@ -12,7 +10,7 @@ const width = 1500;
 const height = 1000;
 const color = d3.scaleOrdinal(d3.schemeCategory10);
 
-/////// App component. Hold graph data in state and renders Graph component.
+/////// App component holds graph data in state and renders Graph component.
 /////// Graph component in turn renders Link and Node components.
 
 class App extends React.Component {
@@ -22,70 +20,8 @@ class App extends React.Component {
     fileLoaded: false
   };
 
-  saveAction = file => {
-    this.props.saveAction(file);
-  };
-
-  selectNode = node => {
-    this.props.selectNode(node);
-  };
-
-  componentDidUpdate() {
-    if (!this.state.fileLoaded) {
-      this.setState({ data: this.props.file, fileLoaded: true });
-    }
-
-    this.saveAction(this.state.data);
-  }
-
-  handleClick = currentClickedNode => {
-    const { lastClickedNode } = this.state;
-
-    if (typeof lastClickedNode === "number") {
-      if (lastClickedNode === currentClickedNode) {
-        this.setState({ lastClickedNode: null });
-        this.selectNode(null);
-      } else {
-        const newLink = {
-          source: lastClickedNode,
-          target: currentClickedNode
-        };
-
-        const linkAlreadyExists = this.state.data.links.find(function(
-          currentClickedNode
-        ) {
-          return (
-            // Check for target -> source AND source -> target
-            (currentClickedNode.source.id === newLink.source &&
-              currentClickedNode.target.id === newLink.target) ||
-            (currentClickedNode.source.id === newLink.target &&
-              currentClickedNode.target.id === newLink.source)
-          );
-        });
-
-        let newLinks;
-        if (linkAlreadyExists) {
-          newLinks = this.state.data.links.filter(function(e) {
-            return e !== linkAlreadyExists;
-          });
-        } else {
-          newLinks = [...this.state.data.links, newLink];
-        }
-
-        const newData = { nodes: this.state.data.nodes, links: newLinks };
-        this.setState({ data: newData });
-        this.setState({ lastClickedNode: null });
-        this.selectNode(null);
-      }
-    } else {
-      this.setState({ lastClickedNode: currentClickedNode });
-      this.selectNode(currentClickedNode);
-    }
-  };
-
   render() {
-    console.log("this.propssss", this.props);
-
+    // console.log("this.props", this.props);
     if (this.state.data) {
       return (
         <div>
@@ -119,6 +55,58 @@ class App extends React.Component {
       return <div></div>;
     }
   }
+
+  componentDidUpdate() {
+    if (!this.state.fileLoaded) {
+      this.setState({ data: this.props.file, fileLoaded: true });
+    }
+    this.props.saveAction(this.state.data);
+  }
+
+  handleClick = currentClickedNode => {
+    const { lastClickedNode } = this.state;
+
+    if (typeof lastClickedNode === "number") {
+      if (lastClickedNode === currentClickedNode) {
+        this.setState({ lastClickedNode: null });
+        this.props.selectNode(null);
+      } else {
+        const newLink = {
+          source: lastClickedNode,
+          target: currentClickedNode
+        };
+
+        const linkAlreadyExists = this.state.data.links.find(function(
+          currentClickedNode
+        ) {
+          return (
+            // Check for target -> source AND source -> target
+            (currentClickedNode.source.id === newLink.source &&
+              currentClickedNode.target.id === newLink.target) ||
+            (currentClickedNode.source.id === newLink.target &&
+              currentClickedNode.target.id === newLink.source)
+          );
+        });
+
+        let newLinks;
+        if (linkAlreadyExists) {
+          newLinks = this.state.data.links.filter(function(e) {
+            return e !== linkAlreadyExists;
+          });
+        } else {
+          newLinks = [...this.state.data.links, newLink];
+        }
+
+        const newData = { nodes: this.state.data.nodes, links: newLinks };
+        this.setState({ data: newData });
+        this.setState({ lastClickedNode: null });
+        this.props.selectNode(null);
+      }
+    } else {
+      this.setState({ lastClickedNode: currentClickedNode });
+      this.props.selectNode(currentClickedNode);
+    }
+  };
 }
 
 /////// Graph component. Holds Link and Node components
@@ -213,18 +201,16 @@ class Graph extends React.Component {
 
   componentDidMount() {
     console.log("find dom node", this);
-
     // after initial render, this sets up d3 to do its thing outside of react
     // x and y coords get added onto the nodes but react doesn't recognnize the changes
     this.d3Graph = d3.select(ReactDOM.findDOMNode(this));
 
     this.d3Graph.call(d3.zoom().on("zoom", zoomed)).on("dblclick.zoom", () => {
-      // disable zoom on double click by default
-      return null;
+      return null; /*disable zoom on double click by default*/
     });
 
     function zoomed() {
-      console.log("ZZOM>", d3.event.transform);
+      console.log("ZOOM>", d3.event.transform);
       d3.select(".frameForZoom").attr("transform", d3.event.transform);
     }
 
@@ -243,18 +229,15 @@ class Graph extends React.Component {
 
     function dragStarted(d) {
       if (!d3.event.active) force.alphaTarget(0.3).restart();
-
       if (d.fx) {
         d.sticky = true;
       }
-
       d.fx = d.x;
       d.fy = d.y;
     }
 
     let dragging = d => {
       console.log("DRAGGING");
-
       if (d.sticky) {
         if (this.props.lastClickedNode && this.props.lastClickedNode === d.id) {
           this.props.handleClick(d);
@@ -313,19 +296,17 @@ class Graph extends React.Component {
   }
 
   render() {
-    var nodes = this.props.data.nodes.map(node => {
-      return (
-        <Node
-          data={node}
-          name={node.name}
-          key={node.id}
-          handleClick={this.props.handleClick}
-        />
-      );
-    });
-    var links = this.props.data.links.map((link, i) => {
-      return <Link key={i} data={link} />;
-    });
+    const nodes = this.props.data.nodes.map(node => (
+      <Node
+        data={node}
+        name={node.name}
+        key={node.id}
+        handleClick={this.props.handleClick}
+      />
+    ));
+    const links = this.props.data.links.map((link, i) => (
+      <Link key={i} data={link} />
+    ));
     return (
       <svg
         className="graph"
@@ -381,23 +362,27 @@ const updateGraph = selection => {
   selection.selectAll(".link").call(updateLink);
 };
 
+const updateNode = selection => {
+  selection.attr("transform", d => {
+    return "translate(" + d.x + "," + d.y + ")";
+  });
+};
+
 ///////
 
 class Node extends React.Component {
   componentDidMount() {
-    this.d3Node = d3
-      .select(ReactDOM.findDOMNode(this))
+    d3.select(ReactDOM.findDOMNode(this))
       .datum(this.props.data)
       .call(enterNode);
   }
 
   componentDidUpdate() {
-    this.d3Node = d3
-      .select(ReactDOM.findDOMNode(this))
+    d3.select(ReactDOM.findDOMNode(this))
+      // won't update bg if uncommented
+      // .selectAll(".node")
       .datum(this.props.data)
       .call(enterNode);
-
-    this.d3Node.datum(this.props.data).call(updateNode);
   }
 
   render() {
@@ -411,8 +396,6 @@ class Node extends React.Component {
         <g>
           <rect />
           <text>{this.props.data.name}</text>
-          {/*<text>{this.props.data.x}</text>*/}
-          {/*<text>{this.props.data.y}</text>*/}
         </g>
       </g>
     );
@@ -476,30 +459,11 @@ const enterNode = selection => {
       }
     })
     .attr("width", function(d) {
-      console.log("DDDDD", d);
       return d.bbox.width;
     })
     .attr("height", function(d) {
       return d.bbox.height;
     });
-
-  // .attr("width", function(d) {
-  //   console.log("hi", d);
-  //   let width = d.name.length * 7;
-  //   return width;
-  // })
-  // .attr("height", function(d) {
-  //   return "20";
-  // });
-};
-
-const updateNode = selection => {
-  // console.log('selection', selection)
-
-  selection.attr("transform", d => {
-    // console.log('update', d)
-    return "translate(" + d.x + "," + d.y + ")";
-  });
 };
 
 ////////
