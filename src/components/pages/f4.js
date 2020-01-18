@@ -218,7 +218,10 @@ class Graph extends React.Component {
     // x and y coords get added onto the nodes but react doesn't recognnize the changes
     this.d3Graph = d3.select(ReactDOM.findDOMNode(this));
 
-    this.d3Graph.call(d3.zoom().on("zoom", zoomed));
+    this.d3Graph.call(d3.zoom().on("zoom", zoomed)).on("dblclick.zoom", () => {
+      // disable zoom on double click by default
+      return null;
+    });
 
     function zoomed() {
       console.log("ZZOM>", d3.event.transform);
