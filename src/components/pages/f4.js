@@ -37,7 +37,7 @@ class App extends React.Component {
             />
           </div>
 
-          <div
+          {/* <div
             style={{
               zIndex: 2000,
               position: "fixed",
@@ -48,7 +48,7 @@ class App extends React.Component {
             }}
           >
             Filters
-          </div>
+          </div> */}
         </div>
       );
     } else {
