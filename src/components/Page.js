@@ -49,7 +49,7 @@ const Inner = styled.div`
   ${({ openNav }) =>
     openNav &&
     `
-        margin-left: 230px;
+        margin-left: 260px;
       `}
 `;
 

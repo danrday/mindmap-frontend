@@ -1,19 +1,36 @@
+import React from "react";
+
+import Node from './pages/node'
+
+
 const navLinks = [
   {
-    link: "/",
+    link: "/open",
     className: "icon ion-android-folder-open",
-    navItemText: "Open"
+    navItemText: "Open",
+    component: props => {
+      const customProps = props
+      return () => <div {...customProps} />
+    },
   },{
-    link: "/",
+    link: "/save",
     className: "icon ion-android-archive",
-    navItemText: "Save"
+    navItemText: "Save",
+    component: props => {
+      const customProps = props
+      return () => <div {...customProps} />
+    },
   },{
-    link: "/",
+    link: "/node",
     className: "icon ion-android-add-circle",
-    navItemText: "Node"
+    navItemText: "Node",
+    component: props => {
+      const customProps = props
+      return () => <Node {...customProps} />
+    },
   },
   {
-    link: "/page2",
+    link: "/categories",
     className: "icon ion-ios-albums-outline",
     navItemText: "Categories",
     subItems: [
@@ -35,7 +52,7 @@ const navLinks = [
     ]
   },
   {
-    link: "/sub1",
+    link: "/settings",
     className: "icon ion-android-settings",
     navItemText: "Settings"
   }

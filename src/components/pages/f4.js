@@ -29,7 +29,6 @@ class App extends React.Component {
             className="graphContainer"
             style={{ position: "fixed", zIndex: 3000 }}
           >
-            <div>{this.state.data.nodes[0].x}</div>
             <Graph
               data={this.state.data}
               lastClickedNode={this.state.lastClickedNode}

@@ -35,7 +35,25 @@ class NavAndHeader extends Component {
     this.saveNameChangeAction(this.state.nameValue);
   }
 
+
+
   render(data) {
+
+      const SelectedMenu = this.state.selected ? navLinks[this.state.selected].component() : () => <div><button onClick={this.simpleAction}>open</button>
+          <br />
+          <button
+              onClick={() => {
+                  console.log("simpleReducer.file", this.props.simpleReducer.file);
+                  this.postAction(this.props.simpleReducer.editedFile);
+              }}
+          >
+              save
+          </button>
+          <br />
+          <button onClick={this.addAction}>add</button>
+          <br />
+          <button onClick={this.deleteAction}>delete</button></div>
+
     return (
       <StyledHeader openNav={this.props.navIsOpen}>
         <div className="hamburgerFrame" onClick={this.props.toggle}>
@@ -66,6 +84,26 @@ class NavAndHeader extends Component {
           hoverNav={this.props.navIsHovered}
         >
 
+            <Hmm openNav={this.props.navIsOpen}
+                 hoverNav={this.props.navIsHovered}><SelectedMenu></SelectedMenu></Hmm>
+
+
+            {/*<Hmm openNav={this.props.navIsOpen}*/}
+            {/*     hoverNav={this.props.navIsHovered}><button onClick={this.simpleAction}>open</button>*/}
+            {/*    <br />*/}
+            {/*    <button*/}
+            {/*        onClick={() => {*/}
+            {/*            console.log("simpleReducer.file", this.props.simpleReducer.file);*/}
+            {/*            this.postAction(this.props.simpleReducer.editedFile);*/}
+            {/*        }}*/}
+            {/*    >*/}
+            {/*        save*/}
+            {/*    </button>*/}
+            {/*    <br />*/}
+            {/*    <button onClick={this.addAction}>add</button>*/}
+            {/*    <br />*/}
+            {/*    <button onClick={this.deleteAction}>delete</button></Hmm>*/}
+
           {navLinks.map((item, i) => {
             const isSelected = i === this.state.selected;
             const subItems = item.subItems;
@@ -83,7 +121,7 @@ class NavAndHeader extends Component {
                       <i className={item.className} />
                     </div>
                   </div>
-                  <div className="navItemText">{item.navItemText}</div>
+                  {/*<div className="navItemText">{item.navItemText}</div>*/}
                 </NavItem>
                 {/*</Link>*/}
 
@@ -113,20 +151,7 @@ class NavAndHeader extends Component {
           })}
 
 
-            <button onClick={this.simpleAction}>open</button>
-            <br />
-            <button
-                onClick={() => {
-                    console.log("simpleReducer.file", this.props.simpleReducer.file);
-                    this.postAction(this.props.simpleReducer.editedFile);
-                }}
-            >
-                save
-            </button>
-            <br />
-            <button onClick={this.addAction}>add</button>
-            <br />
-            <button onClick={this.deleteAction}>delete</button>
+
         </NavBar>
       </StyledHeader>
     );
@@ -221,6 +246,26 @@ const StyledHeader = styled.div`
   }
 `;
 
+const Hmm = styled.div`
+    position: fixed;
+  top: 60px;
+  left: 60px;
+    bottom: 0;
+  padding-top: 15px;
+  transition: all 0.2s ease-in-out;
+overflow-x: hidden;
+  z-index: 50;
+  width: 0px;
+  background-color: #00e8e3;
+   ${({ openNav, hoverNav }) =>
+    (openNav || hoverNav) &&
+    `
+        left: 60px;
+        width: 180px;
+        background: #00ebf2;
+      `}
+`;
+
 const NavBar = styled.div`
   position: fixed;
   top: 60px;
@@ -239,6 +284,8 @@ const NavBar = styled.div`
         background: #d6ebf2;
       `}
 `;
+
+
 
 const NavItem = styled.div`
   display: flex;
