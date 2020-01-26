@@ -65,20 +65,7 @@ class NavAndHeader extends Component {
           openNav={this.props.navIsOpen}
           hoverNav={this.props.navIsHovered}
         >
-          <button onClick={this.simpleAction}>open</button>
-          <br />
-          <button
-            onClick={() => {
-              console.log("simpleReducer.file", this.props.simpleReducer.file);
-              this.postAction(this.props.simpleReducer.editedFile);
-            }}
-          >
-            save
-          </button>
-          <br />
-          <button onClick={this.addAction}>add</button>
-          <br />
-          <button onClick={this.deleteAction}>delete</button>
+
           {navLinks.map((item, i) => {
             const isSelected = i === this.state.selected;
             const subItems = item.subItems;
@@ -124,6 +111,22 @@ class NavAndHeader extends Component {
               </div>
             );
           })}
+
+
+            <button onClick={this.simpleAction}>open</button>
+            <br />
+            <button
+                onClick={() => {
+                    console.log("simpleReducer.file", this.props.simpleReducer.file);
+                    this.postAction(this.props.simpleReducer.editedFile);
+                }}
+            >
+                save
+            </button>
+            <br />
+            <button onClick={this.addAction}>add</button>
+            <br />
+            <button onClick={this.deleteAction}>delete</button>
         </NavBar>
       </StyledHeader>
     );

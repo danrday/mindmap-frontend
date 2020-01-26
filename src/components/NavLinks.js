@@ -1,13 +1,21 @@
 const navLinks = [
   {
     link: "/",
-    className: "icon ion-ios-home-outline",
-    navItemText: "Dashboard"
+    className: "icon ion-android-folder-open",
+    navItemText: "Open"
+  },{
+    link: "/",
+    className: "icon ion-android-archive",
+    navItemText: "Save"
+  },{
+    link: "/",
+    className: "icon ion-android-add-circle",
+    navItemText: "Node"
   },
   {
     link: "/page2",
-    className: "icon ion-ios-photos-outline",
-    navItemText: "D3 tests",
+    className: "icon ion-ios-albums-outline",
+    navItemText: "Categories",
     subItems: [
       {
         link: "/test/force1",
@@ -28,8 +36,8 @@ const navLinks = [
   },
   {
     link: "/sub1",
-    className: "icon ion-ios-email-outline",
-    navItemText: "Other Page"
+    className: "icon ion-android-settings",
+    navItemText: "Settings"
   }
 ];
 
