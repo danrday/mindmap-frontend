@@ -23,7 +23,9 @@ const navLinks = [
   },{
     link: "/node",
     className: "icon ion-android-add-circle",
-    navItemText: "Node",
+    altClassName: "icon ion-aperture",
+    navItemText: "Add Node",
+    altNavItemText: "Edit Node",
     component: props => {
       const customProps = props
       return () => <Node {...customProps} />
@@ -53,9 +55,14 @@ const navLinks = [
   },
   {
     link: "/settings",
-    className: "icon ion-android-settings",
+    className: "icon ion-android-globe",
     navItemText: "Settings"
-  }
+  },
+  // {
+  //   link: "/settings",
+  //   className: "icon ion-android-settings",
+  //   navItemText: "Settings"
+  // }
 ];
 
 export default navLinks;

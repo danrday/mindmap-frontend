@@ -85,7 +85,7 @@ class NavAndHeader extends Component {
         >
 
             <Hmm openNav={this.props.navIsOpen}
-                 hoverNav={this.props.navIsHovered}><SelectedMenu></SelectedMenu></Hmm>
+                 hoverNav={this.props.navIsHovered}><SelectedMenu/></Hmm>
 
 
             {/*<Hmm openNav={this.props.navIsOpen}*/}
@@ -107,6 +107,13 @@ class NavAndHeader extends Component {
           {navLinks.map((item, i) => {
             const isSelected = i === this.state.selected;
             const subItems = item.subItems;
+
+              const isNodeItem = item.link === "/node"
+
+              // if (isNodeItem && this.props.currSelNode && this.state.selected !== i) {
+              //     this.setState({selected: i})
+              // }
+
             return (
               <div key={item.link}>
                 {/*<Link href={item.link}>*/}
@@ -118,10 +125,10 @@ class NavAndHeader extends Component {
                 >
                   <div className="navIconFrame">
                     <div className="navIcon">
-                      <i className={item.className} />
+                      <i className={isNodeItem && this.props.currSelNode ?  item.altClassName : item.className } />
                     </div>
                   </div>
-                  {/*<div className="navItemText">{item.navItemText}</div>*/}
+                    <div className="navItemText">{isNodeItem && this.props.currSelNode ?  item.altNavItemText: item.navItemText}</div>
                 </NavItem>
                 {/*</Link>*/}
 
@@ -129,6 +136,9 @@ class NavAndHeader extends Component {
                   subItems &&
                   subItems.map((item, i) => {
                     const isSelectedSubItem = i === this.state.selectedSubItem;
+
+                    const isNodeItem = item.link === "/node"
+                      console.log('refiring?', item.link)
                     return (
                       <NavItem
                         onClick={() => {
@@ -139,10 +149,10 @@ class NavAndHeader extends Component {
                       >
                         <div className="navIconFrame">
                           <div className="navIcon">
-                            <i className={item.className} />
+                            <i className={!isNodeItem ? item.className : item.altClassName} />
                           </div>
                         </div>
-                        <div className="navItemText">{item.navItemText}</div>
+                        <div className="navItemText">{!isNodeItem ? item.navItemText : item.altNavItemText}</div>
                       </NavItem>
                     );
                   })}
