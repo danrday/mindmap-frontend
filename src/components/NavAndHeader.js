@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import navLinks from "./NavLinks";
 
-import Node from './pages/node'
-
+import Node from "./pages/node";
 
 import { connect } from "react-redux";
 import {
@@ -18,7 +17,8 @@ class NavAndHeader extends Component {
   state = {
     selected: null,
     selectedSubItem: null,
-    nameValue: "null"
+    nameValue: "null",
+    selectedMenu: null
   };
   handleSelected(i) {
     this.setState({ selected: i });
@@ -28,31 +28,43 @@ class NavAndHeader extends Component {
   }
 
   handleNameChange(event) {
-        this.setState({ nameValue: event.target.value });
-    }
+    this.setState({ nameValue: event.target.value });
+  }
 
   handleSaveNameChange() {
     this.saveNameChangeAction(this.state.nameValue);
   }
 
+  componentDidMount() {
+    this.simpleAction();
+  }
 
-  render() {
-      console.log('RENDER', )
-
-      const SelectedMenu = this.state.selected ? navLinks[this.state.selected].component() : () => <div><button onClick={this.simpleAction}>open</button>
+  selectedMenu() {
+    if (this.state.selected) {
+      return navLinks[this.state.selected].component();
+    } else {
+      return (
+        <div>
+          <button onClick={this.simpleAction}>open</button>
           <br />
           <button
-              onClick={() => {
-                  console.log("simpleReducer.file", this.props.simpleReducer.file);
-                  this.postAction(this.props.simpleReducer.editedFile);
-              }}
+            onClick={() => {
+              console.log("simpleReducer.file", this.props.simpleReducer.file);
+              this.postAction(this.props.simpleReducer.editedFile);
+            }}
           >
-              save
+            save
           </button>
           <br />
           <button onClick={this.addAction}>add</button>
           <br />
-          <button onClick={this.deleteAction}>delete</button></div>
+          <button onClick={this.deleteAction}>delete</button>
+        </div>
+      );
+    }
+  }
+  render() {
+    // console.log("RENDER");
 
     return (
       <StyledHeader openNav={this.props.navIsOpen}>
@@ -83,16 +95,18 @@ class NavAndHeader extends Component {
           openNav={this.props.navIsOpen}
           hoverNav={this.props.navIsHovered}
         >
-
-            <Hmm openNav={this.props.navIsOpen}
-                 hoverNav={this.props.navIsHovered}><SelectedMenu/></Hmm>
-
+          <Hmm
+            openNav={this.props.navIsOpen}
+            hoverNav={this.props.navIsHovered}
+          >
+            {this.selectedMenu()}
+          </Hmm>
 
           {navLinks.map((item, i) => {
             const isSelected = i === this.state.selected;
             const subItems = item.subItems;
 
-              const isNodeItem = item.link === "/node"
+            const isNodeItem = item.link === "/node";
 
             return (
               <div key={item.link}>
@@ -104,10 +118,20 @@ class NavAndHeader extends Component {
                 >
                   <div className="navIconFrame">
                     <div className="navIcon">
-                      <i className={isNodeItem && this.props.currSelNode ?  item.altClassName : item.className } />
+                      <i
+                        className={
+                          isNodeItem && this.props.currSelNode
+                            ? item.altClassName
+                            : item.className
+                        }
+                      />
                     </div>
                   </div>
-                    <div className="navItemText">{isNodeItem && this.props.currSelNode ?  item.altNavItemText: item.navItemText}</div>
+                  <div className="navItemText">
+                    {isNodeItem && this.props.currSelNode
+                      ? item.altNavItemText
+                      : item.navItemText}
+                  </div>
                 </NavItem>
 
                 {isSelected &&
@@ -115,8 +139,8 @@ class NavAndHeader extends Component {
                   subItems.map((item, i) => {
                     const isSelectedSubItem = i === this.state.selectedSubItem;
 
-                    const isNodeItem = item.link === "/node"
-                      console.log('refiring?', item.link)
+                    const isNodeItem = item.link === "/node";
+                    console.log("refiring?", item.link);
                     return (
                       <NavItem
                         onClick={() => {
@@ -127,19 +151,22 @@ class NavAndHeader extends Component {
                       >
                         <div className="navIconFrame">
                           <div className="navIcon">
-                            <i className={!isNodeItem ? item.className : item.altClassName} />
+                            <i
+                              className={
+                                !isNodeItem ? item.className : item.altClassName
+                              }
+                            />
                           </div>
                         </div>
-                        <div className="navItemText">{!isNodeItem ? item.navItemText : item.altNavItemText}</div>
+                        <div className="navItemText">
+                          {!isNodeItem ? item.navItemText : item.altNavItemText}
+                        </div>
                       </NavItem>
                     );
                   })}
               </div>
             );
           })}
-
-
-
         </NavBar>
       </StyledHeader>
     );
@@ -235,17 +262,17 @@ const StyledHeader = styled.div`
 `;
 
 const Hmm = styled.div`
-    position: fixed;
+  position: fixed;
   top: 60px;
   left: 60px;
-    bottom: 0;
+  bottom: 0;
   padding-top: 15px;
   transition: all 0.2s ease-in-out;
-overflow-x: hidden;
+  overflow-x: hidden;
   z-index: 50;
   width: 0px;
   background-color: #00e8e3;
-   ${({ openNav, hoverNav }) =>
+  ${({ openNav, hoverNav }) =>
     (openNav || hoverNav) &&
     `
         left: 60px;
@@ -272,8 +299,6 @@ const NavBar = styled.div`
         background: #d6ebf2;
       `}
 `;
-
-
 
 const NavItem = styled.div`
   display: flex;

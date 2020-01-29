@@ -19,6 +19,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         file: action.payload,
+        editedFile: action.payload,
         fetching: false
       };
     case "SIMPLE_ACTION":
@@ -37,13 +38,34 @@ export default (state = initialState, action) => {
 
       return {
         ...state,
-        file: edited
+        editedFile: edited
       };
     case "SAVE_ACTION":
       return {
         ...state,
         editedFile: action.payload
       };
+    case "SAVE_EDIT": {
+      const params = action.payload;
+      const { id } = action.payload;
+
+      console.log("action.payload", action.payload);
+
+      const edited = Object.assign({}, state.editedFile);
+
+      let currSelNodeIndex = edited.nodes.findIndex(e => {
+        return e.id === id;
+      });
+
+      const nodeEdit = Object.assign(edited.nodes[currSelNodeIndex], params);
+
+      edited.nodes[currSelNodeIndex] = nodeEdit;
+
+      return {
+        ...state,
+        editedFile: edited
+      };
+    }
     case "ADD_ACTION":
       const eedited = Object.assign({}, state.file);
 
@@ -60,7 +82,7 @@ export default (state = initialState, action) => {
 
       return {
         ...state,
-        file: eedited
+        editedFile: eedited
       };
     case "SELECT_NODE":
       return {

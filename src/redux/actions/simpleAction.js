@@ -53,6 +53,13 @@ export const addAction = () => dispatch => {
   });
 };
 
+export const saveEdits = edits => dispatch => {
+  dispatch({
+    type: "SAVE_EDIT",
+    payload: edits
+  });
+};
+
 export const deleteAction = () => dispatch => {
   dispatch({
     type: "DELETE_ACTION",

@@ -106,12 +106,11 @@ class App extends React.Component {
       this.setState({ lastClickedNode: currentClickedNode });
       this.props.selectNode(currentClickedNode);
 
-
       const currSelNode = this.state.data.nodes.find(e => {
-        return e.id === currentClickedNode
-      })
+        return e.id === currentClickedNode;
+      });
 
-      this.props.populateCurrentNodeValues(currSelNode)
+      this.props.populateCurrentNodeValues(currSelNode);
     }
   };
 }
@@ -413,7 +412,9 @@ const enterNode = selection => {
   selection
     .select("circle")
     .attr("r", function(d) {
-      if (
+      if (d.radius) {
+        return d.radius;
+      } else if (
         d.id === 0 ||
         d.id === 3 ||
         d.id === 7 ||
@@ -439,7 +440,13 @@ const enterNode = selection => {
 
   selection
     .select("text")
-    .style("font-size", "30px")
+    .style("font-size", function(d) {
+      if (d.fontSize) {
+        return d.fontSize + "px";
+      } else {
+        return "30px";
+      }
+    })
     .attr("dy", ".95em")
     .call(getBoundingBox);
 
@@ -480,7 +487,7 @@ const enterNode = selection => {
 
 const mapStateToProps = (state, props) => ({
   // ...state,
-  file: state.simpleReducer.file
+  file: state.simpleReducer.editedFile
 });
 
 const mapDispatchToProps = dispatch => ({
