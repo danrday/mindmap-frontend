@@ -1,12 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
+import { editName } from "../../redux/actions/liveNodeEdit";
+
+
 // libraries
 import styled from 'styled-components'
 import {
     addAction,
     deleteAction,
-    postAction,
+    postAction, saveAction,
     saveNameChangeAction,
     simpleAction
 } from "../../redux/actions/simpleAction";
@@ -15,13 +18,12 @@ import {
 class Node extends Component {
 
     state = {
-        editedNode: this.props.currSelNode,
-        name: ''
+        selNodeId: this.props.selNodeId,
+        name: this.props.selNodeName
     };
 
     componentDidMount(){
         console.log('MOUNTED', )
-        this.setState({name: this.props.currSelNode.name})
     }
 
     componentDidUpdate() {
@@ -30,14 +32,14 @@ class Node extends Component {
 
 
     handleNameChange(event) {
-        this.setState({ name: event.target.value });
+        this.props.editName(event.target.value)
     }
 
     render() {
 
         return (
             <div>
-                <div>{this.props.currSelNode ? 'Edit Node' : 'Add new node'}</div>
+                <div>{this.props.selNodeId ? 'Edit Node' : 'Add new node'}</div>
                 <div className="navIconFrame">
                     <div className="navIcon">
                         <i className='icon ion-android-add-circle' />
@@ -46,7 +48,7 @@ class Node extends Component {
                 <br/>
 
                 <div>heading</div>
-                <input type="text" value={this.state.name} onChange={this.handleNameChange.bind(this)}/>
+                <input type="text" value={this.props.selNodeName} onChange={this.handleNameChange.bind(this)}/>
                 <br/>                <br/>
 
                 <div>sub-heading</div>
@@ -67,12 +69,11 @@ class Node extends Component {
 
 
 const mapStateToProps = state => ({
-    currSelNode: state.simpleReducer.currentNode? state.simpleReducer.editedFile.nodes.find(e => {
-        console.log('hmmmmmm', )
-        return e.id === state.simpleReducer.currentNode
-    }) : {name: 'new node'},
+    selNodeId: state.liveNodeEdit.selNodeId,
+    selNodeName: state.liveNodeEdit.name
 });
 const mapDispatchToProps = dispatch => ({
+    editName: name => dispatch(editName(name)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Node);
 

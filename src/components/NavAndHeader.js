@@ -1,7 +1,9 @@
 import React, { Component } from "react";
-// import Link from "next/link";
 import styled from "styled-components";
 import navLinks from "./NavLinks";
+
+import Node from './pages/node'
+
 
 import { connect } from "react-redux";
 import {
@@ -22,21 +24,16 @@ class NavAndHeader extends Component {
     this.setState({ selected: i });
   }
   handleSelectedSubItem(i) {
-    console.log("firing?", this);
     this.setState({ selectedSubItem: i });
   }
 
   handleNameChange(event) {
-        console.log("H>", this);
         this.setState({ nameValue: event.target.value });
     }
 
   handleSaveNameChange() {
     this.saveNameChangeAction(this.state.nameValue);
   }
-
-
-
 
 
   render() {
@@ -91,35 +88,14 @@ class NavAndHeader extends Component {
                  hoverNav={this.props.navIsHovered}><SelectedMenu/></Hmm>
 
 
-            {/*<Hmm openNav={this.props.navIsOpen}*/}
-            {/*     hoverNav={this.props.navIsHovered}><button onClick={this.simpleAction}>open</button>*/}
-            {/*    <br />*/}
-            {/*    <button*/}
-            {/*        onClick={() => {*/}
-            {/*            console.log("simpleReducer.file", this.props.simpleReducer.file);*/}
-            {/*            this.postAction(this.props.simpleReducer.editedFile);*/}
-            {/*        }}*/}
-            {/*    >*/}
-            {/*        save*/}
-            {/*    </button>*/}
-            {/*    <br />*/}
-            {/*    <button onClick={this.addAction}>add</button>*/}
-            {/*    <br />*/}
-            {/*    <button onClick={this.deleteAction}>delete</button></Hmm>*/}
-
           {navLinks.map((item, i) => {
             const isSelected = i === this.state.selected;
             const subItems = item.subItems;
 
               const isNodeItem = item.link === "/node"
 
-              // if (isNodeItem && this.props.currSelNode && this.state.selected !== i) {
-              //     this.setState({selected: i})
-              // }
-
             return (
               <div key={item.link}>
-                {/*<Link href={item.link}>*/}
                 <NavItem
                   onClick={() => {
                     this.handleSelected(i);
@@ -133,7 +109,6 @@ class NavAndHeader extends Component {
                   </div>
                     <div className="navItemText">{isNodeItem && this.props.currSelNode ?  item.altNavItemText: item.navItemText}</div>
                 </NavItem>
-                {/*</Link>*/}
 
                 {isSelected &&
                   subItems &&
