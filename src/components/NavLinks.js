@@ -23,7 +23,7 @@ const navLinks = [
   },{
     link: "/node",
     className: "icon ion-android-add-circle",
-    altClassName: "icon ion-aperture",
+    altClassName: "icon ion-android-create",
     navItemText: "Add Node",
     altNavItemText: "Edit Node",
     component: props => {

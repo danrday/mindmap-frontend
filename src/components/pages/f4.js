@@ -2,6 +2,7 @@ import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 
 import { saveAction, selectNode } from "../../redux/actions/simpleAction";
+import { populateCurrentNodeValues } from "../../redux/actions/liveNodeEdit";
 
 let d3 = require("d3");
 let React = require("react");
@@ -104,6 +105,13 @@ class App extends React.Component {
     } else {
       this.setState({ lastClickedNode: currentClickedNode });
       this.props.selectNode(currentClickedNode);
+
+
+      const currSelNode = this.state.data.nodes.find(e => {
+        return e.id === currentClickedNode
+      })
+
+      this.props.populateCurrentNodeValues(currSelNode)
     }
   };
 }
@@ -477,7 +485,8 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = dispatch => ({
   saveAction: file => dispatch(saveAction(file)),
-  selectNode: node => dispatch(selectNode(node))
+  selectNode: node => dispatch(selectNode(node)),
+  populateCurrentNodeValues: node => dispatch(populateCurrentNodeValues(node))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
