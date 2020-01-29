@@ -27,9 +27,9 @@ class NavAndHeader extends Component {
   }
 
   handleNameChange(event) {
-    console.log("H>", this);
-    this.setState({ nameValue: event.target.value });
-  }
+        console.log("H>", this);
+        this.setState({ nameValue: event.target.value });
+    }
 
   handleSaveNameChange() {
     this.saveNameChangeAction(this.state.nameValue);
@@ -37,7 +37,10 @@ class NavAndHeader extends Component {
 
 
 
-  render(data) {
+
+
+  render() {
+      console.log('RENDER', )
 
       const SelectedMenu = this.state.selected ? navLinks[this.state.selected].component() : () => <div><button onClick={this.simpleAction}>open</button>
           <br />
