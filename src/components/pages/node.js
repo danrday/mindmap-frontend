@@ -6,7 +6,8 @@ import {
   editRadius,
   editFontSize,
     handleCheckboxChange,
-    editNewCategoryName
+    editNewCategoryName,
+    clearTempCustomAttrs
 } from "../../redux/actions/liveNodeEdit";
 import { saveEdits } from "../../redux/actions/simpleAction";
 
@@ -43,15 +44,20 @@ class Node extends Component {
 
   save() {
 
-    if (!this.state.customAttrs.includes('saveAsCategory')) {
+
+    // if (!this.state.customAttrs.includes('newCategoryName')) {
         this.props.saveEdits({
             customAttrs: this.state.customAttrs,
             id: this.props.selNodeId,
             name: this.props.selNodeName,
             radius: this.props.selNodeRadius,
-            fontSize: this.props.selNodeFontSize
+            fontSize: this.props.selNodeFontSize,
+            newCategoryName: this.props.newCategoryName
         });
-    }
+
+      this.props.clearTempCustomAttrs()
+
+      // }
   }
 
     handleCheckboxChange(event) {
@@ -132,15 +138,15 @@ class Node extends Component {
 
 
           <input
-              name="saveAsCategory"
+              name="newCategoryName"
               type="checkbox"
-              checked={this.state.customAttrs.includes('saveAsCategory')}
+              checked={this.state.customAttrs.includes('newCategoryName')}
               onChange={this.handleCheckboxChange.bind(this)} />
           <div>save custom attrs as new category</div>
           <input
-              disabled={!this.state.customAttrs.includes('saveAsCategory')}
+              disabled={!this.state.customAttrs.includes('newCategoryName')}
               type="string"
-              value={this.props.selCategory || ""}
+              value={this.props.newCategoryName || ""}
               onChange={this.handleCategoryNameChange.bind(this)}
           />
 
@@ -162,7 +168,7 @@ const mapStateToProps = state => ({
   selNodeName: state.liveNodeEdit.name,
   selNodeRadius: state.liveNodeEdit.radius,
   selNodeFontSize: state.liveNodeEdit.fontSize,
-    selCategory: state.liveNodeEdit.newCategoryName
+    newCategoryName: state.liveNodeEdit.newCategoryName
 });
 const mapDispatchToProps = dispatch => ({
   editName: name => dispatch(editName(name)),
@@ -170,6 +176,7 @@ const mapDispatchToProps = dispatch => ({
   editFontSize: f => dispatch(editFontSize(f)),
   saveEdits: edits => dispatch(saveEdits(edits)),
     handleCheckboxChange: checkedAttrs => dispatch(handleCheckboxChange(checkedAttrs)),
-    editNewCategoryName: name => dispatch(editNewCategoryName(name))
+    editNewCategoryName: name => dispatch(editNewCategoryName(name)),
+    clearTempCustomAttrs: () => dispatch(clearTempCustomAttrs())
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Node);

@@ -27,7 +27,7 @@ class App extends React.Component {
 
       const liveNodeEdit = this.props.liveNodeEdit
 
-      let modData = this.state.data
+      let modData = this.props.file
 
 
       // overwrite currently selected node with temp editing values to show live update
@@ -38,17 +38,11 @@ class App extends React.Component {
 
         modData.nodes[node].name = liveNodeEdit.name
 
+          modData.nodes[node].tempCustomAttrs = {}
 
-        // delete this after refactor -instantiating this for each node
-        if (!modData.nodes[node].customAttrs) {
-          modData.nodes[node].customAttrs = {}
-        }
-
-
-
-        liveNodeEdit.checkedAttrs.forEach(attr => {
-          modData.nodes[node].customAttrs[attr]= liveNodeEdit[attr]
-        })
+          liveNodeEdit.checkedAttrs.forEach(attr => {
+            modData.nodes[node].tempCustomAttrs[attr]= liveNodeEdit[attr]
+          })
 
       }
 
@@ -76,7 +70,7 @@ class App extends React.Component {
     if (!this.state.fileLoaded) {
       this.setState({ data: this.props.file, fileLoaded: true });
     }
-    this.props.saveAction(this.state.data);
+    this.props.saveAction(this.props.file);
   }
 
   handleClick = currentClickedNode => {
@@ -327,15 +321,37 @@ class Graph extends React.Component {
     window.force = force;
   }
 
+  getCategory (cat) {
+    console.log('this.props.data',this.props.data )
+    return this.props.data.categories[cat]
+  }
+
   render() {
-    const nodes = this.props.data.nodes.map(node => (
-      <Node
-        data={node}
-        name={node.name}
-        key={node.id}
-        handleClick={this.props.handleClick}
-      />
-    ));
+    const nodes = this.props.data.nodes.map(node => {
+      let attrs
+      if (node.category) {
+        console.log('node category', node.category)
+       let cat = this.getCategory(node.category)
+
+        if (cat) {
+          console.log('cat', cat)
+          let customAttrs = node.tempCustomAttrs || {}
+
+          let attrs = Object.assign(cat, customAttrs)
+
+          node.tempCustomAttrs = attrs
+        }
+
+      }
+      return (
+          <Node
+              data={node}
+              name={node.name}
+              key={node.id}
+              handleClick={this.props.handleClick}
+          />
+      );
+    })
     const links = this.props.data.links.map((link, i) => (
       <Link key={i} data={link} />
     ));
@@ -439,7 +455,9 @@ const enterNode = selection => {
   selection
     .select("circle")
     .attr("r", function(d) {
-      if (d.customAttrs && d.customAttrs.radius) {
+      if (d.tempCustomAttrs && d.tempCustomAttrs.radius) {
+        return d.tempCustomAttrs.radius;
+      } else if (d.customAttrs && d.customAttrs.radius) {
         return d.customAttrs.radius;
       } else if (
         d.id === 0 ||
@@ -468,7 +486,10 @@ const enterNode = selection => {
   selection
     .select("text")
     .style("font-size", function(d) {
-      if (d.customAttrs && d.customAttrs.fontSize) {
+      if (d.tempCustomAttrs && d.tempCustomAttrs.fontSize) {
+        return d.tempCustomAttrs.fontSize;
+      }
+      else if (d.customAttrs && d.customAttrs.fontSize) {
         return d.customAttrs.fontSize + "px";
       } else {
         return "30px";

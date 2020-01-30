@@ -63,14 +63,35 @@ export default (state = initialState, action) => {
 
       edited.nodes[currSelNodeIndex].customAttrs = {}
 
-      params.customAttrs.forEach(attr => {
-        edited.nodes[currSelNodeIndex].customAttrs[attr] = params[attr]
-      })
+      if (params.customAttrs.includes('newCategoryName')) {
 
+        console.log(' new cat name?', )
+        if (!edited.categories) {
+          edited.categories = {}
+        }
+
+        edited.categories[params.newCategoryName] = {}
+
+
+        params.customAttrs.forEach(attr => {
+          edited.categories[params.newCategoryName][attr] = params[attr]
+        })
+
+        edited.nodes[currSelNodeIndex].category = params.newCategoryName
+        console.log('edited', edited)
+
+      } else {
+        params.customAttrs.forEach(attr => {
+
+          edited.nodes[currSelNodeIndex].customAttrs[attr] = params[attr]
+        })
+      }
 
       // const nodeEdit = Object.assign(edited.nodes[currSelNodeIndex], params);
       //
       // edited.nodes[currSelNodeIndex] = nodeEdit;
+
+      console.log('edited', edited)
 
       return {
         ...state,
