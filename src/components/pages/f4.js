@@ -23,7 +23,7 @@ class App extends React.Component {
 
   render() {
     // console.log("this.props", this.props);
-    if (this.state.data) {
+    if (this.props.file) {
 
       const liveNodeEdit = this.props.liveNodeEdit
 
@@ -334,12 +334,7 @@ class Graph extends React.Component {
        let cat = this.getCategory(node.category)
 
         if (cat) {
-          console.log('cat', cat)
-          let customAttrs = node.tempCustomAttrs || {}
-
-          let attrs = Object.assign(cat, customAttrs)
-
-          node.tempCustomAttrs = attrs
+          node.categoryAttrs = cat
         }
 
       }
@@ -459,7 +454,9 @@ const enterNode = selection => {
         return d.tempCustomAttrs.radius;
       } else if (d.customAttrs && d.customAttrs.radius) {
         return d.customAttrs.radius;
-      } else if (
+      } else if (d.categoryAttrs && d.categoryAttrs.radius) {
+    return d.categoryAttrs.radius;
+  } else if (
         d.id === 0 ||
         d.id === 3 ||
         d.id === 7 ||
@@ -491,6 +488,8 @@ const enterNode = selection => {
       }
       else if (d.customAttrs && d.customAttrs.fontSize) {
         return d.customAttrs.fontSize + "px";
+      } else if (d.categoryAttrs && d.categoryAttrs.fontSize) {
+        return d.categoryAttrs.fontSize;
       } else {
         return "30px";
       }
