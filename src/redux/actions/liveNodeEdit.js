@@ -11,6 +11,12 @@ export const editName = name => dispatch => {
     payload: name
   });
 };
+export const clearTempCustomAttrs = () => dispatch => {
+  dispatch({
+    type: "liveNodeEdit/CLEAR_TEMP_CUSTOM_ATTRS",
+    payload: null
+  });
+};
 
 export const handleCheckboxChange = checks=> dispatch => {
   dispatch({

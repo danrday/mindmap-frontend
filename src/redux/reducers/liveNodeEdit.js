@@ -10,9 +10,7 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case "liveNodeEdit/POPULATE_CURRENT_NODE_VALUES": {
-      const { id, name, radius, fontSize, customAttrs } = action.payload;
-      console.log("action payload", action.payload);
-
+      const { id, name, customAttrs } = action.payload;
 
       let custom = customAttrs
       if (!customAttrs) {
@@ -29,6 +27,9 @@ export default (state = initialState, action) => {
     }
     case "liveNodeEdit/EDIT_NAME": {
       return { ...state, name: action.payload };
+    }
+    case "liveNodeEdit/CLEAR_TEMP_CUSTOM_ATTRS": {
+      return { ...state, checkedAttrs: [] };
     }
     case "liveNodeEdit/HANDLE_CHECKBOX_CHANGE": {
       return { ...state, checkedAttrs: action.payload };
