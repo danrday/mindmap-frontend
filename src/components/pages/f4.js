@@ -36,19 +36,6 @@ class App extends React.Component {
               handleClick={this.handleClick}
             />
           </div>
-
-          {/* <div
-            style={{
-              zIndex: 2000,
-              position: "fixed",
-              width: "200px",
-              background: "#D3D3D3",
-              right: "0px",
-              height: "100%"
-            }}
-          >
-            Filters
-          </div> */}
         </div>
       );
     } else {
@@ -330,6 +317,7 @@ class Graph extends React.Component {
         height={height}
         style={{ border: "1px solid black" }}
       >
+        <rect width="100%" height="100%" fill="pink"/>
         <g className="frameForZoom">
           <g>{nodes}</g>
           <g>{links}</g>

@@ -99,7 +99,8 @@ class NavAndHeader extends Component {
             openNav={this.props.navIsOpen}
             hoverNav={this.props.navIsHovered}
           >
-            {this.selectedMenu()}
+              <div style={{"width": "180px"}}>{this.selectedMenu()}</div>
+
           </Hmm>
 
           {navLinks.map((item, i) => {
