@@ -132,10 +132,20 @@ class Graph extends React.Component {
         })
         .style("fill", function(d) {
           return "red";
-        });
+        }).style("stroke-width", function(d) {
+        return "2";
+      }).style("stroke-dasharray", function(d) {
+        return "6,10";
+      }).style("stroke-linecap", function(d) {
+        return "round";
+      });
     } else {
       d3.selectAll("circle").style("fill", function(d) {
         return color(d.name);
+      }).style("stroke-width", function(d) {
+        return "1";
+      }).style("stroke-dasharray", function(d) {
+        return "0,0";
       });
     }
 
@@ -431,7 +441,7 @@ const enterNode = selection => {
       if (d.fx) {
         return "black";
       } else {
-        return "orange";
+        return "purple";
       }
     })
     .style("fill", function(d) {
