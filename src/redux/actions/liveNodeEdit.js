@@ -12,6 +12,19 @@ export const editName = name => dispatch => {
   });
 };
 
+export const handleCheckboxChange = checks=> dispatch => {
+  dispatch({
+    type: "liveNodeEdit/HANDLE_CHECKBOX_CHANGE",
+    payload: checks
+  });
+};
+export const editNewCategoryName = name => dispatch => {
+  dispatch({
+    type: "liveNodeEdit/EDIT_NEW_CATEGORY_NAME",
+    payload: name
+  });
+};
+
 export const editFontSize = fontSize => dispatch => {
   dispatch({
     type: "liveNodeEdit/EDIT_FONT_SIZE",

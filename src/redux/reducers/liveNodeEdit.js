@@ -2,7 +2,9 @@ const initialState = {
   selNodeId: null,
   name: null,
   radius: null,
-  fontSize: null
+  fontSize: null,
+  checkedAttrs: [],
+  newCategoryName: null
 };
 
 export default (state = initialState, action) => {
@@ -21,8 +23,14 @@ export default (state = initialState, action) => {
     case "liveNodeEdit/EDIT_NAME": {
       return { ...state, name: action.payload };
     }
+    case "liveNodeEdit/HANDLE_CHECKBOX_CHANGE": {
+      return { ...state, checkedAttrs: action.payload };
+    }
     case "liveNodeEdit/EDIT_FONT_SIZE": {
       return { ...state, fontSize: action.payload };
+    }
+    case "liveNodeEdit/EDIT_NEW_CATEGORY_NAME": {
+      return { ...state, newCategoryName: action.payload };
     }
     case "liveNodeEdit/EDIT_RADIUS": {
       return { ...state, radius: action.payload };
