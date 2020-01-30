@@ -51,20 +51,32 @@ export default (state = initialState, action) => {
 
       console.log("action.payload", action.payload);
 
+
       const edited = Object.assign({}, state.editedFile);
 
       let currSelNodeIndex = edited.nodes.findIndex(e => {
         return e.id === id;
       });
 
-      const nodeEdit = Object.assign(edited.nodes[currSelNodeIndex], params);
 
-      edited.nodes[currSelNodeIndex] = nodeEdit;
+      edited.nodes[currSelNodeIndex].name = params.name
+
+      edited.nodes[currSelNodeIndex].customAttrs = {}
+
+      params.customAttrs.forEach(attr => {
+        edited.nodes[currSelNodeIndex].customAttrs[attr] = params[attr]
+      })
+
+
+      // const nodeEdit = Object.assign(edited.nodes[currSelNodeIndex], params);
+      //
+      // edited.nodes[currSelNodeIndex] = nodeEdit;
 
       return {
         ...state,
         editedFile: edited
       };
+
     }
     case "ADD_ACTION":
       const eedited = Object.assign({}, state.file);

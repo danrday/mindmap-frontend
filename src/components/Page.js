@@ -7,7 +7,7 @@ import theme from "./styles/theme";
 
 class Page extends Component {
   state = {
-    navIsOpen: false,
+    navIsOpen: true,
     navIsHovered: false
   };
 

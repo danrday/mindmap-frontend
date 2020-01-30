@@ -38,8 +38,16 @@ class App extends React.Component {
 
         modData.nodes[node].name = liveNodeEdit.name
 
+
+        // delete this after refactor -instantiating this for each node
+        if (!modData.nodes[node].customAttrs) {
+          modData.nodes[node].customAttrs = {}
+        }
+
+
+
         liveNodeEdit.checkedAttrs.forEach(attr => {
-          modData.nodes[node][attr]= liveNodeEdit[attr]
+          modData.nodes[node].customAttrs[attr]= liveNodeEdit[attr]
         })
 
       }
@@ -431,8 +439,8 @@ const enterNode = selection => {
   selection
     .select("circle")
     .attr("r", function(d) {
-      if (d.radius) {
-        return d.radius;
+      if (d.customAttrs && d.customAttrs.radius) {
+        return d.customAttrs.radius;
       } else if (
         d.id === 0 ||
         d.id === 3 ||
@@ -460,8 +468,8 @@ const enterNode = selection => {
   selection
     .select("text")
     .style("font-size", function(d) {
-      if (d.fontSize) {
-        return d.fontSize + "px";
+      if (d.customAttrs && d.customAttrs.fontSize) {
+        return d.customAttrs.fontSize + "px";
       } else {
         return "30px";
       }

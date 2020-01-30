@@ -10,14 +10,21 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case "liveNodeEdit/POPULATE_CURRENT_NODE_VALUES": {
-      const { id, name, radius, fontSize } = action.payload;
+      const { id, name, radius, fontSize, customAttrs } = action.payload;
       console.log("action payload", action.payload);
+
+
+      let custom = customAttrs
+      if (!customAttrs) {
+        custom = {}
+      }
+
       return {
         ...state,
         name: name,
         selNodeId: id,
-        radius: radius,
-        fontSize: fontSize
+        radius: custom.radius || null,
+        fontSize: custom.fontSize || null
       };
     }
     case "liveNodeEdit/EDIT_NAME": {

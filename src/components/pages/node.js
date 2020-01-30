@@ -42,12 +42,16 @@ class Node extends Component {
   }
 
   save() {
-    this.props.saveEdits({
-      id: this.props.selNodeId,
-      name: this.props.selNodeName,
-      radius: this.props.selNodeRadius,
-      fontSize: this.props.selNodeFontSize
-    });
+
+    if (!this.state.customAttrs.includes('saveAsCategory')) {
+        this.props.saveEdits({
+            customAttrs: this.state.customAttrs,
+            id: this.props.selNodeId,
+            name: this.props.selNodeName,
+            radius: this.props.selNodeRadius,
+            fontSize: this.props.selNodeFontSize
+        });
+    }
   }
 
     handleCheckboxChange(event) {
