@@ -24,6 +24,27 @@ class App extends React.Component {
   render() {
     // console.log("this.props", this.props);
     if (this.state.data) {
+
+      const liveNodeEdit = this.props.liveNodeEdit
+
+      let modData = this.state.data
+
+
+      // overwrite currently selected node with temp editing values to show live update
+      if (this.state.lastClickedNode && liveNodeEdit.selNodeId) {
+        let node = modData.nodes.findIndex(n => {
+          return n.id === liveNodeEdit.selNodeId
+        })
+
+        modData.nodes[node].name = liveNodeEdit.name
+
+        liveNodeEdit.checkedAttrs.forEach(attr => {
+          modData.nodes[node][attr]= liveNodeEdit[attr]
+        })
+
+      }
+
+
       return (
         <div>
           <div
@@ -31,7 +52,7 @@ class App extends React.Component {
             style={{ position: "fixed", zIndex: 3000 }}
           >
             <Graph
-              data={this.state.data}
+              data={modData}
               lastClickedNode={this.state.lastClickedNode}
               handleClick={this.handleClick}
             />
@@ -485,7 +506,8 @@ const enterNode = selection => {
 
 const mapStateToProps = (state, props) => ({
   // ...state,
-  file: state.simpleReducer.editedFile
+  file: state.simpleReducer.editedFile,
+  liveNodeEdit: state.liveNodeEdit
 });
 
 const mapDispatchToProps = dispatch => ({
