@@ -132,10 +132,21 @@ class Node extends Component {
           onChange={this.handleFontSizeChange.bind(this)}
         />
 
-
         <hr/>
           <br />
 
+          <div>save custom attrs as new category</div>
+          <select>
+              {Object.keys(this.props.categories).map((cat, i) => {
+                  return <option key={i} value={cat}>{cat}</option>
+              })}
+              {/*{this.props.categories.map((cat, i) => {*/}
+              {/*    return <option key={i} value={cat.newCategoryName}>{cat.newCategoryName}</option>*/}
+              {/*})*/}
+              {/*}*/}
+          </select>
+
+          <br /><br />
 
           <input
               name="newCategoryName"
@@ -168,7 +179,8 @@ const mapStateToProps = state => ({
   selNodeName: state.liveNodeEdit.name,
   selNodeRadius: state.liveNodeEdit.radius,
   selNodeFontSize: state.liveNodeEdit.fontSize,
-    newCategoryName: state.liveNodeEdit.newCategoryName
+    newCategoryName: state.liveNodeEdit.newCategoryName,
+    categories: state.simpleReducer.editedFile.categories
 });
 const mapDispatchToProps = dispatch => ({
   editName: name => dispatch(editName(name)),
