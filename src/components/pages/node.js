@@ -7,7 +7,8 @@ import {
   editFontSize,
     handleCheckboxChange,
     editNewCategoryName,
-    clearTempCustomAttrs
+    clearTempCustomAttrs,
+    changeSelectedCategory
 } from "../../redux/actions/liveNodeEdit";
 import { saveEdits } from "../../redux/actions/simpleAction";
 
@@ -112,10 +113,11 @@ class Node extends Component {
         <hr/>
           <br />
 
-          <div>save custom attrs as new category</div>
-          <select>
+          <div>category</div>
+          <select onChange={this.changeSelectedCategory}>
+              <option key='-1' default value='none'>(None)</option>
               {Object.keys(this.props.categories).map((cat, i) => {
-                  return <option key={i} value={cat}>{cat}</option>
+                  return <option key={i} selected={cat === this.props.liveNodeEdit.category} value={cat}>{cat}</option>
               })}
           </select>
 
@@ -152,6 +154,7 @@ const mapDispatchToProps = dispatch => ({
   saveEdits: edits => dispatch(saveEdits(edits)),
     handleCheckboxChange: checkedAttrs => dispatch(handleCheckboxChange(checkedAttrs)),
     editNewCategoryName: name => dispatch(editNewCategoryName(name)),
-    clearTempCustomAttrs: () => dispatch(clearTempCustomAttrs())
+    clearTempCustomAttrs: () => dispatch(clearTempCustomAttrs()),
+    changeSelectedCategory: (cat) => dispatch(changeSelectedCategory(cat))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Node);
