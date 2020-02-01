@@ -12,12 +12,10 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case "liveNodeEdit/POPULATE_CURRENT_NODE_VALUES": {
       const { id, name, customAttrs, category } = action.payload;
-
       let custom = customAttrs
       if (!customAttrs) {
         custom = {}
       }
-
       return {
         ...state,
         name: name,
