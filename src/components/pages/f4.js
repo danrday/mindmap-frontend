@@ -461,7 +461,12 @@ const enterNode = selection => {
     .attr("r", function(d) {
       if (d.tempCustomAttrs && d.tempCustomAttrs.radius) {
         return d.tempCustomAttrs.radius;
-      } else if (d.customAttrs && d.customAttrs.radius) {
+      } else if (d.customAttrs && d.customAttrs.radius && d.tempCustomAttrs && !d.tempCustomAttrs.radius) {
+        // if radius is a custom attribute, but while editing radius is not checked,
+        // assign radius value as category value or default value if no category
+        return d.categoryAttrs && d.categoryAttrs.radius || '30'
+      }
+      else if (d.customAttrs && d.customAttrs.radius) {
         return d.customAttrs.radius;
       } else if (d.categoryAttrs && d.categoryAttrs.radius) {
     return d.categoryAttrs.radius;
@@ -494,6 +499,11 @@ const enterNode = selection => {
     .style("font-size", function(d) {
       if (d.tempCustomAttrs && d.tempCustomAttrs.fontSize) {
         return d.tempCustomAttrs.fontSize;
+      }
+      else if (d.customAttrs && d.customAttrs.fontSize && d.tempCustomAttrs && !d.tempCustomAttrs.fontSize) {
+        // if font size is a custom attribute, but while editing radius is not checked,
+        // assign font size value as category value or default value if no category
+        return d.categoryAttrs && d.categoryAttrs.fontSize || '18'
       }
       else if (d.customAttrs && d.customAttrs.fontSize) {
         return d.customAttrs.fontSize + "px";
