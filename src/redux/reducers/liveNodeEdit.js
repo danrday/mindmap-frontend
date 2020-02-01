@@ -5,7 +5,7 @@ const initialState = {
   fontSize: null,
   checkedAttrs: [],
   newCategoryName: null,
-  categoryName: null,
+  category: null,
 };
 
 export default (state = initialState, action) => {
@@ -29,6 +29,10 @@ export default (state = initialState, action) => {
     }
     case "liveNodeEdit/EDIT_NAME": {
       return { ...state, name: action.payload };
+    }
+    case "liveNodeEdit/CHANGE_SELECTED_CATEGORY": {
+      console.log('action pay', action.payload)
+      return { ...state, category: action.payload };
     }
     case "liveNodeEdit/CLEAR_TEMP_CUSTOM_ATTRS": {
       return { ...state, checkedAttrs: [] };

@@ -47,7 +47,9 @@ export default (state = initialState, action) => {
       };
     case "SAVE_EDIT": {
       const params = action.payload;
-      const { id } = action.payload;
+      const { liveNodeEdit, customAttrs } = action.payload;
+
+      const changes = customAttrs
 
       console.log("action.payload", action.payload);
 
@@ -55,35 +57,50 @@ export default (state = initialState, action) => {
       const edited = Object.assign({}, state.editedFile);
 
       let currSelNodeIndex = edited.nodes.findIndex(e => {
-        return e.id === id;
+        return e.id === liveNodeEdit.selNodeId;
       });
 
 
-      edited.nodes[currSelNodeIndex].name = params.name
+      edited.nodes[currSelNodeIndex].name = liveNodeEdit.name
+
 
       edited.nodes[currSelNodeIndex].customAttrs = {}
 
-      if (params.customAttrs.includes('newCategoryName')) {
+      if (changes.includes('newCategoryName')) {
 
         console.log(' new cat name?', )
         if (!edited.categories) {
           edited.categories = {}
         }
 
-        edited.categories[params.newCategoryName] = {}
+        edited.categories[liveNodeEdit.newCategoryName] = {}
 
 
-        params.customAttrs.forEach(attr => {
-          edited.categories[params.newCategoryName][attr] = params[attr]
+        changes.forEach(attr => {
+          edited.categories[liveNodeEdit.newCategoryName][attr] = liveNodeEdit[attr]
         })
+        edited.categories[liveNodeEdit.newCategoryName].category = liveNodeEdit.newCategoryName
 
-        edited.nodes[currSelNodeIndex].category = params.newCategoryName
+        console.log('edited.nodes[currSelNodeIndex].category', edited.nodes[currSelNodeIndex].category)
+
+        edited.nodes[currSelNodeIndex].category = liveNodeEdit.newCategoryName
+
+        console.log('edited.nodes[currSelNodeIndex].category', edited.nodes[currSelNodeIndex].category)
+
+
+        console.log('wtfff',liveNodeEdit.newCategoryName
+        )
         console.log('edited', edited)
+        console.log('FUC YOU', edited.nodes[currSelNodeIndex])
 
       } else {
-        params.customAttrs.forEach(attr => {
+      changes.forEach(attr => {
 
-          edited.nodes[currSelNodeIndex].customAttrs[attr] = params[attr]
+        if (attr === 'category') {
+          edited.nodes[currSelNodeIndex].category = liveNodeEdit.category
+        }
+
+          edited.nodes[currSelNodeIndex].customAttrs[attr] = liveNodeEdit[attr]
         })
       }
 

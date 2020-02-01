@@ -18,6 +18,14 @@ export const clearTempCustomAttrs = () => dispatch => {
   });
 };
 
+export const changeSelectedCategory = (cat) => dispatch => {
+  console.log('HMMMMMMM', )
+  dispatch({
+    type: "liveNodeEdit/CHANGE_SELECTED_CATEGORY",
+    payload: cat
+  });
+};
+
 export const handleCheckboxChange = checks=> dispatch => {
   dispatch({
     type: "liveNodeEdit/HANDLE_CHECKBOX_CHANGE",

@@ -29,11 +29,8 @@ class Node extends Component {
     // if (!this.state.customAttrs.includes('newCategoryName')) {
         this.props.saveEdits({
             customAttrs: this.state.customAttrs,
-            id: this.props.liveNodeEdit.selNodeId,
-            name: this.props.liveNodeEdit.name,
-            radius: this.props.liveNodeEdit.radius,
-            fontSize: this.props.liveNodeEdit.fontSize,
-            newCategoryName: this.props.liveNodeEdit.newCategoryName
+            liveNodeEdit: this.props.liveNodeEdit,
+
         });
 
       this.props.clearTempCustomAttrs()
@@ -114,10 +111,15 @@ class Node extends Component {
           <br />
 
           <div>category</div>
-          <select onChange={this.changeSelectedCategory}>
+          <input
+              name="category"
+              type="checkbox"
+              checked={this.state.customAttrs.includes('category')}
+              onChange={this.handleCheckboxChange.bind(this)} />
+          <select  onChange={e => this.props.changeSelectedCategory(e.target.value)} value={this.props.liveNodeEdit.category || 'none'} >
               <option key='-1' default value='none'>(None)</option>
               {Object.keys(this.props.categories).map((cat, i) => {
-                  return <option key={i} selected={cat === this.props.liveNodeEdit.category} value={cat}>{cat}</option>
+                  return <option key={i} value={cat}>{cat}</option>
               })}
           </select>
 

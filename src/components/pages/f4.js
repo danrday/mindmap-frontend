@@ -38,11 +38,19 @@ class App extends React.Component {
 
         modData.nodes[node].name = liveNodeEdit.name
 
+        if (liveNodeEdit.checkedAttrs.includes('category')) {
+          modData.nodes[node].category = liveNodeEdit.category
+        }
+
+
+        // populate the temporary custom attributes being edited live
           modData.nodes[node].tempCustomAttrs = {}
 
           liveNodeEdit.checkedAttrs.forEach(attr => {
             modData.nodes[node].tempCustomAttrs[attr]= liveNodeEdit[attr]
           })
+
+
       }
 
 
@@ -323,6 +331,7 @@ class Graph extends React.Component {
 
   getCategory (cat) {
     console.log('this.props.data',this.props.data )
+    console.log('CATE',cat )
     return this.props.data.categories[cat]
   }
 
