@@ -23,11 +23,11 @@ class App extends React.Component {
 
   render() {
     // console.log("this.props", this.props);
-    if (this.props.file) {
+    if (this.state.data) {
 
       const liveNodeEdit = this.props.liveNodeEdit
 
-      let modData = this.props.file
+      let modData = this.state.data
 
 
       // overwrite currently selected node with temp editing values to show live update
@@ -43,8 +43,8 @@ class App extends React.Component {
           liveNodeEdit.checkedAttrs.forEach(attr => {
             modData.nodes[node].tempCustomAttrs[attr]= liveNodeEdit[attr]
           })
-
       }
+
 
 
       return (
@@ -107,7 +107,7 @@ class App extends React.Component {
           newLinks = [...this.state.data.links, newLink];
         }
 
-        const newData = { nodes: this.state.data.nodes, links: newLinks };
+        const newData = { categories: this.state.data.categories || {}, nodes: this.state.data.nodes, links: newLinks };
         this.setState({ data: newData });
         this.setState({ lastClickedNode: null });
         this.props.selectNode(null);
