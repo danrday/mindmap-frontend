@@ -13,46 +13,26 @@ import { saveEdits } from "../../redux/actions/simpleAction";
 
 class Node extends Component {
   state = {
-    selNodeId: this.props.selNodeId || "",
-    name: this.props.selNodeName || "",
+    selNodeId: this.props.liveNodeEdit.selNodeId || "",
+    name: this.props.liveNodeEdit.name || "",
   customAttrs: []
   };
 
   componentDidMount() {
-    // console.log("MOUNTED");
   }
 
   componentDidUpdate() {
-    // console.log("hmmm");
-  }
-
-  handleNameChange(event) {
-    this.props.editName(event.target.value);
-  }
-
-  handleRadiusChange(event) {
-    this.props.editRadius(event.target.value);
-  }
-
-  handleFontSizeChange(event) {
-    this.props.editFontSize(event.target.value);
-  }
-
-    handleCategoryNameChange(event) {
-    this.props.editNewCategoryName(event.target.value);
   }
 
   save() {
-
-
     // if (!this.state.customAttrs.includes('newCategoryName')) {
         this.props.saveEdits({
             customAttrs: this.state.customAttrs,
-            id: this.props.selNodeId,
-            name: this.props.selNodeName,
-            radius: this.props.selNodeRadius,
-            fontSize: this.props.selNodeFontSize,
-            newCategoryName: this.props.newCategoryName
+            id: this.props.liveNodeEdit.selNodeId,
+            name: this.props.liveNodeEdit.name,
+            radius: this.props.liveNodeEdit.radius,
+            fontSize: this.props.liveNodeEdit.fontSize,
+            newCategoryName: this.props.liveNodeEdit.newCategoryName
         });
 
       this.props.clearTempCustomAttrs()
@@ -62,9 +42,6 @@ class Node extends Component {
 
     handleCheckboxChange(event) {
         const target = event.target;
-        // const value = target.type === 'checkbox' ? target.checked : target.value;
-        // const name = target.name;
-
         let attrs = this.state.customAttrs
 
         if (attrs.includes(target.name) && !target.checked) {
@@ -85,7 +62,7 @@ class Node extends Component {
   render() {
     return (
       <div>
-        <div>{this.props.selNodeId ? "Edit Node" : "Add new node"}</div>
+        <div>{this.props.liveNodeEdit.selNodeId ? "Edit Node" : "Add new node"}</div>
         <button onClick={this.save.bind(this)}>save</button>
         <button onClick={this.cancel.bind(this)}>cancel</button>
         <div className="navIconFrame">
@@ -97,8 +74,8 @@ class Node extends Component {
         <div>heading</div>
         <input
           type="text"
-          value={this.props.selNodeName || ""}
-          onChange={this.handleNameChange.bind(this)}
+          value={this.props.liveNodeEdit.name || ""}
+          onChange={event => this.props.editName(event.target.value)}
         />
         <br /> <br />
 
@@ -115,8 +92,8 @@ class Node extends Component {
         <input
             disabled={!this.state.customAttrs.includes('radius')}
           type="number"
-          value={this.props.selNodeRadius || ""}
-          onChange={this.handleRadiusChange.bind(this)}
+          value={this.props.liveNodeEdit.radius || ""}
+          onChange={event => this.props.editRadius(event.target.value)}
         />
           <br />
           <input
@@ -128,8 +105,8 @@ class Node extends Component {
         <input
             disabled={!this.state.customAttrs.includes('fontSize')}
             type="number"
-          value={this.props.selNodeFontSize || ""}
-          onChange={this.handleFontSizeChange.bind(this)}
+          value={this.props.liveNodeEdit.fontSize || ""}
+          onChange={event => this.props.editFontSize(event.target.value)}
         />
 
         <hr/>
@@ -140,10 +117,6 @@ class Node extends Component {
               {Object.keys(this.props.categories).map((cat, i) => {
                   return <option key={i} value={cat}>{cat}</option>
               })}
-              {/*{this.props.categories.map((cat, i) => {*/}
-              {/*    return <option key={i} value={cat.newCategoryName}>{cat.newCategoryName}</option>*/}
-              {/*})*/}
-              {/*}*/}
           </select>
 
           <br /><br />
@@ -157,8 +130,8 @@ class Node extends Component {
           <input
               disabled={!this.state.customAttrs.includes('newCategoryName')}
               type="string"
-              value={this.props.newCategoryName || ""}
-              onChange={this.handleCategoryNameChange.bind(this)}
+              value={this.props.liveNodeEdit.newCategoryName || ""}
+              onChange={event => this.props.editNewCategoryName(event.target.value)}
           />
 
       </div>
@@ -166,22 +139,12 @@ class Node extends Component {
   }
 }
 
-// const AssetMenuContainer = styled.div`
-//     display: flex;
-//     flex-direction: column;
-//     background-color: floralwhite;
-//     height: 100%;
-//     width: 100%;
-// `
 
 const mapStateToProps = state => ({
-  selNodeId: state.liveNodeEdit.selNodeId,
-  selNodeName: state.liveNodeEdit.name,
-  selNodeRadius: state.liveNodeEdit.radius,
-  selNodeFontSize: state.liveNodeEdit.fontSize,
-    newCategoryName: state.liveNodeEdit.newCategoryName,
+    liveNodeEdit: state.liveNodeEdit,
     categories: state.simpleReducer.editedFile.categories
 });
+
 const mapDispatchToProps = dispatch => ({
   editName: name => dispatch(editName(name)),
   editRadius: r => dispatch(editRadius(r)),

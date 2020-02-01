@@ -4,13 +4,14 @@ const initialState = {
   radius: null,
   fontSize: null,
   checkedAttrs: [],
-  newCategoryName: null
+  newCategoryName: null,
+  categoryName: null,
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case "liveNodeEdit/POPULATE_CURRENT_NODE_VALUES": {
-      const { id, name, customAttrs } = action.payload;
+      const { id, name, customAttrs, category } = action.payload;
 
       let custom = customAttrs
       if (!customAttrs) {
@@ -22,7 +23,8 @@ export default (state = initialState, action) => {
         name: name,
         selNodeId: id,
         radius: custom.radius || null,
-        fontSize: custom.fontSize || null
+        fontSize: custom.fontSize || null,
+        category: category || null
       };
     }
     case "liveNodeEdit/EDIT_NAME": {
