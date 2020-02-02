@@ -49,8 +49,12 @@ class App extends React.Component {
           liveNodeEdit.checkedAttrs.forEach(attr => {
             modData.nodes[node].tempCustomAttrs[attr]= liveNodeEdit[attr]
           })
-
-
+      } else {
+        modData.nodes.forEach(node => {
+          if (node.tempCustomAttrs) {
+            delete node.tempCustomAttrs
+          }
+        })
       }
 
 

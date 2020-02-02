@@ -13,34 +13,17 @@ import {
 import { saveEdits } from "../../redux/actions/simpleAction";
 
 class Node extends Component {
-  state = {
-    selNodeId: this.props.liveNodeEdit.selNodeId || "",
-    name: this.props.liveNodeEdit.name || "",
-  customAttrs: []
-  };
-
-  componentDidMount() {
-  }
-
-  componentDidUpdate() {
-  }
-
   save() {
-    // if (!this.state.customAttrs.includes('newCategoryName')) {
         this.props.saveEdits({
-            customAttrs: this.state.customAttrs,
+            customAttrs: this.props.liveNodeEdit.checkedAttrs,
             liveNodeEdit: this.props.liveNodeEdit,
-
         });
-
-      this.props.clearTempCustomAttrs()
-
-      // }
+      // this.props.clearTempCustomAttrs()
   }
 
     handleCheckboxChange(event) {
         const target = event.target;
-        let attrs = this.state.customAttrs
+        let attrs = this.props.liveNodeEdit.checkedAttrs
 
         if (attrs.includes(target.name) && !target.checked) {
             attrs = attrs.filter(e => e !== target.name)
@@ -48,9 +31,9 @@ class Node extends Component {
             attrs.push(target.name)
         }
 
-        this.setState({
-            customAttrs: attrs
-        });
+        // this.setState({
+        //     customAttrs: attrs
+        // });
 
         this.props.handleCheckboxChange(attrs)
     }
@@ -84,11 +67,11 @@ class Node extends Component {
           <input
               name="radius"
               type="checkbox"
-              checked={this.state.customAttrs.includes('radius')}
+              checked={this.props.liveNodeEdit.checkedAttrs.includes('radius')}
               onChange={this.handleCheckboxChange.bind(this)} />
         <div>radius</div>
         <input
-            disabled={!this.state.customAttrs.includes('radius')}
+            disabled={!this.props.liveNodeEdit.checkedAttrs.includes('radius')}
           type="number"
           value={this.props.liveNodeEdit.radius || ""}
           onChange={event => this.props.editRadius(event.target.value)}
@@ -97,11 +80,11 @@ class Node extends Component {
           <input
               name="fontSize"
               type="checkbox"
-              checked={this.state.customAttrs.includes('fontSize')}
+              checked={this.props.liveNodeEdit.checkedAttrs.includes('fontSize')}
               onChange={this.handleCheckboxChange.bind(this)} />
         <div>font size</div>
         <input
-            disabled={!this.state.customAttrs.includes('fontSize')}
+            disabled={!this.props.liveNodeEdit.checkedAttrs.includes('fontSize')}
             type="number"
           value={this.props.liveNodeEdit.fontSize || ""}
           onChange={event => this.props.editFontSize(event.target.value)}
@@ -114,7 +97,7 @@ class Node extends Component {
           <input
               name="category"
               type="checkbox"
-              checked={this.state.customAttrs.includes('category')}
+              checked={this.props.liveNodeEdit.checkedAttrs.includes('category')}
               onChange={this.handleCheckboxChange.bind(this)} />
           <select  onChange={e => this.props.changeSelectedCategory(e.target.value)} value={this.props.liveNodeEdit.category || 'none'} >
               <option key='-1' default value='none'>(None)</option>
@@ -128,11 +111,11 @@ class Node extends Component {
           <input
               name="newCategoryName"
               type="checkbox"
-              checked={this.state.customAttrs.includes('newCategoryName')}
+              checked={this.props.liveNodeEdit.checkedAttrs.includes('newCategoryName')}
               onChange={this.handleCheckboxChange.bind(this)} />
           <div>save custom attrs as new category</div>
           <input
-              disabled={!this.state.customAttrs.includes('newCategoryName')}
+              disabled={!this.props.liveNodeEdit.checkedAttrs.includes('newCategoryName')}
               type="string"
               value={this.props.liveNodeEdit.newCategoryName || ""}
               onChange={event => this.props.editNewCategoryName(event.target.value)}

@@ -16,13 +16,17 @@ export default (state = initialState, action) => {
       if (!customAttrs) {
         custom = {}
       }
+
+      const checkedAttrs = Object.keys(custom) || []
+      if (category) checkedAttrs.push('category')
       return {
         ...state,
         name: name,
         selNodeId: id,
         radius: custom.radius || null,
         fontSize: custom.fontSize || null,
-        category: category || null
+        category: category || null,
+        checkedAttrs: checkedAttrs
       };
     }
     case "liveNodeEdit/EDIT_NAME": {
