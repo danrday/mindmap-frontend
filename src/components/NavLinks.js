@@ -1,6 +1,8 @@
 import React from "react";
 
 import Node from "./pages/node";
+import Categories from './pages/categories'
+import GlobalSettings from './pages/global'
 
 const navLinks = [
   {
@@ -36,6 +38,10 @@ const navLinks = [
     link: "/categories",
     className: "icon ion-ios-albums-outline",
     navItemText: "Categories",
+    component: props => {
+      const customProps = props;
+      return <Categories {...customProps} />;
+    },
     subItems: [
       {
         link: "/test/force1",
@@ -57,7 +63,11 @@ const navLinks = [
   {
     link: "/settings",
     className: "icon ion-android-globe",
-    navItemText: "Settings"
+    navItemText: "Settings",
+    component: props => {
+      const customProps = props;
+      return <GlobalSettings {...customProps} />;
+    }
   }
   // {
   //   link: "/settings",
