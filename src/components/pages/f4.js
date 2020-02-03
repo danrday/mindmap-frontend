@@ -58,6 +58,24 @@ class App extends React.Component {
       }
 
 
+      const categoryEdit = this.props.categoryEdit
+
+
+      modData.nodes.forEach(node => {
+
+        console.log('node.cat', node.category, categoryEdit.category)
+
+        if (node.category === categoryEdit.category) {
+          node.tempCustomAttrs = node.tempCustomAttrs || {}
+console.log('MOFUCKA', )
+          categoryEdit.checkedAttrs.forEach(attr => {
+            node.tempCustomAttrs[attr]= categoryEdit[attr]
+          })
+        }
+
+      })
+
+
 
       return (
         <div>
@@ -562,7 +580,8 @@ const enterNode = selection => {
 const mapStateToProps = (state, props) => ({
   // ...state,
   file: state.simpleReducer.editedFile,
-  liveNodeEdit: state.liveNodeEdit
+  liveNodeEdit: state.liveNodeEdit,
+  categoryEdit: state.categoryEdit
 });
 
 const mapDispatchToProps = dispatch => ({
