@@ -489,7 +489,7 @@ const enterNode = selection => {
       else if (d.customAttrs && d.customAttrs.radius && d.tempCustomAttrs && !d.tempCustomAttrs.radius) {
         // if radius is a custom attribute, but while editing radius is not checked,
         // assign radius value as category value or default value if no category
-        return d.categoryAttrs && d.categoryAttrs.radius || '30'
+        return d.tempCategoryAttrs && d.tempCategoryAttrs.radius || d.categoryAttrs && d.categoryAttrs.radius || '30'
       }
       else if (d.customAttrs && d.customAttrs.radius) {
         return d.customAttrs.radius;
