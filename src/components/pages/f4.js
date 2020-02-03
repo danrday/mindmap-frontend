@@ -82,7 +82,7 @@ class App extends React.Component {
     if (!this.state.fileLoaded) {
       this.setState({ data: this.props.file, fileLoaded: true });
     }
-    this.props.saveAction(this.props.file);
+    // this.props.saveAction(this.props.file);
   }
 
   handleClick = currentClickedNode => {
@@ -117,11 +117,15 @@ class App extends React.Component {
           });
         } else {
           newLinks = [...this.state.data.links, newLink];
+          console.log('new links', newLinks)
         }
 
-        const newData = { categories: this.state.data.categories || {}, nodes: this.state.data.nodes, links: newLinks };
+        const cats = this.state.data.categories || {}
+
+        const newData = { categories: cats, nodes: this.state.data.nodes, links: newLinks };
         this.setState({ data: newData });
         this.setState({ lastClickedNode: null });
+        this.props.saveAction(newData);
         this.props.selectNode(null);
       }
     } else {
