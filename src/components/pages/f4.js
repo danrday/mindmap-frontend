@@ -32,16 +32,21 @@ class App extends React.Component {
 
       const categoryEdit = this.props.categoryEdit
       modData.nodes.forEach(node => {
+
+        if (node.tempCategoryAttrs) {
+          delete node.tempCategoryAttrs
+        }
+
         if (node.category === categoryEdit.category) {
-          node.tempCustomAttrs = node.tempCustomAttrs || {}
+          node.tempCategoryAttrs = {}
           categoryEdit.checkedAttrs.forEach(attr => {
-            node.tempCustomAttrs[attr]= categoryEdit[attr]
+            node.tempCategoryAttrs[attr]= categoryEdit[attr]
           })
-        } else {
+        }
             if (node.tempCustomAttrs) {
               delete node.tempCustomAttrs
             }
-        }
+
       })
 
       // overwrite currently selected node with temp editing values to show live update
@@ -480,26 +485,22 @@ const enterNode = selection => {
     .attr("r", function(d) {
       if (d.tempCustomAttrs && d.tempCustomAttrs.radius) {
         return d.tempCustomAttrs.radius;
-      } else if (d.customAttrs && d.customAttrs.radius && d.tempCustomAttrs && !d.tempCustomAttrs.radius) {
+      }
+      else if (d.customAttrs && d.customAttrs.radius && d.tempCustomAttrs && !d.tempCustomAttrs.radius) {
         // if radius is a custom attribute, but while editing radius is not checked,
         // assign radius value as category value or default value if no category
         return d.categoryAttrs && d.categoryAttrs.radius || '30'
       }
       else if (d.customAttrs && d.customAttrs.radius) {
         return d.customAttrs.radius;
-      } else if (d.categoryAttrs && d.categoryAttrs.radius) {
+      }
+      else if (d.tempCategoryAttrs && d.tempCategoryAttrs.radius) {
+        return d.tempCategoryAttrs.radius;
+      }
+      else if (d.categoryAttrs && d.categoryAttrs.radius) {
     return d.categoryAttrs.radius;
-  } else if (
-        d.id === 0 ||
-        d.id === 3 ||
-        d.id === 7 ||
-        d.id === 8 ||
-        d.id === 11 ||
-        d.id === 15
-      ) {
+  } else {
         return 30;
-      } else {
-        return 15;
       }
     })
     .attr("stroke", function(d) {
@@ -526,7 +527,11 @@ const enterNode = selection => {
       }
       else if (d.customAttrs && d.customAttrs.fontSize) {
         return d.customAttrs.fontSize + "px";
-      } else if (d.categoryAttrs && d.categoryAttrs.fontSize) {
+      }
+      else if (d.tempCategoryAttrs && d.tempCategoryAttrs.fontSize) {
+        return d.tempCategoryAttrs.fontSize;
+      }
+      else if (d.categoryAttrs && d.categoryAttrs.fontSize) {
         return d.categoryAttrs.fontSize;
       } else {
         return "30px";
