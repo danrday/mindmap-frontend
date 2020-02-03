@@ -23,7 +23,7 @@ export default (state = initialState, action) => {
         case "categoryEdit/HANDLE_CHECKBOX_CHANGE": {
             return { ...state, checkedAttrs: action.payload };
         }
-        case "categoryEdit/HANDLE_ATTRIBUTE_VALUE_CHANGE": {
+        case `categoryEdit/HANDLE_ATTRIBUTE_VALUE_CHANGE`: {
             const {key, value} = action.payload
             return { ...state, [key]: value };
         }

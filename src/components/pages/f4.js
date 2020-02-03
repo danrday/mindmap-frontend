@@ -30,6 +30,20 @@ class App extends React.Component {
       let modData = this.state.data
 
 
+      const categoryEdit = this.props.categoryEdit
+      modData.nodes.forEach(node => {
+        if (node.category === categoryEdit.category) {
+          node.tempCustomAttrs = node.tempCustomAttrs || {}
+          categoryEdit.checkedAttrs.forEach(attr => {
+            node.tempCustomAttrs[attr]= categoryEdit[attr]
+          })
+        } else {
+            if (node.tempCustomAttrs) {
+              delete node.tempCustomAttrs
+            }
+        }
+      })
+
       // overwrite currently selected node with temp editing values to show live update
       if (this.state.lastClickedNode && liveNodeEdit.selNodeId) {
         let node = modData.nodes.findIndex(n => {
@@ -44,36 +58,15 @@ class App extends React.Component {
 
 
         // populate the temporary custom attributes being edited live
-          modData.nodes[node].tempCustomAttrs = {}
+          modData.nodes[node].tempCustomAttrs = modData.nodes[node].tempCustomAttrs || {}
 
           liveNodeEdit.checkedAttrs.forEach(attr => {
             modData.nodes[node].tempCustomAttrs[attr]= liveNodeEdit[attr]
           })
-      } else {
-        modData.nodes.forEach(node => {
-          if (node.tempCustomAttrs) {
-            delete node.tempCustomAttrs
-          }
-        })
       }
 
 
-      const categoryEdit = this.props.categoryEdit
 
-
-      modData.nodes.forEach(node => {
-
-        console.log('node.cat', node.category, categoryEdit.category)
-
-        if (node.category === categoryEdit.category) {
-          node.tempCustomAttrs = node.tempCustomAttrs || {}
-console.log('MOFUCKA', )
-          categoryEdit.checkedAttrs.forEach(attr => {
-            node.tempCustomAttrs[attr]= categoryEdit[attr]
-          })
-        }
-
-      })
 
 
 
