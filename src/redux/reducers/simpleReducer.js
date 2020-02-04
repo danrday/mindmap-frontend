@@ -75,8 +75,17 @@ export default (state = initialState, action) => {
     }
     case "SAVE_CATEGORY_EDIT":
 
+      const {currentCats, currCatName, newCatName} = action.payload
+
       let updated = state.editedFile
-        updated.categories = action.payload
+        updated.categories = currentCats
+
+        updated.nodes.forEach(node => {
+          if (node.category === currCatName) {
+            node.category = newCatName
+          }
+        })
+
       return {
         ...state,
         editedFile: updated

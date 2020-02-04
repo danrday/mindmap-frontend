@@ -24,12 +24,19 @@ class Categories extends Component {
 
         let currCatName = this.props.categoryEdit.category
 
-        currentCats[currCatName] = {}
+        let newCatName = this.props.categoryEdit.newCategoryName
+
+        delete currentCats[currCatName]
+
+        currentCats[newCatName] = {}
 
         this.props.categoryEdit.checkedAttrs.forEach(item => {
-            currentCats[currCatName][item] = this.props.categoryEdit[item]
+            currentCats[newCatName][item] = this.props.categoryEdit[item]
         })
-        this.props.saveCategoryEdit(currentCats);
+
+        currentCats[newCatName].category = newCatName
+
+        this.props.saveCategoryEdit({currentCats, currCatName, newCatName});
     }
 
 
