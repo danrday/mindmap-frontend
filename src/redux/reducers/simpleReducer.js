@@ -73,6 +73,14 @@ export default (state = initialState, action) => {
         editedFile: edited
       };
     }
+    case "SAVE_CATEGORY_EDIT":
+
+      let updated = state.editedFile
+        updated.categories = action.payload
+      return {
+        ...state,
+        editedFile: updated
+      };
     case "ADD_ACTION":
       const eedited = Object.assign({}, state.file);
       const length = state.file.nodes.length;

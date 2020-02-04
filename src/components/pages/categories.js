@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import {changeSelectedCategory, handleCheckboxChange, editValue} from "../../redux/actions/categoryEdit";
+import { saveCategoryEdit} from "../../redux/actions/simpleAction";
 
 class Categories extends Component {
 
@@ -17,11 +18,29 @@ class Categories extends Component {
         this.props.handleCheckboxChange(attrs)
     }
 
+    save() {
+
+        let currentCats = this.props.categories
+
+        let currCatName = this.props.categoryEdit.category
+
+        currentCats[currCatName] = {}
+
+        this.props.categoryEdit.checkedAttrs.forEach(item => {
+            currentCats[currCatName][item] = this.props.categoryEdit[item]
+        })
+        this.props.saveCategoryEdit(currentCats);
+    }
+
 
     render() {
         return (
             <div>
                categories
+
+                <button onClick={this.save.bind(this)}>save</button>
+
+                <br/>
 
                 <select  onChange={e => this.props.changeSelectedCategory({categories: this.props.categories, value:e.target.value})} value={this.props.categoryEdit.category || 'none'} >
                     <option key='-1' default value='none'>(None)</option>
@@ -80,15 +99,13 @@ class Categories extends Component {
 const mapStateToProps = state => ({
     categoryEdit: state.categoryEdit,
     categories: state.simpleReducer.editedFile.categories,
-
-
 });
 
 const mapDispatchToProps = dispatch => ({
     changeSelectedCategory: (cat) => dispatch(changeSelectedCategory(cat)),
     handleCheckboxChange: checkedAttrs => dispatch(handleCheckboxChange(checkedAttrs)),
     editValue: keyAndValue => dispatch(editValue(keyAndValue)),
-
+    saveCategoryEdit: edits => dispatch(saveCategoryEdit(edits))
 
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Categories);

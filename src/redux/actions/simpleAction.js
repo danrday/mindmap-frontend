@@ -108,6 +108,13 @@ export const postAction = file => dispatch => {
     });
 };
 
+export const saveCategoryEdit = edits => dispatch => {
+  dispatch({
+    type: `SAVE_CATEGORY_EDIT`,
+    payload: edits
+  });
+};
+
 // export const getUserFacilities = ({ user34, authToken }) => dispatch => {
 //     const endpointForAuthUser = serverUrl + `User/GetUserFacilities/${user34}`
 //
