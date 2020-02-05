@@ -114,6 +114,12 @@ export const saveCategoryEdit = edits => dispatch => {
     payload: edits
   });
 };
+export const handleZoom = zoomAttrs => dispatch => {
+  dispatch({
+    type: `HANDLE_ZOOM`,
+    payload: zoomAttrs
+  });
+};
 
 // export const getUserFacilities = ({ user34, authToken }) => dispatch => {
 //     const endpointForAuthUser = serverUrl + `User/GetUserFacilities/${user34}`

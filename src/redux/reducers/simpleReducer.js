@@ -27,6 +27,19 @@ export default (state = initialState, action) => {
         ...state,
         result: action.payload
       };
+    case "HANDLE_ZOOM":
+
+      let gSettings = state.editedFile.globalSettings || {}
+
+      gSettings.zoom = action.payload
+
+        let updatedFile = state.editedFile
+        updatedFile.globalSettings = gSettings
+
+      return {
+        ...state,
+        editedFile: updatedFile
+      };
     case "SAVE_NAME_CHANGE_ACTION":
       const edited = Object.assign({}, state.file);
       const nodeEdit = edited.nodes[state.currentNode];

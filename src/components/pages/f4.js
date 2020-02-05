@@ -1,7 +1,7 @@
 import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 
-import { saveAction, selectNode } from "../../redux/actions/simpleAction";
+import { saveAction, selectNode, handleZoom } from "../../redux/actions/simpleAction";
 import { populateCurrentNodeValues } from "../../redux/actions/liveNodeEdit";
 
 let d3 = require("d3");
@@ -85,6 +85,8 @@ class App extends React.Component {
               data={modData}
               lastClickedNode={this.state.lastClickedNode}
               handleClick={this.handleClick}
+              handleZoom={this.handleZoom}
+              initialZoom={this.props.file.globalSettings.zoom || null}
             />
           </div>
         </div>
@@ -99,6 +101,12 @@ class App extends React.Component {
       this.setState({ data: this.props.file, fileLoaded: true });
     }
     // this.props.saveAction(this.props.file);
+  }
+
+  handleZoom = zoomAttrs => {
+    // const gSettings = this.state.data.globalSettings || {}
+    this.props.handleZoom(zoomAttrs);
+
   }
 
   handleClick = currentClickedNode => {
@@ -258,18 +266,30 @@ class Graph extends React.Component {
   }
 
   componentDidMount() {
+
+    // set initial zoom frame from saved value
+    d3.select(".frameForZoom").attr("transform", `translate(${this.props.initialZoom.x}, ${this.props.initialZoom.y})scale(${this.props.initialZoom.k})`);
+
     console.log("find dom node", this);
     // after initial render, this sets up d3 to do its thing outside of react
     // x and y coords get added onto the nodes but react doesn't recognnize the changes
     this.d3Graph = d3.select(ReactDOM.findDOMNode(this));
 
-    this.d3Graph.call(d3.zoom().on("zoom", zoomed)).on("dblclick.zoom", () => {
+    this.d3Graph.call(d3.zoom().on("zoom", () => zoomed(this))).on("dblclick.zoom", () => {
       return null; /*disable zoom on double click by default*/
     });
 
-    function zoomed() {
-      console.log("ZOOM>", d3.event.transform);
+    // set 'zoom identity' so d3 knows what zoom level you are at from the initialized value
+    let transform = d3.zoomIdentity.translate(this.props.initialZoom.x, this.props.initialZoom.y).scale(this.props.initialZoom.k);
+    this.d3Graph.call(d3.zoom().transform, transform)
+
+    function zoomed(self) {
+      let {x, y, k} = d3.event.transform;
+      console.log('ZZZOOOOM', {x, y, k})
+      // d3.select(".frameForZoom").attr("transform", `translate(${x}, ${y})scale(${k})`);
+
       d3.select(".frameForZoom").attr("transform", d3.event.transform);
+      self.props.handleZoom(d3.event.transform)
     }
 
     let force = d3
@@ -585,7 +605,8 @@ const mapStateToProps = (state, props) => ({
 const mapDispatchToProps = dispatch => ({
   saveAction: file => dispatch(saveAction(file)),
   selectNode: node => dispatch(selectNode(node)),
-  populateCurrentNodeValues: node => dispatch(populateCurrentNodeValues(node))
+  populateCurrentNodeValues: node => dispatch(populateCurrentNodeValues(node)),
+  handleZoom: zoomAttrs => dispatch(handleZoom(zoomAttrs))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
