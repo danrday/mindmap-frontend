@@ -412,7 +412,7 @@ class Graph extends React.Component {
         height={height}
         style={{ border: "1px solid black" }}
       >
-        <rect width="100%" height="100%" fill="pink"/>
+        <rect width="100%" height="100%" fill="lightgreen"/>
         <g className="frameForZoom">
           <g>{nodes}</g>
           <g>{links}</g>

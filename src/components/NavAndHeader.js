@@ -75,15 +75,15 @@ class NavAndHeader extends Component {
           </div>
         </div>
 
-        <input
-          type="text"
-          value={this.state.nameValue}
-          onChange={this.handleNameChange.bind(this)}
-        />
+        {/*<input*/}
+        {/*  type="text"*/}
+        {/*  value={this.state.nameValue}*/}
+        {/*  onChange={this.handleNameChange.bind(this)}*/}
+        {/*/>*/}
 
-        <button onClick={this.handleSaveNameChange.bind(this)}>
-          save to {this.props.currSelNode}
-        </button>
+        {/*<button onClick={this.handleSaveNameChange.bind(this)}>*/}
+        {/*  save to {this.props.currSelNode}*/}
+        {/*</button>*/}
 
         <div className="projectTitle">
           <h4 style={{ color: "#d1e8e3" }}>Force Mapper</h4>
@@ -252,7 +252,7 @@ const StyledHeader = styled.div`
     ${({ openNav }) =>
       openNav &&
       `
-            margin-left: 120px;
+            margin-left: 200px;
             background-color: #fff6f5;
 
           `}
