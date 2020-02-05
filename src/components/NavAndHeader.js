@@ -272,13 +272,14 @@ const Hmm = styled.div`
   overflow-x: hidden;
   z-index: 50;
   width: 0px;
-  background-color: #00e8e3;
+  background-color: #00F8e3;
   ${({ openNav, hoverNav }) =>
     (openNav || hoverNav) &&
     `
         left: 60px;
-        width: 180px;
-        background: #00ebf2;
+        width: 200px;
+        background-color: #00ebf2;
+         box-shadow: inset -4px 0px 2px -2px purple;
       `}
 `;
 

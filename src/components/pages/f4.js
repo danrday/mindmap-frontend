@@ -9,6 +9,7 @@ let React = require("react");
 
 const width = 1500;
 const height = 1000;
+
 const color = d3.scaleOrdinal(d3.schemeCategory10);
 
 /////// App component holds graph data in state and renders Graph component.
@@ -76,7 +77,8 @@ class App extends React.Component {
 
 
       return (
-        <div>
+        <div
+        >
           <div
             className="graphContainer"
             style={{ position: "fixed", zIndex: 3000 }}
@@ -146,7 +148,7 @@ class App extends React.Component {
 
         const cats = this.state.data.categories || {}
 
-        const newData = { categories: cats, nodes: this.state.data.nodes, links: newLinks };
+        const newData = { ...this.state.data, categories: cats, links: newLinks };
         this.setState({ data: newData });
         this.setState({ lastClickedNode: null });
         this.props.saveAction(newData);
