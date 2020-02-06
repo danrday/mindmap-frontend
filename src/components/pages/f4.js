@@ -114,7 +114,7 @@ class App extends React.Component {
   handleClick = currentClickedNode => {
     const { lastClickedNode } = this.state;
 
-    if (typeof lastClickedNode === "number") {
+    if (lastClickedNode) {
       if (lastClickedNode === currentClickedNode) {
         this.setState({ lastClickedNode: null });
         this.props.selectNode(null);
@@ -175,12 +175,12 @@ class Graph extends React.Component {
       .force("link", d3.forceLink(this.props.data.links).distance(90))
       .restart();
 
-    const lastClicked = typeof this.props.lastClickedNode === "number";
+    const lastClicked = this.props.lastClickedNode
     if (lastClicked) {
       let self = this;
       d3.selectAll("circle")
         .filter(function(d, i) {
-          return i === self.props.lastClickedNode;
+          return d.id === self.props.lastClickedNode;
         })
         .style("fill", function(d) {
           return "red";
@@ -215,7 +215,7 @@ class Graph extends React.Component {
     };
 
     let dragging = d => {
-      console.log("DRAGGING");
+      console.log("DRAGGING", d);
 
       if (d.sticky) {
         if (this.props.lastClickedNode && this.props.lastClickedNode === d.id) {

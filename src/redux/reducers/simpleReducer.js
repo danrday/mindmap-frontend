@@ -1,3 +1,6 @@
+import uuidv4 from "uuid/v4";
+
+
 const initialState = {
   file: null,
   currentNode: null,
@@ -7,6 +10,7 @@ const initialState = {
   editedFile: null
 };
 
+
 export default (state = initialState, action) => {
   switch (action.type) {
     case "file/FETCH_FILE_ERROR":
@@ -15,6 +19,26 @@ export default (state = initialState, action) => {
       return { ...state, file: action.payload };
     case "file/FETCH_FILE":
       return { ...state, fetching: true };
+      case "DELETE_ACTION": {
+
+        const filteredLinks = state.editedFile.links.filter(link => {
+          return link.source.id !== state.currentNode && link.target.id !== state.currentNode
+        })
+
+        const filteredNodes = state.editedFile.nodes.filter(node => {
+          return node.id !== state.currentNode
+        })
+
+        let updatedFile = Object.assign({}, state.editedFile)
+
+        updatedFile.nodes = filteredNodes
+        updatedFile.links = filteredLinks
+
+
+        console.log('dELETE action', updatedFile)
+
+        return { ...state, editedFile: updatedFile };
+      }
     case "file/FETCH_FILE_RECEIVED":
       return {
         ...state,
@@ -104,14 +128,14 @@ export default (state = initialState, action) => {
         editedFile: updated
       };
     case "ADD_ACTION":
-      const eedited = Object.assign({}, state.file);
+      const eedited = Object.assign({}, state.editedFile);
       const length = state.file.nodes.length;
 
       console.log('ADD ACTION: ', action.payload)
       // 480 181
       eedited.nodes.push({
         name: "new",
-        id: length,
+        id: uuidv4(),
         index: length,
         x: (50 - action.payload.x)/action.payload.k,
         y:  (50 - action.payload.y)/action.payload.k,
