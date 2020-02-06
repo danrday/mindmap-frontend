@@ -37,7 +37,7 @@ export default (state = initialState, action) => {
 
         console.log('dELETE action', updatedFile)
 
-        return { ...state, editedFile: updatedFile };
+        return { ...state, editedFile: updatedFile, currentNode: null };
       }
     case "file/FETCH_FILE_RECEIVED":
       return {
@@ -65,7 +65,7 @@ export default (state = initialState, action) => {
         editedFile: updatedFile
       };
     case "SAVE_NAME_CHANGE_ACTION":
-      const edited = Object.assign({}, state.file);
+      const edited = Object.assign({}, state.editedFile);
       const nodeEdit = edited.nodes[state.currentNode];
       nodeEdit.name = action.payload;
       edited.nodes[state.currentNode] = nodeEdit;
@@ -129,7 +129,7 @@ export default (state = initialState, action) => {
       };
     case "ADD_ACTION":
       const eedited = Object.assign({}, state.editedFile);
-      const length = state.file.nodes.length;
+      const length = state.editedFile.nodes.length;
 
       console.log('ADD ACTION: ', action.payload)
       // 480 181
