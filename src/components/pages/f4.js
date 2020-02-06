@@ -270,7 +270,14 @@ class Graph extends React.Component {
   componentDidMount() {
 
     // set initial zoom frame from saved value
-    d3.select(".frameForZoom").attr("transform", `translate(${this.props.initialZoom.x}, ${this.props.initialZoom.y})scale(${this.props.initialZoom.k})`);
+    d3.select(".frameForZoom")
+        .attr("transform", `translate(${this.props.initialZoom.x}, ${this.props.initialZoom.y})scale(${this.props.initialZoom.k})`)
+        .on('click', d => {
+          // let x = (d3.event.x - zoomTrans.x)/zoomTrans.scale;
+          // let y = (d3.event.y - zoomTrans.y)/zoomTrans.scale;
+          // data.push({ x, y, id: Math.random() });
+          console.log('click!', d3.event.x, d3.event.y)
+        });
 
     console.log("find dom node", this);
     // after initial render, this sets up d3 to do its thing outside of react

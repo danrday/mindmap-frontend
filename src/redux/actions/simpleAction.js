@@ -46,10 +46,10 @@ export const saveAction = file => dispatch => {
   });
 };
 
-export const addAction = () => dispatch => {
+export const addAction = (zoomLevel) => dispatch => {
   dispatch({
     type: "ADD_ACTION",
-    payload: ""
+    payload: zoomLevel
   });
 };
 

@@ -106,14 +106,20 @@ export default (state = initialState, action) => {
     case "ADD_ACTION":
       const eedited = Object.assign({}, state.file);
       const length = state.file.nodes.length;
+
+      console.log('ADD ACTION: ', action.payload)
+      // 480 181
       eedited.nodes.push({
         name: "new",
         id: length,
         index: length,
-        x: 1091.2253543130957,
-        y: 699.1031619851105,
-        vy: 0.5153184447520401,
-        vx: -0.7744626636014145
+        x: (50 - action.payload.x)/action.payload.k,
+        y:  (50 - action.payload.y)/action.payload.k,
+        vy: 0,
+        vx: 0,
+        sticky: 'f',
+        fx: (50 - action.payload.x)/action.payload.k,
+        fy: (50 - action.payload.y)/action.payload.k,
       });
       return {
         ...state,

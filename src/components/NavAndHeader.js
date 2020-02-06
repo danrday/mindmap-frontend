@@ -182,7 +182,7 @@ class NavAndHeader extends Component {
     this.props.saveNameChangeAction(text);
   };
   addAction = () => {
-    this.props.addAction();
+    this.props.addAction(this.props.currZoomLevel);
   };
 }
 
@@ -343,12 +343,13 @@ const NavItem = styled.div`
 
 const mapStateToProps = state => ({
   ...state,
-  currSelNode: state.simpleReducer.currentNode
+  currSelNode: state.simpleReducer.currentNode,
+    currZoomLevel: state.simpleReducer.editedFile ? state.simpleReducer.editedFile.globalSettings.zoom: {x: 0, y: 0}
 });
 const mapDispatchToProps = dispatch => ({
   simpleAction: () => dispatch(simpleAction()),
   postAction: file => dispatch(postAction(file)),
-  addAction: file => dispatch(addAction(file)),
+  addAction: zoomLevel => dispatch(addAction(zoomLevel)),
   deleteAction: file => dispatch(deleteAction(file)),
   saveNameChangeAction: text => dispatch(saveNameChangeAction(text))
 });
