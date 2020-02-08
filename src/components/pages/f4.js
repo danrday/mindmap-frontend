@@ -82,7 +82,7 @@ class App extends React.Component {
         >
           <div
             className="graphContainer"
-            style={{ position: "fixed", zIndex: 3000 }}
+            style={{ width: '100%', height: '100%', position: "fixed", zIndex: 3000 }}
           >
             <Graph
               data={modData}
@@ -435,8 +435,8 @@ class Graph extends React.Component {
     return (
       <svg
         className="graph"
-        width={width}
-        height={height}
+        width='100%'
+        height='100%'
         style={{ border: "1px solid black" }}
       >
         <rect width="100%" height="100%" fill="lightgreen"/>
