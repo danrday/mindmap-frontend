@@ -61,6 +61,7 @@ export const saveEdits = edits => dispatch => {
 };
 
 export const deleteAction = () => dispatch => {
+  console.log('delete ac?', )
   dispatch({
     type: "DELETE_ACTION",
     payload: ""

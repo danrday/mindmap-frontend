@@ -17,18 +17,18 @@ const color = d3.scaleOrdinal(d3.schemeCategory10);
 
 class App extends React.Component {
   state = {
-    data: this.props.file,
-    lastClickedNode: null,
     fileLoaded: false
   };
 
   render() {
+
+    // console.log('RENDER UPDATE?', this.state.data)
     // console.log("this.props", this.props);
-    if (this.state.data) {
+    if (this.props.file) {
 
       const liveNodeEdit = this.props.liveNodeEdit
 
-      let modData = this.state.data
+      let modData = this.props.file
 
 
       const categoryEdit = this.props.categoryEdit
@@ -51,41 +51,42 @@ class App extends React.Component {
       })
 
       // overwrite currently selected node with temp editing values to show live update
-      if (this.state.lastClickedNode && liveNodeEdit.selNodeId) {
+      if (this.props.currentNode && liveNodeEdit.selNodeId) {
         let node = modData.nodes.findIndex(n => {
           return n.id === liveNodeEdit.selNodeId
         })
 
-        modData.nodes[node].name = liveNodeEdit.name
+        // if the node hasn't been deleted'
+        if (node !== -1) {
+          console.log('nodeee', node)
+          modData.nodes[node].name = liveNodeEdit.name
 
-        if (liveNodeEdit.checkedAttrs.includes('category')) {
-          modData.nodes[node].category = liveNodeEdit.category
-        }
+          if (liveNodeEdit.checkedAttrs.includes('category')) {
+            modData.nodes[node].category = liveNodeEdit.category
+          }
 
 
-        // populate the temporary custom attributes being edited live
+          // populate the temporary custom attributes being edited live
           modData.nodes[node].tempCustomAttrs = modData.nodes[node].tempCustomAttrs || {}
 
           liveNodeEdit.checkedAttrs.forEach(attr => {
             modData.nodes[node].tempCustomAttrs[attr]= liveNodeEdit[attr]
           })
+        }
+
+
       }
-
-
-
-
-
 
       return (
         <div
         >
           <div
             className="graphContainer"
-            style={{ position: "fixed", zIndex: 3000 }}
+            style={{ width: '100%', height: '100%', position: "fixed", zIndex: 3000 }}
           >
             <Graph
               data={modData}
-              lastClickedNode={this.state.lastClickedNode}
+              lastClickedNode={this.props.currentNode}
               handleClick={this.handleClick}
               handleZoom={this.handleZoom}
               initialZoom={this.props.file.globalSettings.zoom || null}
@@ -98,10 +99,10 @@ class App extends React.Component {
     }
   }
 
-  componentDidUpdate() {
-    if (!this.state.fileLoaded) {
-      this.setState({ data: this.props.file, fileLoaded: true });
-    }
+  componentDidUpdate(prevProps) {
+    // if (!this.state.fileLoaded) {
+    //   this.setState({ data: this.props.file, fileLoaded: true });
+    // }
     // this.props.saveAction(this.props.file);
   }
 
@@ -112,45 +113,61 @@ class App extends React.Component {
   }
 
   handleClick = currentClickedNode => {
-    const { lastClickedNode } = this.state;
+    const lastClickedNode = this.props.currentNode
 
-    if (typeof lastClickedNode === "number") {
+    console.log('lst, curr', lastClickedNode, currentClickedNode)
+
+    if (lastClickedNode) {
       if (lastClickedNode === currentClickedNode) {
+        console.log(' 1st block', )
         this.setState({ lastClickedNode: null });
         this.props.selectNode(null);
       } else {
+        console.log(' 2st block', )
+
+
+        const last = this.props.file.nodes.find(e => {
+          return e.id === lastClickedNode
+        })
+
+        const current = this.props.file.nodes.find(e => {
+          return e.id ===  currentClickedNode
+        })
+
+        console.log('LAST', last)
+
         const newLink = {
-          source: lastClickedNode,
-          target: currentClickedNode
+          source: last,
+          target: current
         };
 
-        const linkAlreadyExists = this.state.data.links.find(function(
+        const linkAlreadyExists = this.props.file.links.find(function(
           currentClickedNode
         ) {
           return (
             // Check for target -> source AND source -> target
-            (currentClickedNode.source.id === newLink.source &&
-              currentClickedNode.target.id === newLink.target) ||
-            (currentClickedNode.source.id === newLink.target &&
-              currentClickedNode.target.id === newLink.source)
+            (currentClickedNode.source.id === newLink.source.id &&
+              currentClickedNode.target.id === newLink.target.id) ||
+            (currentClickedNode.source.id === newLink.target.id &&
+              currentClickedNode.target.id === newLink.source.id)
           );
         });
 
         let newLinks;
         if (linkAlreadyExists) {
-          newLinks = this.state.data.links.filter(function(e) {
+          newLinks = this.props.file.links.filter(function(e) {
             return e !== linkAlreadyExists;
           });
         } else {
-          newLinks = [...this.state.data.links, newLink];
+          newLinks = [...this.props.file.links, newLink];
           console.log('new links', newLinks)
         }
 
-        const cats = this.state.data.categories || {}
+        const cats = this.props.file.categories || {}
 
-        const newData = { ...this.state.data, categories: cats, links: newLinks };
-        this.setState({ data: newData });
-        this.setState({ lastClickedNode: null });
+        const newData = { ...this.props.file, categories: cats, links: newLinks };
+        // this.setState({ data: newData });
+        // this.setState({ lastClickedNode: null });
         this.props.saveAction(newData);
         this.props.selectNode(null);
       }
@@ -158,7 +175,7 @@ class App extends React.Component {
       this.setState({ lastClickedNode: currentClickedNode });
       this.props.selectNode(currentClickedNode);
 
-      const currSelNode = this.state.data.nodes.find(e => {
+      const currSelNode = this.props.file.nodes.find(e => {
         return e.id === currentClickedNode;
       });
 
@@ -171,16 +188,19 @@ class App extends React.Component {
 
 class Graph extends React.Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
+
+    console.log('did component update?', this.props.data.nodes)
+
     window.force
       .force("link", d3.forceLink(this.props.data.links).distance(90))
       .restart();
 
-    const lastClicked = typeof this.props.lastClickedNode === "number";
+    const lastClicked = this.props.lastClickedNode
     if (lastClicked) {
       let self = this;
       d3.selectAll("circle")
         .filter(function(d, i) {
-          return i === self.props.lastClickedNode;
+          return d.id === self.props.lastClickedNode;
         })
         .style("fill", function(d) {
           return "red";
@@ -215,11 +235,11 @@ class Graph extends React.Component {
     };
 
     let dragging = d => {
-      console.log("DRAGGING");
+      console.log("DRAGGING", d);
 
       if (d.sticky) {
         if (this.props.lastClickedNode && this.props.lastClickedNode === d.id) {
-          this.props.handleClick(d);
+          this.props.handleClick(d.id);
           d.sticky = false;
         } else {
           // needed for some reason
@@ -383,8 +403,8 @@ class Graph extends React.Component {
   }
 
   getCategory (cat) {
-    console.log('this.props.data',this.props.data )
-    console.log('CATE',cat )
+    // console.log('this.props.data',this.props.data )
+    // console.log('CATE',cat )
     return this.props.data.categories[cat]
   }
 
@@ -415,8 +435,8 @@ class Graph extends React.Component {
     return (
       <svg
         className="graph"
-        width={width}
-        height={height}
+        width='100%'
+        height='100%'
         style={{ border: "1px solid black" }}
       >
         <rect width="100%" height="100%" fill="lightgreen"/>
@@ -607,6 +627,7 @@ const enterNode = selection => {
 const mapStateToProps = (state, props) => ({
   // ...state,
   file: state.simpleReducer.editedFile,
+  currentNode: state.simpleReducer.currentNode,
   liveNodeEdit: state.liveNodeEdit,
   categoryEdit: state.categoryEdit
 });

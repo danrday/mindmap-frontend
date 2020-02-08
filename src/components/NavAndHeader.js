@@ -58,7 +58,7 @@ class NavAndHeader extends Component {
           <br />
           <button onClick={this.addAction}>add</button>
           <br />
-          <button onClick={this.deleteAction}>delete</button>
+          <button onClick={this.props.deleteAction}>delete</button>
         </div>
       );
     }
@@ -350,7 +350,7 @@ const mapDispatchToProps = dispatch => ({
   simpleAction: () => dispatch(simpleAction()),
   postAction: file => dispatch(postAction(file)),
   addAction: zoomLevel => dispatch(addAction(zoomLevel)),
-  deleteAction: file => dispatch(deleteAction(file)),
+  deleteAction: () => dispatch(deleteAction()),
   saveNameChangeAction: text => dispatch(saveNameChangeAction(text))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(NavAndHeader);
