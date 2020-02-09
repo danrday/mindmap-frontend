@@ -6,7 +6,6 @@ const initialState = {
   currentNode: null,
   fetching: false,
   error: null,
-  result: null,
   editedFile: null
 };
 
@@ -45,11 +44,6 @@ export default (state = initialState, action) => {
         file: action.payload,
         editedFile: action.payload,
         fetching: false
-      };
-    case "SIMPLE_ACTION":
-      return {
-        ...state,
-        result: action.payload
       };
     case "HANDLE_ZOOM":
 

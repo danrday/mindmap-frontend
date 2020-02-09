@@ -198,7 +198,9 @@ class Graph extends React.Component {
 
     window.force
         .force("charge", d3.forceManyBody().strength(charge || -60))
-        .force("link", d3.forceLink(this.props.data.links).distance(dist || 900))
+        .force("link", d3.forceLink(this.props.data.links).distance(function (d) {
+          return dist || 900
+        }))
         // .force("collide", d3.forceCollide([165]).iterations([1000]));
 
     // .force('collision', d3.forceCollide().radius(function(d) {
@@ -463,7 +465,7 @@ class Graph extends React.Component {
         height='100%'
         style={{ border: "1px solid black" }}
       >
-        <rect width="100%" height="100%" fill="lightgreen"/>
+        <rect width="100%" height="100%" fill="powderblue"/>
         <g className="frameForZoom">
           <g>{nodes}</g>
           <g>{links}</g>

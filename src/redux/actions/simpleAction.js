@@ -4,11 +4,6 @@ import environment from "../../environment";
 const serverUrl = environment._serverUrl;
 
 export const simpleAction = filename => dispatch => {
-  dispatch({
-    type: "SIMPLE_ACTION",
-    payload: "result_of_simple_action"
-  });
-
   const f = "web";
 
   const endpointForAuthUser = serverUrl + `getfile/${f}`;
