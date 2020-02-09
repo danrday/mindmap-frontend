@@ -86,6 +86,7 @@ class App extends React.Component {
           >
             <Graph
               data={modData}
+              globalSettings={this.props.globalEdit}
               lastClickedNode={this.props.currentNode}
               handleClick={this.handleClick}
               handleZoom={this.handleZoom}
@@ -191,9 +192,31 @@ class Graph extends React.Component {
 
     console.log('did component update?', this.props.data.nodes)
 
+    const charge = this.props.globalSettings.chargeStrength
+    const dist = this.props.globalSettings.linkDistance
+
+
     window.force
-      .force("link", d3.forceLink(this.props.data.links).distance(90))
-      .restart();
+        .force("charge", d3.forceManyBody().strength(charge || -60))
+        .force("link", d3.forceLink(this.props.data.links).distance(function (d) {
+          return dist || 900
+        }))
+        // .force("collide", d3.forceCollide([165]).iterations([1000]));
+
+    // .force('collision', d3.forceCollide().radius(function(d) {
+        //   return d.radius
+        // }))
+
+    // .force("x", d3.forceX())
+        // .force("y", d3.forceY())
+        .alphaTarget(0.5)
+        .velocityDecay(0.7)
+        .restart()
+
+
+    setTimeout(function(){  window.force.alphaTarget(0); }, 3000);
+
+
 
     const lastClicked = this.props.lastClickedNode
     if (lastClicked) {
@@ -323,15 +346,17 @@ class Graph extends React.Component {
 
     let force = d3
       .forceSimulation(this.props.data.nodes)
-      .force("charge", d3.forceManyBody().strength(-20))
-      .force("link", d3.forceLink(this.props.data.links).distance(90))
-      .force(
-        "center",
-        d3
-          .forceCenter()
-          .x(width / 2)
-          .y(height / 2)
-      )
+      .force("charge", d3.forceManyBody().strength(this.props.globalSettings.chargeStrength || -60))
+      .force("link", d3.forceLink(this.props.data.links).distance(this.props.globalSettings.linkDistance || 900))
+      // .force(
+      //   "center",
+      //   d3
+      //     .forceCenter()
+      //     .x(width / 2)
+      //     .y(height / 2)
+      // )
+      //   .force("x", d3.forceX())
+      //   .force("y", d3.forceY())
       .force("collide", d3.forceCollide([65]).iterations([60]));
 
     function dragStarted(d) {
@@ -395,6 +420,7 @@ class Graph extends React.Component {
     );
 
     force.on("tick", () => {
+      console.log('tick tick', )
       this.d3Graph.call(updateGraph);
     });
 
@@ -439,7 +465,7 @@ class Graph extends React.Component {
         height='100%'
         style={{ border: "1px solid black" }}
       >
-        <rect width="100%" height="100%" fill="lightgreen"/>
+        <rect width="100%" height="100%" fill="powderblue"/>
         <g className="frameForZoom">
           <g>{nodes}</g>
           <g>{links}</g>
@@ -489,6 +515,7 @@ const updateGraph = selection => {
 };
 
 const updateNode = selection => {
+  console.log('updated node', )
   selection.attr("transform", d => {
     return "translate(" + d.x + "," + d.y + ")";
   });
@@ -629,7 +656,8 @@ const mapStateToProps = (state, props) => ({
   file: state.simpleReducer.editedFile,
   currentNode: state.simpleReducer.currentNode,
   liveNodeEdit: state.liveNodeEdit,
-  categoryEdit: state.categoryEdit
+  categoryEdit: state.categoryEdit,
+  globalEdit: state.globalEdit
 });
 
 const mapDispatchToProps = dispatch => ({

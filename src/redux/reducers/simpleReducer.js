@@ -6,7 +6,6 @@ const initialState = {
   currentNode: null,
   fetching: false,
   error: null,
-  result: null,
   editedFile: null
 };
 
@@ -45,11 +44,6 @@ export default (state = initialState, action) => {
         file: action.payload,
         editedFile: action.payload,
         fetching: false
-      };
-    case "SIMPLE_ACTION":
-      return {
-        ...state,
-        result: action.payload
       };
     case "HANDLE_ZOOM":
 
@@ -110,23 +104,36 @@ export default (state = initialState, action) => {
         editedFile: edited
       };
     }
-    case "SAVE_CATEGORY_EDIT":
-
+    case "SAVE_CATEGORY_EDIT": {
       const {currentCats, currCatName, newCatName} = action.payload
 
       let updated = state.editedFile
-        updated.categories = currentCats
+      updated.categories = currentCats
 
-        updated.nodes.forEach(node => {
-          if (node.category === currCatName) {
-            node.category = newCatName
-          }
-        })
+      updated.nodes.forEach(node => {
+        if (node.category === currCatName) {
+          node.category = newCatName
+        }
+      })
 
       return {
         ...state,
         editedFile: updated
       };
+    }
+
+    case "SAVE_DEFAULTS_EDIT": {
+      const edits = action.payload
+
+      let updated = state.editedFile
+      updated.globalSettings = edits
+
+      return {
+        ...state,
+        editedFile: updated
+      };
+    }
+
     case "ADD_ACTION":
       const eedited = Object.assign({}, state.editedFile);
       const length = state.editedFile.nodes.length;

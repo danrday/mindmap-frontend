@@ -11,3 +11,10 @@ export const editValue = (keyAndValue) => dispatch => {
         payload: keyAndValue
     });
 };
+
+export const populateInitialValues = (defaults) => dispatch => {
+    dispatch({
+        type: `globalEdit/POPULATE_INITIAL_VALUES`,
+        payload: defaults
+    });
+};
