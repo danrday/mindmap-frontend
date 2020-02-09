@@ -207,7 +207,13 @@ class Graph extends React.Component {
 
     // .force("x", d3.forceX())
         // .force("y", d3.forceY())
+        .alphaTarget(0.5)
+        .velocityDecay(0.7)
         .restart()
+
+
+    setTimeout(function(){  window.force.alphaTarget(0); }, 3000);
+
 
 
     const lastClicked = this.props.lastClickedNode
@@ -412,6 +418,7 @@ class Graph extends React.Component {
     );
 
     force.on("tick", () => {
+      console.log('tick tick', )
       this.d3Graph.call(updateGraph);
     });
 
