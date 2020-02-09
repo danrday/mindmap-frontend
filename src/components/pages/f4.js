@@ -1,14 +1,15 @@
 import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 
+import { useAlert } from 'react-alert'
+import { withAlert } from 'react-alert'
+
+
 import { saveAction, selectNode, handleZoom } from "../../redux/actions/simpleAction";
 import { populateCurrentNodeValues } from "../../redux/actions/liveNodeEdit";
 
 let d3 = require("d3");
 let React = require("react");
-
-const width = 1500;
-const height = 1000;
 
 const color = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -21,6 +22,8 @@ class App extends React.Component {
   };
 
   render() {
+    // this.props.alert.success('Oh look, an alert!')
+    console.log('this', this)
 
     // console.log('RENDER UPDATE?', this.state.data)
     // console.log("this.props", this.props);
@@ -667,4 +670,4 @@ const mapDispatchToProps = dispatch => ({
   handleZoom: zoomAttrs => dispatch(handleZoom(zoomAttrs))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(withAlert()(App));
