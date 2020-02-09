@@ -115,6 +115,14 @@ export const saveCategoryEdit = edits => dispatch => {
     payload: edits
   });
 };
+
+export const saveDefaultsEdit = edits => dispatch => {
+  dispatch({
+    type: `SAVE_DEFAULTS_EDIT`,
+    payload: edits
+  });
+};
+
 export const handleZoom = zoomAttrs => dispatch => {
   dispatch({
     type: `HANDLE_ZOOM`,

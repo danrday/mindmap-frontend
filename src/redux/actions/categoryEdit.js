@@ -1,6 +1,6 @@
 export const changeSelectedCategory = (cat) => dispatch => {
     dispatch({
-        type: "categoryEdit/CHANGE_SELECTED_CATEGORY",
+        type: "categoryEdit/changeSelectedCategory",
         payload: cat
     });
 };
