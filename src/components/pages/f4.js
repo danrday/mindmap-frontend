@@ -198,7 +198,7 @@ class Graph extends React.Component {
 
     window.force
         .force("charge", d3.forceManyBody().strength(charge || -60))
-        .force("link", d3.forceLink(this.props.data.links).distance(function (d) {
+        .force("link", d3.forceLink(this.props.data.links).id(function(d) { return d.id; }).distance(function (d) {
           return dist || 900
         }))
         // .force("collide", d3.forceCollide([165]).iterations([1000]));
@@ -347,7 +347,7 @@ class Graph extends React.Component {
     let force = d3
       .forceSimulation(this.props.data.nodes)
       .force("charge", d3.forceManyBody().strength(this.props.globalSettings.chargeStrength || -60))
-      .force("link", d3.forceLink(this.props.data.links).distance(this.props.globalSettings.linkDistance || 900))
+      .force("link", d3.forceLink(this.props.data.links).id(function(d) { /*reference by id, not index */return d.id }).distance(this.props.globalSettings.linkDistance || 900))
       // .force(
       //   "center",
       //   d3

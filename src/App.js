@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import "./App.css";
-import { simpleAction } from "./redux/actions/simpleAction";
-import { hideAlertMessage, showAlertMessage } from "./redux/actions/ui";
+import { hideAlertMessage } from "./redux/actions/ui";
 import Page from "./components/Page";
 import F4 from "./components/pages/f4";
 import {withAlert} from "react-alert";
@@ -13,6 +12,7 @@ class App extends Component {
     if (this.props.ui.alert.show && this.props.ui.alert.msg) {
       this.props.alert.show(this.props.ui.alert.msg, {
         type: this.props.ui.alert.type,
+        timeout: 1750,
       })
       this.props.hideAlertMessage()
     }
@@ -27,16 +27,12 @@ class App extends Component {
       </div>
     );
   }
-  simpleAction = event => {
-    this.props.simpleAction();
-  };
 }
 
 const mapStateToProps = state => ({
   ...state,
 });
 const mapDispatchToProps = dispatch => ({
-  simpleAction: () => dispatch(simpleAction()),
   hideAlertMessage: () => dispatch(hideAlertMessage()),
 });
 
