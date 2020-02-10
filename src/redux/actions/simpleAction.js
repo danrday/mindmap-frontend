@@ -97,6 +97,16 @@ export const postAction = file => dispatch => {
         type: "file/POST_FILE",
         payload: response.data
       });
+
+      dispatch({
+        type: 'SHOW_ALERT_MESSAGE',
+        payload: {
+          show: true,
+          msg: 'saved!',
+          type: 'success',
+        }
+      })
+
     })
     .catch(function(error) {
       dispatch({
