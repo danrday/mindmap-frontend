@@ -1,5 +1,6 @@
 import ReactDOM from "react-dom";
 import { connect } from "react-redux";
+import savePdf from 'd3-save-pdf'
 
 import { saveAction, selectNode, handleZoom } from "../../redux/actions/simpleAction";
 import { populateCurrentNodeValues } from "../../redux/actions/liveNodeEdit";
@@ -189,7 +190,10 @@ class App extends React.Component {
 
 class Graph extends React.Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
-
+    let canvas = d3.select('svg').node();
+    let config = {filename: 'testing'}
+    // savePdf.save(canvas, config)
+    console.log('savePdf', savePdf)
     console.log('did component update?', this.props.data.nodes)
 
     const charge = this.props.globalSettings.chargeStrength
