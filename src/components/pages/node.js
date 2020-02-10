@@ -45,7 +45,9 @@ class Node extends Component {
       <div>
         <div>{this.props.liveNodeEdit.selNodeId ? "Edit Node" : "Add new node"}</div>
         <button onClick={this.save.bind(this)}>save</button>
-        <button onClick={this.cancel.bind(this)}>cancel</button>
+          <button onClick={this.save.bind(this)}>save and unselect</button>
+
+          <button onClick={this.cancel.bind(this)}>cancel</button>
         <div className="navIconFrame">
           <div className="navIcon">
             <i className="icon ion-android-add-circle" />
