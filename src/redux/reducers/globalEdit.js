@@ -1,9 +1,22 @@
 const initialState = {
+    checkedAttrs: [],
     radius: null,
     fontSize: null,
     chargeStrength: null,
-    checkedAttrs: [],
     linkDistance: null,
+    defaults: {
+        radius: 30,
+        fontSize: 30,
+        chargeStrength: -320,
+        linkDistance: 300,
+        bgColor: 'powderblue',
+        sideMenuOpenOnInit: true,
+        goToEditNodePageWhenNodeIsClicked: true,
+        nodeColor: 'blue',
+        nodeHoverColor: 'green',
+        seeLinksOverlapNodes: true,
+
+    }
 };
 
 export default (state = initialState, action) => {

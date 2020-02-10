@@ -588,7 +588,21 @@ const enterNode = selection => {
     })
     .style("fill", function(d) {
       return color(d.name);
-    });
+    }).on('mouseover', function(d, i) {
+    console.log("mouseover on", this);
+    d3.select(this)
+        .transition().duration(200)
+        .style("fill", function(d) {
+          return 'purple';
+        })
+  }).on('mouseout', function(d, i) {
+    console.log("mouseover on", this);
+    d3.select(this)
+        .transition().duration(200)
+        .style("fill", function(d) {
+          return color(d.name);
+        })
+  })
 
   selection
     .select("text")
