@@ -8,9 +8,6 @@ import { populateCurrentNodeValues } from "../../redux/actions/liveNodeEdit";
 let d3 = require("d3");
 let React = require("react");
 
-const width = 1500;
-const height = 1000;
-
 const color = d3.scaleOrdinal(d3.schemeCategory10);
 
 /////// App component holds graph data in state and renders Graph component.
@@ -82,6 +79,7 @@ class App extends React.Component {
         <div
         >
           <div
+              contenteditable="true"
             className="graphContainer"
             style={{ width: '100%', height: '100%', position: "fixed", zIndex: 3000 }}
           >
@@ -604,7 +602,11 @@ const enterNode = selection => {
     d3.select(this)
         .transition().duration(200)
         .style("fill", function(d) {
-          return color(d.name);
+          if (d.tempCustomAttrs) {
+            return 'red';
+          } else {
+            return color(d.name);
+          }
         })
   })
 
