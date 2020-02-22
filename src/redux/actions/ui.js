@@ -14,3 +14,10 @@ export const hideAlertMessage = () => {
         type: 'HIDE_ALERT_MESSAGE',
     };
 }
+
+export const selectPage = pageName => dispatch => {
+    dispatch({
+        type: "UI_SELECT_PAGE",
+        payload: pageName
+    });
+};

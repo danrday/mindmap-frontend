@@ -10,7 +10,7 @@ it does not apply those values to the new category... just the set custom attrs.
 ####TO DO:
 
 ##need to haves
-+ Automatically go to edit screen when clicking on a node
++ ~~Automatically go to edit screen when clicking on a node~~
 + auto select the new node
 + Add delete button onto edit node screen
 + Add shadow under unanchored nodes

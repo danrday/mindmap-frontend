@@ -4,6 +4,7 @@ import savePdf from 'd3-save-pdf'
 
 import { saveAction, selectNode, handleZoom } from "../../redux/actions/simpleAction";
 import { populateCurrentNodeValues } from "../../redux/actions/liveNodeEdit";
+import { selectPage } from "../../redux/actions/ui";
 
 let d3 = require("d3");
 let React = require("react");
@@ -88,7 +89,8 @@ class App extends React.Component {
               globalSettings={this.props.globalEdit}
               lastClickedNode={this.props.currentNode}
               handleClick={this.handleClick}
-              handleZoom={this.handleZoom}
+              handleZoom={this.props.handleZoom}
+              selectPage={this.props.selectPage}
               initialZoom={this.props.file.globalSettings.zoom || null}
             />
           </div>
@@ -106,11 +108,11 @@ class App extends React.Component {
     // this.props.saveAction(this.props.file);
   }
 
-  handleZoom = zoomAttrs => {
-    // const gSettings = this.state.data.globalSettings || {}
-    this.props.handleZoom(zoomAttrs);
-
-  }
+  // handleZoom = zoomAttrs => {
+  //   // const gSettings = this.state.data.globalSettings || {}
+  //   this.props.handleZoom(zoomAttrs);
+  //
+  // }
 
   handleClick = currentClickedNode => {
     const lastClickedNode = this.props.currentNode
@@ -454,6 +456,7 @@ class Graph extends React.Component {
               name={node.name}
               key={node.id}
               handleClick={this.props.handleClick}
+              selectPage={this.props.selectPage}
           />
       );
     })
@@ -546,7 +549,10 @@ class Node extends React.Component {
         <circle
           name={this.props.data.id}
           ref="dragMe"
-          onClick={e => this.props.handleClick(this.props.data.id)}
+          onClick={e => {
+            this.props.handleClick(this.props.data.id);
+            this.props.selectPage(2)
+          }}
         />
         <g>
           <rect />
@@ -684,7 +690,8 @@ const mapDispatchToProps = dispatch => ({
   saveAction: file => dispatch(saveAction(file)),
   selectNode: node => dispatch(selectNode(node)),
   populateCurrentNodeValues: node => dispatch(populateCurrentNodeValues(node)),
-  handleZoom: zoomAttrs => dispatch(handleZoom(zoomAttrs))
+  handleZoom: zoomAttrs => dispatch(handleZoom(zoomAttrs)),
+  selectPage: i => dispatch(selectPage(i))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

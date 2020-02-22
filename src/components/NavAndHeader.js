@@ -12,16 +12,19 @@ import {
   deleteAction,
   saveNameChangeAction
 } from "../redux/actions/simpleAction";
+import {
+    selectPage
+} from "../redux/actions/ui";
 
 class NavAndHeader extends Component {
   state = {
-    selected: null,
     selectedSubItem: null,
     nameValue: "null",
     selectedMenu: null
   };
   handleSelected(i) {
-    this.setState({ selected: i });
+      this.props.selectPage(i)
+    // this.setState({ selected: i });
   }
   handleSelectedSubItem(i) {
     this.setState({ selectedSubItem: i });
@@ -40,8 +43,8 @@ class NavAndHeader extends Component {
   }
 
   selectedMenu() {
-    if (this.state.selected) {
-      return navLinks[this.state.selected].component();
+    if (this.props.selectedPage) {
+      return navLinks[this.props.selectedPage].component();
     } else {
       return (
         <div>
@@ -104,7 +107,7 @@ class NavAndHeader extends Component {
           </Hmm>
 
           {navLinks.map((item, i) => {
-            const isSelected = i === this.state.selected;
+            const isSelected = i === this.props.selectedPage;
             const subItems = item.subItems;
 
             const isNodeItem = item.link === "/node";
@@ -344,13 +347,15 @@ const NavItem = styled.div`
 const mapStateToProps = state => ({
   ...state,
   currSelNode: state.simpleReducer.currentNode,
-    currZoomLevel: state.simpleReducer.editedFile ? state.simpleReducer.editedFile.globalSettings.zoom: {x: 0, y: 0}
+    currZoomLevel: state.simpleReducer.editedFile ? state.simpleReducer.editedFile.globalSettings.zoom: {x: 0, y: 0},
+    selectedPage: state.ui.selectedPage
 });
 const mapDispatchToProps = dispatch => ({
   simpleAction: () => dispatch(simpleAction()),
   postAction: file => dispatch(postAction(file)),
   addAction: zoomLevel => dispatch(addAction(zoomLevel)),
   deleteAction: () => dispatch(deleteAction()),
-  saveNameChangeAction: text => dispatch(saveNameChangeAction(text))
+  saveNameChangeAction: text => dispatch(saveNameChangeAction(text)),
+    selectPage: pageName => dispatch(selectPage(pageName))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(NavAndHeader);
