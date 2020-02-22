@@ -1,14 +1,13 @@
 import ReactDOM from "react-dom";
 import { connect } from "react-redux";
+import savePdf from 'd3-save-pdf'
 
 import { saveAction, selectNode, handleZoom } from "../../redux/actions/simpleAction";
 import { populateCurrentNodeValues } from "../../redux/actions/liveNodeEdit";
+import { selectPage } from "../../redux/actions/ui";
 
 let d3 = require("d3");
 let React = require("react");
-
-const width = 1500;
-const height = 1000;
 
 const color = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -81,6 +80,7 @@ class App extends React.Component {
         <div
         >
           <div
+              contenteditable="true"
             className="graphContainer"
             style={{ width: '100%', height: '100%', position: "fixed", zIndex: 3000 }}
           >
@@ -89,7 +89,8 @@ class App extends React.Component {
               globalSettings={this.props.globalEdit}
               lastClickedNode={this.props.currentNode}
               handleClick={this.handleClick}
-              handleZoom={this.handleZoom}
+              handleZoom={this.props.handleZoom}
+              selectPage={this.props.selectPage}
               initialZoom={this.props.file.globalSettings.zoom || null}
             />
           </div>
@@ -107,11 +108,11 @@ class App extends React.Component {
     // this.props.saveAction(this.props.file);
   }
 
-  handleZoom = zoomAttrs => {
-    // const gSettings = this.state.data.globalSettings || {}
-    this.props.handleZoom(zoomAttrs);
-
-  }
+  // handleZoom = zoomAttrs => {
+  //   // const gSettings = this.state.data.globalSettings || {}
+  //   this.props.handleZoom(zoomAttrs);
+  //
+  // }
 
   handleClick = currentClickedNode => {
     const lastClickedNode = this.props.currentNode
@@ -189,7 +190,10 @@ class App extends React.Component {
 
 class Graph extends React.Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
-
+    let canvas = d3.select('svg').node();
+    let config = {filename: 'testing'}
+    // savePdf.save(canvas, config)
+    console.log('savePdf', savePdf)
     console.log('did component update?', this.props.data.nodes)
 
     const charge = this.props.globalSettings.chargeStrength
@@ -452,6 +456,7 @@ class Graph extends React.Component {
               name={node.name}
               key={node.id}
               handleClick={this.props.handleClick}
+              selectPage={this.props.selectPage}
           />
       );
     })
@@ -544,7 +549,10 @@ class Node extends React.Component {
         <circle
           name={this.props.data.id}
           ref="dragMe"
-          onClick={e => this.props.handleClick(this.props.data.id)}
+          onClick={e => {
+            this.props.handleClick(this.props.data.id);
+            this.props.selectPage(2)
+          }}
         />
         <g>
           <rect />
@@ -600,7 +608,11 @@ const enterNode = selection => {
     d3.select(this)
         .transition().duration(200)
         .style("fill", function(d) {
-          return color(d.name);
+          if (d.tempCustomAttrs) {
+            return 'red';
+          } else {
+            return color(d.name);
+          }
         })
   })
 
@@ -678,7 +690,8 @@ const mapDispatchToProps = dispatch => ({
   saveAction: file => dispatch(saveAction(file)),
   selectNode: node => dispatch(selectNode(node)),
   populateCurrentNodeValues: node => dispatch(populateCurrentNodeValues(node)),
-  handleZoom: zoomAttrs => dispatch(handleZoom(zoomAttrs))
+  handleZoom: zoomAttrs => dispatch(handleZoom(zoomAttrs)),
+  selectPage: i => dispatch(selectPage(i))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -4,6 +4,7 @@ const initialState = {
         msg: '',
         type: 'info',
     },
+    selectedPage: null
 };
 
 export default (state = initialState, action) => {
@@ -21,6 +22,11 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 alert: initialState.alert,
+            };
+            case 'UI_SELECT_PAGE':
+            return {
+                ...state,
+                selectedPage: action.payload,
             };
         default:
             return state;
