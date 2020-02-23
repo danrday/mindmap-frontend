@@ -80,7 +80,6 @@ class App extends React.Component {
         <div
         >
           <div
-              contenteditable="true"
             className="graphContainer"
             style={{ width: '100%', height: '100%', position: "fixed", zIndex: 3000 }}
           >

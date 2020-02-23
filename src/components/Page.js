@@ -56,36 +56,38 @@ margin-left: 60px;
 `;
 
 // injectGlobal`
-//     html {
-//       box-sizing: border-box;
-//       font-size: 10px;
-//     }
-//     *, *:before, *:after {
-//       box-sizing: inherit;
-//     }
-//     body {
-//       padding: 0;
-//       //margin: 0;
-//       font-size: 1.5rem;
-//       color: #474747;
-//     }
-//     .node circle {
-//       fill: #fff;
-//       stroke: steelblue;
-//       stroke-width: 3px;
-//     }
 //
-//     .node text { font: 12px sans-serif; }
-//
-//     .node--internal text {
-//       text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
-//     }
-//
-//     .link {
-//       fill: none;
-//       stroke: #ccc;
-//       stroke-width: 2px;
-//     }
 // `;
+
+// html {
+//     box-sizing: border-box;
+//     font-size: 10px;
+// }
+// *, *:before, *:after {
+//     box-sizing: inherit;
+// }
+// body {
+//     padding: 0;
+//     //margin: 0;
+//     font-size: 1.5rem;
+//     color: #474747;
+// }
+// .node circle {
+//     fill: #fff;
+//     stroke: steelblue;
+//     stroke-width: 3px;
+// }
+//
+// .node text { font: 12px sans-serif; }
+//
+// .node--internal text {
+//     text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
+// }
+//
+// .link {
+//     fill: none;
+//     stroke: #ccc;
+//     stroke-width: 2px;
+// }
 
 export default Page;
