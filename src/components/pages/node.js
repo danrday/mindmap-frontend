@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import ReactSlider from 'react-slider'
+import "../styles/slider.css";
+
 
 import {
   editName,
@@ -13,6 +16,13 @@ import {
 import { saveEdits } from "../../redux/actions/simpleAction";
 
 class Node extends Component {
+    state = {
+        testSliderVal: 20,
+        testMax: 100,
+        testMin: 0,
+        pointerUp: true,
+        timeout: undefined
+    }
   save() {
         this.props.saveEdits({
             customAttrs: this.props.liveNodeEdit.checkedAttrs,
@@ -39,6 +49,34 @@ class Node extends Component {
     }
 
   cancel() {}
+
+  repeat() {
+        console.log('this', this)
+      if (this.state.testMax ===  this.state.testSliderVal) {
+          this.setState({testMax: this.state.testMax+ 1, testSliderVal: this.state.testSliderVal+1})
+          this.props.editRadius(this.state.testSliderVal+1)
+      }
+
+          let x = setTimeout(
+              function() {
+                  this.repeat()
+              }
+                  .bind(this),
+              10
+          );
+          this.setState({timeout: x})
+
+
+
+  }
+
+  pointerDown(e) {
+      this.repeat()
+  }
+
+  pointerUp() {
+        clearTimeout(this.state.timeout)
+  }
 
   render() {
     return (
@@ -122,6 +160,24 @@ class Node extends Component {
               value={this.props.liveNodeEdit.newCategoryName || ""}
               onChange={event => this.props.editNewCategoryName(event.target.value)}
           />
+
+          <br /><br />
+          <div onPointerOut={this.pointerUp.bind(this)} onPointerUp={this.pointerUp.bind(this)} onPointerDown={this.pointerDown.bind(this)}>
+          <ReactSlider
+              className="horizontal-slider"
+              thumbClassName="example-thumb"
+              trackClassName="example-track"
+              renderThumb={(props, state) => <div {...props}>{state.valueNow}</div>}
+              onChange={val => {
+                  this.props.editRadius(val)
+                  this.setState({testSliderVal: val})}
+              }
+              value={this.state.testSliderVal}
+              min={this.state.testMin}
+              max={this.state.testMax}
+
+          />
+          </div>
 
       </div>
     );

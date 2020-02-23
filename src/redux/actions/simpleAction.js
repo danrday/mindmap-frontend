@@ -1,7 +1,8 @@
 import axios from "axios";
 import environment from "../../environment";
-
+import uuidv4 from "uuid/v4";
 const serverUrl = environment._serverUrl;
+
 
 
 
@@ -44,9 +45,25 @@ export const saveAction = file => dispatch => {
 };
 
 export const addAction = (zoomLevel) => dispatch => {
+
+  zoomLevel.id = uuidv4()
+
   dispatch({
     type: "ADD_ACTION",
     payload: zoomLevel
+  });
+  dispatch({
+    type: "SELECT_NODE",
+    payload: zoomLevel.id
+  });
+  dispatch({
+    type: "liveNodeEdit/POPULATE_CURRENT_NODE_VALUES",
+    // const { id, name, customAttrs, category } = action.payload;
+    payload: {id: zoomLevel.id, name: 'new', customAttrs: null, category: null}
+  });
+  dispatch({
+    type: "UI_SELECT_PAGE",
+    payload: 2
   });
 };
 

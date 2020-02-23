@@ -11,7 +11,8 @@ it does not apply those values to the new category... just the set custom attrs.
 
 ##need to haves
 + ~~Automatically go to edit screen when clicking on a node~~
-+ auto select the new node
++ ~~auto select the new node~~
++ ~~Make slider component~~
 + Add delete button onto edit node screen
 + Add shadow under unanchored nodes
 + Create up to five documents
@@ -22,11 +23,11 @@ it does not apply those values to the new category... just the set custom attrs.
 + Unlock all as an option
 + Lock all as an option
 + A Notes page on the right hand side- 
-+ a. With text editor
-+ b. Attached Images
-+ Make slider component
++  - a. With text editor
++  - b. Attached Images
 + ‘Friction’ setting
 + Download the JSON file
++ Color picker for node/category
 
 
 ##nice to haves

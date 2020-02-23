@@ -139,10 +139,12 @@ export default (state = initialState, action) => {
       const length = state.editedFile.nodes.length;
 
       console.log('ADD ACTION: ', action.payload)
+
+        // const newId = uuidv4()
       // 480 181
       eedited.nodes.push({
         name: "new",
-        id: uuidv4(),
+        id: action.payload.id,
         index: length,
         x: (50 - action.payload.x)/action.payload.k,
         y:  (50 - action.payload.y)/action.payload.k,
