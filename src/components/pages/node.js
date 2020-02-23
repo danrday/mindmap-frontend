@@ -54,6 +54,7 @@ class Node extends Component {
         console.log('this', this)
       if (this.state.testMax ===  this.state.testSliderVal) {
           this.setState({testMax: this.state.testMax+ 1, testSliderVal: this.state.testSliderVal+1})
+          this.props.editRadius(this.state.testSliderVal+1)
       }
 
           let x = setTimeout(
@@ -167,7 +168,10 @@ class Node extends Component {
               thumbClassName="example-thumb"
               trackClassName="example-track"
               renderThumb={(props, state) => <div {...props}>{state.valueNow}</div>}
-              onChange={val => this.setState({testSliderVal: val})}
+              onChange={val => {
+                  this.props.editRadius(val)
+                  this.setState({testSliderVal: val})}
+              }
               value={this.state.testSliderVal}
               min={this.state.testMin}
               max={this.state.testMax}
