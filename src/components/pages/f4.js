@@ -442,9 +442,28 @@ class Graph extends React.Component {
         style={{ border: "1px solid black" }}
       >
         <defs>
-          <filter id="dropshadow">
+          <filter id="dropshadow" width="150%" height="180%">
             <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"></feGaussianBlur>
-            <feOffset in="blur" dx="2" dy="3" result="offsetBlur"></feOffset>
+            <feOffset in="blur" dx="6" dy="6" result="offsetBlur"></feOffset>
+            <feMerge>
+              <feMergeNode></feMergeNode>
+              <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+          </filter>
+          <filter id="dropshadowtext" width="150%" height="180%">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"></feGaussianBlur>
+            <feOffset in="blur" dx="3" dy="3" result="offsetBlur"></feOffset>
+            <feMerge>
+              <feMergeNode></feMergeNode>
+              <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+          </filter>
+          <filter id="dropshadowunanchored" width="150%" height="180%" >
+            <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"></feGaussianBlur>
+            <feOffset in="blur" dx="20" dy="20" result="offsetBlur"></feOffset>
+            <feComponentTransfer>
+              <feFuncA type="linear" slope=".2"/>
+            </feComponentTransfer>
             <feMerge>
               <feMergeNode></feMergeNode>
               <feMergeNode in="SourceGraphic"></feMergeNode>
@@ -576,7 +595,7 @@ const enterNode = selection => {
         return "purple";
       }
     })
-    .attr("filter", 'url(#dropshadow)')
+    .attr("filter", 'url(#dropshadowunanchored)')
     .style("fill", function(d) {
       return color(d.name);
     }).on('mouseover', function(d, i) {
@@ -633,7 +652,8 @@ const enterNode = selection => {
 
   selection
     .select("rect")
-    .style("fill", function(d) {
+      .attr("filter", 'url(#dropshadowunanchored)')
+      .style("fill", function(d) {
       if (
         d.id === 0 ||
         d.id === 3 ||
