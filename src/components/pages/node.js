@@ -13,7 +13,7 @@ import {
     clearTempCustomAttrs,
     changeSelectedCategory
 } from "../../redux/actions/liveNodeEdit";
-import { saveEdits } from "../../redux/actions/simpleAction";
+import {deleteAction, saveEdits} from "../../redux/actions/simpleAction";
 
 class Node extends Component {
     state = {
@@ -84,9 +84,10 @@ class Node extends Component {
         <div>{this.props.liveNodeEdit.selNodeId ? "Edit Node" : "Add new node"}</div>
         <button onClick={this.save.bind(this)}>save</button>
           <button onClick={this.save.bind(this)}>save and unselect</button>
-
           <button onClick={this.cancel.bind(this)}>cancel</button>
-        <div className="navIconFrame">
+          <button onClick={this.props.deleteAction}>delete</button>
+
+          <div className="navIconFrame">
           <div className="navIcon">
             <i className="icon ion-android-add-circle" />
           </div>
@@ -198,6 +199,7 @@ const mapDispatchToProps = dispatch => ({
     handleCheckboxChange: checkedAttrs => dispatch(handleCheckboxChange(checkedAttrs)),
     editNewCategoryName: name => dispatch(editNewCategoryName(name)),
     clearTempCustomAttrs: () => dispatch(clearTempCustomAttrs()),
-    changeSelectedCategory: (cat) => dispatch(changeSelectedCategory(cat))
+    changeSelectedCategory: (cat) => dispatch(changeSelectedCategory(cat)),
+    deleteAction: () => dispatch(deleteAction()),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Node);
