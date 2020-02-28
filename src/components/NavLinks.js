@@ -3,6 +3,7 @@ import React from "react";
 import Node from "./pages/node";
 import Categories from './pages/categories'
 import GlobalSettings from './pages/global'
+import RichText from './pages/richText'
 
 const navLinks = [
   {
@@ -67,6 +68,15 @@ const navLinks = [
     component: props => {
       const customProps = props;
       return <GlobalSettings {...customProps} />;
+    }
+  },
+  {
+    link: "/richText",
+    className: "icon ion-ios-book-outline",
+    navItemText: "Rich Text",
+    component: props => {
+      const customProps = props;
+      return <RichText {...customProps} />;
     }
   }
   // {
