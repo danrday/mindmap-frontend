@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import ReactSlider from 'react-slider'
+import Slider from '../reusable/slider'
 import "../styles/slider.css";
 
 
@@ -14,15 +15,10 @@ import {
     changeSelectedCategory
 } from "../../redux/actions/liveNodeEdit";
 import {deleteAction, saveEdits} from "../../redux/actions/simpleAction";
+import {editValue} from "../../redux/actions/globalEdit";
+
 
 class Node extends Component {
-    state = {
-        testSliderVal: 20,
-        testMax: 100,
-        testMin: 0,
-        pointerUp: true,
-        timeout: undefined
-    }
   save() {
         this.props.saveEdits({
             customAttrs: this.props.liveNodeEdit.checkedAttrs,
@@ -70,14 +66,6 @@ class Node extends Component {
 
   }
 
-  pointerDown(e) {
-      this.repeat()
-  }
-
-  pointerUp() {
-        clearTimeout(this.state.timeout)
-  }
-
   render() {
     return (
       <div>
@@ -117,6 +105,13 @@ class Node extends Component {
           value={this.props.liveNodeEdit.radius || ""}
           onChange={event => this.props.editRadius(event.target.value)}
         />
+          <Slider sliderVal={this.props.liveNodeEdit.radius}
+                  sliderMin={0} sliderMax={this.props.globalEdit.radiusRangeMax || this.props.globalEdit.defaults.radiusRangeMax}
+                  editRadius={this.props.editRadius}
+                  updateSliderRangeMax={(v) => this.props.editValue({key: 'radiusRangeMax', value: v})}
+                  disabled={!this.props.liveNodeEdit.checkedAttrs.includes('radius')}
+          />
+
           <br />
           <input
               name="fontSize"
@@ -163,22 +158,8 @@ class Node extends Component {
           />
 
           <br /><br />
-          <div onPointerOut={this.pointerUp.bind(this)} onPointerUp={this.pointerUp.bind(this)} onPointerDown={this.pointerDown.bind(this)}>
-          <ReactSlider
-              className="horizontal-slider"
-              thumbClassName="example-thumb"
-              trackClassName="example-track"
-              renderThumb={(props, state) => <div {...props}>{state.valueNow}</div>}
-              onChange={val => {
-                  this.props.editRadius(val)
-                  this.setState({testSliderVal: val})}
-              }
-              value={this.state.testSliderVal}
-              min={this.state.testMin}
-              max={this.state.testMax}
 
-          />
-          </div>
+
 
       </div>
     );
@@ -188,7 +169,8 @@ class Node extends Component {
 
 const mapStateToProps = state => ({
     liveNodeEdit: state.liveNodeEdit,
-    categories: state.simpleReducer.editedFile.categories
+    categories: state.simpleReducer.editedFile.categories,
+    globalEdit: state.globalEdit
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -201,5 +183,6 @@ const mapDispatchToProps = dispatch => ({
     clearTempCustomAttrs: () => dispatch(clearTempCustomAttrs()),
     changeSelectedCategory: (cat) => dispatch(changeSelectedCategory(cat)),
     deleteAction: () => dispatch(deleteAction()),
+    editValue: keyAndValue => dispatch(editValue(keyAndValue)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Node);

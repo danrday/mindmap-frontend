@@ -183,8 +183,8 @@ class Graph extends React.Component {
     let canvas = d3.select('svg').node();
     let config = {filename: 'testing'}
     // savePdf.save(canvas, config)
-    console.log('savePdf', savePdf)
-    console.log('did component update?', this.props.data.nodes)
+    // console.log('savePdf', savePdf)
+    // console.log('did component update?', this.props.data.nodes)
 
     const charge = this.props.globalSettings.chargeStrength
     const dist = this.props.globalSettings.linkDistance
@@ -211,15 +211,21 @@ class Graph extends React.Component {
         .filter(function(d, i) {
           return d.id === self.props.lastClickedNode;
         })
-        .style("fill", function(d) {
-          return "red";
-        }).style("stroke-width", function(d) {
-        return "2";
-      }).style("stroke-dasharray", function(d) {
-        return "6,10";
-      }).style("stroke-linecap", function(d) {
-        return "round";
-      });
+        // .style("fill", function(d) {
+        //   return "red";
+        // })
+          .style("stroke-width", function(d) {
+        return "10";
+      })
+          .style("stroke", function(d) {
+            return "red";
+          })
+
+      //     .style("stroke-dasharray", function(d) {
+      //   return "6,10";
+      // }).style("stroke-linecap", function(d) {
+      //   return "round";
+      // });
     } else {
       d3.selectAll("circle").style("fill", function(d) {
         return color(d.name);
@@ -397,7 +403,6 @@ class Graph extends React.Component {
     );
 
     force.on("tick", () => {
-      console.log('tick tick', )
       this.d3Graph.call(updateGraph);
     });
 
@@ -413,7 +418,7 @@ class Graph extends React.Component {
     const nodes = this.props.data.nodes.map(node => {
       let attrs
       if (node.category) {
-        console.log('node category', node.category)
+        // console.log('node category', node.category)
        let cat = this.getCategory(node.category)
 
         if (cat) {
@@ -521,7 +526,6 @@ const updateGraph = selection => {
 };
 
 const updateNode = selection => {
-  console.log('updated node', )
   selection.attr("transform", d => {
     return "translate(" + d.x + "," + d.y + ")";
   });
@@ -602,18 +606,39 @@ const enterNode = selection => {
     console.log("mouseover on", this);
     d3.select(this)
         .transition().duration(200)
-        .style("fill", function(d) {
-          return 'purple';
-        })
+        // .style("fill", function(d) {
+        //   return 'purple';
+        // })
+        .style("stroke-width", '10')
+        .style("stroke", "black")
   }).on('mouseout', function(d, i) {
     console.log("mouseover on", this);
     d3.select(this)
         .transition().duration(200)
         .style("fill", function(d) {
           if (d.tempCustomAttrs) {
-            return 'red';
+            // return 'red';
+
+            return color(d.name);
+
           } else {
             return color(d.name);
+          }
+        })
+        .style("stroke-width", function(d) {
+          if (d.tempCustomAttrs) {
+            return '10'
+
+          } else {
+            return '1'
+          }
+        })
+        .style("stroke", function(d) {
+          if (d.tempCustomAttrs) {
+            return 'red'
+
+          } else {
+            return "black"
           }
         })
   })
