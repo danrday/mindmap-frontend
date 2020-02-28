@@ -197,7 +197,7 @@ const StyledHeader = styled.div`
   right: 0;
   left: 0;
   z-index: 1030;
-  background-color: #fff;
+  background-color: #312a48;
   box-shadow: 0 1px 4px 0px rgba(0, 0, 0, 0.16);
   display: flex;
   align-items: center;
@@ -257,7 +257,7 @@ const StyledHeader = styled.div`
       openNav &&
       `
             margin-left: 200px;
-            background-color: #fff6f5;
+            background-color: #584586;
 
           `}
     &:hover {
@@ -282,7 +282,7 @@ const Hmm = styled.div`
     `
         left: 60px;
         width: 200px;
-        background-color: #00ebf2;
+        background-color: #9bccff;
          box-shadow: inset -4px 0px 2px -2px purple;
       `}
 `;
@@ -302,7 +302,7 @@ const NavBar = styled.div`
     `
         left: 0px;
         width: 180px;
-        background: #d6ebf2;
+        background: #65bbd8;
       `}
 `;
 

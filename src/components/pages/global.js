@@ -31,7 +31,7 @@ class GlobalSettings extends Component {
 
     render() {
         return (
-            <div>
+            <div class="column is-vcentered">
                  <button className="button is-success is-rounded is-light" onClick={this.save.bind(this)}>save</button>
 <br/>
 <br/>
