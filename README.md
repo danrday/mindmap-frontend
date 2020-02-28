@@ -17,7 +17,7 @@ it does not apply those values to the new category... just the set custom attrs.
 + Add shadow under unanchored nodes
 + Create up to five documents
 + Click on a node, then option to create connected node on next click
-+ BUG: have link distances auto load saved values
++ ~~BUG: have link distances auto load saved values~~
 + Print out a pdf
 + Unlock all as an option
 + Lock all as an option
