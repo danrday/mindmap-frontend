@@ -101,17 +101,9 @@ class App extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    // if (!this.state.fileLoaded) {
-    //   this.setState({ data: this.props.file, fileLoaded: true });
-    // }
-    // this.props.saveAction(this.props.file);
+
   }
 
-  // handleZoom = zoomAttrs => {
-  //   // const gSettings = this.state.data.globalSettings || {}
-  //   this.props.handleZoom(zoomAttrs);
-  //
-  // }
 
   handleClick = currentClickedNode => {
     const lastClickedNode = this.props.currentNode
@@ -167,8 +159,7 @@ class App extends React.Component {
         const cats = this.props.file.categories || {}
 
         const newData = { ...this.props.file, categories: cats, links: newLinks };
-        // this.setState({ data: newData });
-        // this.setState({ lastClickedNode: null });
+
         this.props.saveAction(newData);
         this.props.selectNode(null);
       }
@@ -192,8 +183,8 @@ class Graph extends React.Component {
     let canvas = d3.select('svg').node();
     let config = {filename: 'testing'}
     // savePdf.save(canvas, config)
-    console.log('savePdf', savePdf)
-    console.log('did component update?', this.props.data.nodes)
+    // console.log('savePdf', savePdf)
+    // console.log('did component update?', this.props.data.nodes)
 
     const charge = this.props.globalSettings.chargeStrength
     const dist = this.props.globalSettings.linkDistance
@@ -204,14 +195,6 @@ class Graph extends React.Component {
         .force("link", d3.forceLink(this.props.data.links).id(function(d) { return d.id; }).distance(function (d) {
           return dist || 900
         }))
-        // .force("collide", d3.forceCollide([165]).iterations([1000]));
-
-    // .force('collision', d3.forceCollide().radius(function(d) {
-        //   return d.radius
-        // }))
-
-    // .force("x", d3.forceX())
-        // .force("y", d3.forceY())
         .alphaTarget(0.5)
         .velocityDecay(0.7)
         .restart()
@@ -228,15 +211,21 @@ class Graph extends React.Component {
         .filter(function(d, i) {
           return d.id === self.props.lastClickedNode;
         })
-        .style("fill", function(d) {
-          return "red";
-        }).style("stroke-width", function(d) {
-        return "2";
-      }).style("stroke-dasharray", function(d) {
-        return "6,10";
-      }).style("stroke-linecap", function(d) {
-        return "round";
-      });
+        // .style("fill", function(d) {
+        //   return "red";
+        // })
+          .style("stroke-width", function(d) {
+        return "10";
+      })
+          .style("stroke", function(d) {
+            return "red";
+          })
+
+      //     .style("stroke-dasharray", function(d) {
+      //   return "6,10";
+      // }).style("stroke-linecap", function(d) {
+      //   return "round";
+      // });
     } else {
       d3.selectAll("circle").style("fill", function(d) {
         return color(d.name);
@@ -351,15 +340,6 @@ class Graph extends React.Component {
       .forceSimulation(this.props.data.nodes)
       .force("charge", d3.forceManyBody().strength(this.props.globalSettings.chargeStrength || -60))
       .force("link", d3.forceLink(this.props.data.links).id(function(d) { /*reference by id, not index */return d.id }).distance(this.props.globalSettings.linkDistance || 900))
-      // .force(
-      //   "center",
-      //   d3
-      //     .forceCenter()
-      //     .x(width / 2)
-      //     .y(height / 2)
-      // )
-      //   .force("x", d3.forceX())
-      //   .force("y", d3.forceY())
       .force("collide", d3.forceCollide([65]).iterations([60]));
 
     function dragStarted(d) {
@@ -423,7 +403,6 @@ class Graph extends React.Component {
     );
 
     force.on("tick", () => {
-      console.log('tick tick', )
       this.d3Graph.call(updateGraph);
     });
 
@@ -432,8 +411,6 @@ class Graph extends React.Component {
   }
 
   getCategory (cat) {
-    // console.log('this.props.data',this.props.data )
-    // console.log('CATE',cat )
     return this.props.data.categories[cat]
   }
 
@@ -441,7 +418,7 @@ class Graph extends React.Component {
     const nodes = this.props.data.nodes.map(node => {
       let attrs
       if (node.category) {
-        console.log('node category', node.category)
+        // console.log('node category', node.category)
        let cat = this.getCategory(node.category)
 
         if (cat) {
@@ -469,8 +446,38 @@ class Graph extends React.Component {
         height='100%'
         style={{ border: "1px solid black" }}
       >
+        <defs>
+          <filter id="dropshadow" width="150%" height="180%">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"></feGaussianBlur>
+            <feOffset in="blur" dx="6" dy="6" result="offsetBlur"></feOffset>
+            <feMerge>
+              <feMergeNode></feMergeNode>
+              <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+          </filter>
+          <filter id="dropshadowtext" width="150%" height="180%">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"></feGaussianBlur>
+            <feOffset in="blur" dx="3" dy="3" result="offsetBlur"></feOffset>
+            <feMerge>
+              <feMergeNode></feMergeNode>
+              <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+          </filter>
+          <filter id="dropshadowunanchored" width="150%" height="180%" >
+            <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"></feGaussianBlur>
+            <feOffset in="blur" dx="20" dy="20" result="offsetBlur"></feOffset>
+            <feComponentTransfer>
+              <feFuncA type="linear" slope=".2"/>
+            </feComponentTransfer>
+            <feMerge>
+              <feMergeNode></feMergeNode>
+              <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+          </filter>
+        </defs>
         <rect width="100%" height="100%" fill="powderblue"/>
         <g className="frameForZoom">
+
           <g>{nodes}</g>
           <g>{links}</g>
         </g>
@@ -519,7 +526,6 @@ const updateGraph = selection => {
 };
 
 const updateNode = selection => {
-  console.log('updated node', )
   selection.attr("transform", d => {
     return "translate(" + d.x + "," + d.y + ")";
   });
@@ -593,24 +599,46 @@ const enterNode = selection => {
         return "purple";
       }
     })
+    .attr("filter", 'url(#dropshadowunanchored)')
     .style("fill", function(d) {
       return color(d.name);
     }).on('mouseover', function(d, i) {
     console.log("mouseover on", this);
     d3.select(this)
         .transition().duration(200)
-        .style("fill", function(d) {
-          return 'purple';
-        })
+        // .style("fill", function(d) {
+        //   return 'purple';
+        // })
+        .style("stroke-width", '10')
+        .style("stroke", "black")
   }).on('mouseout', function(d, i) {
     console.log("mouseover on", this);
     d3.select(this)
         .transition().duration(200)
         .style("fill", function(d) {
           if (d.tempCustomAttrs) {
-            return 'red';
+            // return 'red';
+
+            return color(d.name);
+
           } else {
             return color(d.name);
+          }
+        })
+        .style("stroke-width", function(d) {
+          if (d.tempCustomAttrs) {
+            return '10'
+
+          } else {
+            return '1'
+          }
+        })
+        .style("stroke", function(d) {
+          if (d.tempCustomAttrs) {
+            return 'red'
+
+          } else {
+            return "black"
           }
         })
   })
@@ -649,7 +677,8 @@ const enterNode = selection => {
 
   selection
     .select("rect")
-    .style("fill", function(d) {
+      .attr("filter", 'url(#dropshadowunanchored)')
+      .style("fill", function(d) {
       if (
         d.id === 0 ||
         d.id === 3 ||
@@ -677,7 +706,6 @@ const enterNode = selection => {
 ////////
 
 const mapStateToProps = (state, props) => ({
-  // ...state,
   file: state.simpleReducer.editedFile,
   currentNode: state.simpleReducer.currentNode,
   liveNodeEdit: state.liveNodeEdit,

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import ReactSlider from 'react-slider'
+import Slider from '../reusable/slider'
 import "../styles/slider.css";
 
 
@@ -13,16 +14,11 @@ import {
     clearTempCustomAttrs,
     changeSelectedCategory
 } from "../../redux/actions/liveNodeEdit";
-import { saveEdits } from "../../redux/actions/simpleAction";
+import {deleteAction, saveEdits} from "../../redux/actions/simpleAction";
+import {editValue, handleCheckboxChange as handleGlobalAttrCheckbox} from "../../redux/actions/globalEdit";
+
 
 class Node extends Component {
-    state = {
-        testSliderVal: 20,
-        testMax: 100,
-        testMin: 0,
-        pointerUp: true,
-        timeout: undefined
-    }
   save() {
         this.props.saveEdits({
             customAttrs: this.props.liveNodeEdit.checkedAttrs,
@@ -46,6 +42,8 @@ class Node extends Component {
         // });
 
         this.props.handleCheckboxChange(attrs)
+        // this.props.handleGlobalAttrCheckbox(attrs)
+
     }
 
   cancel() {}
@@ -70,23 +68,16 @@ class Node extends Component {
 
   }
 
-  pointerDown(e) {
-      this.repeat()
-  }
-
-  pointerUp() {
-        clearTimeout(this.state.timeout)
-  }
-
   render() {
     return (
       <div>
         <div>{this.props.liveNodeEdit.selNodeId ? "Edit Node" : "Add new node"}</div>
         <button onClick={this.save.bind(this)}>save</button>
           <button onClick={this.save.bind(this)}>save and unselect</button>
-
           <button onClick={this.cancel.bind(this)}>cancel</button>
-        <div className="navIconFrame">
+          <button onClick={this.props.deleteAction}>delete</button>
+
+          <div className="navIconFrame">
           <div className="navIcon">
             <i className="icon ion-android-add-circle" />
           </div>
@@ -116,6 +107,13 @@ class Node extends Component {
           value={this.props.liveNodeEdit.radius || ""}
           onChange={event => this.props.editRadius(event.target.value)}
         />
+          <Slider sliderVal={this.props.liveNodeEdit.radius}
+                  sliderMin={0} sliderMax={this.props.globalEdit.radiusRangeMax || this.props.globalEdit.defaults.radiusRangeMax}
+                  editRadius={this.props.editRadius}
+                  updateSliderRangeMax={(v) => this.props.editValue({key: 'radiusRangeMax', value: v})}
+                  disabled={!this.props.liveNodeEdit.checkedAttrs.includes('radius')}
+          />
+
           <br />
           <input
               name="fontSize"
@@ -162,22 +160,8 @@ class Node extends Component {
           />
 
           <br /><br />
-          <div onPointerOut={this.pointerUp.bind(this)} onPointerUp={this.pointerUp.bind(this)} onPointerDown={this.pointerDown.bind(this)}>
-          <ReactSlider
-              className="horizontal-slider"
-              thumbClassName="example-thumb"
-              trackClassName="example-track"
-              renderThumb={(props, state) => <div {...props}>{state.valueNow}</div>}
-              onChange={val => {
-                  this.props.editRadius(val)
-                  this.setState({testSliderVal: val})}
-              }
-              value={this.state.testSliderVal}
-              min={this.state.testMin}
-              max={this.state.testMax}
 
-          />
-          </div>
+
 
       </div>
     );
@@ -187,10 +171,12 @@ class Node extends Component {
 
 const mapStateToProps = state => ({
     liveNodeEdit: state.liveNodeEdit,
-    categories: state.simpleReducer.editedFile.categories
+    categories: state.simpleReducer.editedFile.categories,
+    globalEdit: state.globalEdit
 });
 
 const mapDispatchToProps = dispatch => ({
+    // handleGlobalAttrCheckbox: checked => dispatch(handleGlobalAttrCheckbox(checked)),
   editName: name => dispatch(editName(name)),
   editRadius: r => dispatch(editRadius(r)),
   editFontSize: f => dispatch(editFontSize(f)),
@@ -198,6 +184,8 @@ const mapDispatchToProps = dispatch => ({
     handleCheckboxChange: checkedAttrs => dispatch(handleCheckboxChange(checkedAttrs)),
     editNewCategoryName: name => dispatch(editNewCategoryName(name)),
     clearTempCustomAttrs: () => dispatch(clearTempCustomAttrs()),
-    changeSelectedCategory: (cat) => dispatch(changeSelectedCategory(cat))
+    changeSelectedCategory: (cat) => dispatch(changeSelectedCategory(cat)),
+    deleteAction: () => dispatch(deleteAction()),
+    editValue: keyAndValue => dispatch(editValue(keyAndValue)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Node);

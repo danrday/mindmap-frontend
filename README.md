@@ -13,12 +13,11 @@ it does not apply those values to the new category... just the set custom attrs.
 + ~~Automatically go to edit screen when clicking on a node~~
 + ~~auto select the new node~~
 + ~~Make slider component~~
-+ Add delete button onto edit node screen
++ ~~Add delete button onto edit node screen~~
 + Add shadow under unanchored nodes
 + Create up to five documents
 + Click on a node, then option to create connected node on next click
-+ When node is selected, a delete button in upper left corner
-+ BUG: have link distances auto load saved values
++ ~~BUG: have link distances auto load saved values~~
 + Print out a pdf
 + Unlock all as an option
 + Lock all as an option
@@ -32,7 +31,7 @@ it does not apply those values to the new category... just the set custom attrs.
 
 ##nice to haves
 + Write undo history with timestamps
-+ Pyshadelic backgrounds
++ Psychadelic backgrounds
 + Combine documents together
 + Option to combine overlapping node names
 + Option to go step by step through each overlapping name
