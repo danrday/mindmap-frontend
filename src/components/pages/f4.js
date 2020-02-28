@@ -180,9 +180,7 @@ class App extends React.Component {
 
 class Graph extends React.Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
-    let canvas = d3.select('svg').node();
-    let config = {filename: 'testing'}
-    // savePdf.save(canvas, config)
+
     // console.log('savePdf', savePdf)
     // console.log('did component update?', this.props.data.nodes)
 
@@ -300,6 +298,10 @@ class Graph extends React.Component {
         .on("drag", dragging)
         .on("end", dragEnded)
     );
+
+    let canvas = d3.select('svg').node();
+    let config = {filename: 'testing'}
+    // savePdf.save(canvas, config)
   }
 
   componentDidMount() {

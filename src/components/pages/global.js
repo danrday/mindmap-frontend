@@ -32,31 +32,42 @@ class GlobalSettings extends Component {
     render() {
         return (
             <div>
-                <button onClick={this.save.bind(this)}>save</button>
-
+                 <button className="button is-success is-rounded is-light" onClick={this.save.bind(this)}>save</button>
+<br/>
+<br/>
+                <label className="switch">
                 <input
                     name="chargeStrength"
                     type="checkbox"
                     checked={this.props.globalEdit.checkedAttrs.includes('chargeStrength')}
                     onChange={this.handleCheckboxChange.bind(this)} />
+                        <span className="slider round"></span>
+                </label>
+
                 <div>charge strength</div>
                 <input
                     disabled={!this.props.globalEdit.checkedAttrs.includes('chargeStrength')}
                     type="number"
+                    className="input"
                     value={this.props.globalEdit.chargeStrength || ""}
                     onChange={event => this.props.editValue({key: 'chargeStrength', value: event.target.value})}
                 />
                 <br/>
                 <br/>
+                <label className="switch">
                 <input
                     name="linkDistance"
                     type="checkbox"
+
                     checked={this.props.globalEdit.checkedAttrs.includes('linkDistance')}
                     onChange={this.handleCheckboxChange.bind(this)} />
+                    <span className="slider round"></span>
+                </label>
                 <div>link distance</div>
                 <input
                     disabled={!this.props.globalEdit.checkedAttrs.includes('linkDistance')}
                     type="number"
+                    className="input"
                     value={this.props.globalEdit.linkDistance || ""}
                     onChange={event => this.props.editValue({key: 'linkDistance', value: event.target.value})}
                 />

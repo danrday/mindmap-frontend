@@ -10,11 +10,11 @@
 
 .horizontal-slider .example-track {
     top: 20px;
-    height: 10px;
+    height: 5px;
 }
 
 .example-track {
-    background: rgb(255, 0, 0);
+    background: mediumslateblue;
 }
 
 .horizontal-slider .example-thumb {
@@ -34,14 +34,14 @@ element.style {
 .example-thumb {
     font-size: 0.9em;
     text-align: center;
-    background-color: black;
+    background-color: darkblue;
     color: white;
     cursor: pointer;
     border-radius: 50%;
 }
 
 .example-thumb.active {
-    background-color: grey;
+    background-color: deeppink;
 }
 
 
