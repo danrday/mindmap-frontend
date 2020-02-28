@@ -28,6 +28,10 @@ export const simpleAction = filename => dispatch => {
         type: "file/FETCH_FILE_RECEIVED",
         payload: response.data.file
       });
+      dispatch({
+        type: "globalEdit/POPULATE_INITIAL_VALUES",
+        payload: response.data.file.globalSettings
+      });
     })
     .catch(function(error) {
       dispatch({

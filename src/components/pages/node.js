@@ -15,7 +15,7 @@ import {
     changeSelectedCategory
 } from "../../redux/actions/liveNodeEdit";
 import {deleteAction, saveEdits} from "../../redux/actions/simpleAction";
-import {editValue} from "../../redux/actions/globalEdit";
+import {editValue, handleCheckboxChange as handleGlobalAttrCheckbox} from "../../redux/actions/globalEdit";
 
 
 class Node extends Component {
@@ -42,6 +42,8 @@ class Node extends Component {
         // });
 
         this.props.handleCheckboxChange(attrs)
+        // this.props.handleGlobalAttrCheckbox(attrs)
+
     }
 
   cancel() {}
@@ -174,6 +176,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+    // handleGlobalAttrCheckbox: checked => dispatch(handleGlobalAttrCheckbox(checked)),
   editName: name => dispatch(editName(name)),
   editRadius: r => dispatch(editRadius(r)),
   editFontSize: f => dispatch(editFontSize(f)),

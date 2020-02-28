@@ -6,7 +6,7 @@ import {saveDefaultsEdit} from "../../redux/actions/simpleAction";
 class GlobalSettings extends Component {
 
     componentDidMount() {
-        this.props.populateInitialValues(this.props.globalSettings)
+        // this.props.populateInitialValues(this.props.globalSettings)
     }
 
     handleCheckboxChange(event) {

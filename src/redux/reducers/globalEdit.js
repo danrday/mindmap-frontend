@@ -1,5 +1,5 @@
 const initialState = {
-    checkedAttrs: [],
+    checkedAttrs: ['radiusRangeMax'],
     radius: null,
     radiusRangeMax: null,
     fontSize: null,
