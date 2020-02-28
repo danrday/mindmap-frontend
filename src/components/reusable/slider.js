@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import ReactSlider from 'react-slider'
 import "../styles/slider.css";
+import styled from "styled-components";
 
 class Slider extends Component {
     state = {
@@ -35,7 +36,7 @@ class Slider extends Component {
 
     render() {
         return (
-                <div onPointerOut={this.pointerUp.bind(this)} onPointerUp={this.pointerUp.bind(this)} onPointerDown={this.repeat.bind(this)}>
+                <Shell disabled={this.props.disabled} onPointerOut={this.pointerUp.bind(this)} onPointerUp={this.pointerUp.bind(this)} onPointerDown={this.repeat.bind(this)}>
                     <ReactSlider
                         disabled={this.props.disabled}
                         className="horizontal-slider"
@@ -49,9 +50,19 @@ class Slider extends Component {
                         min={this.props.sliderMin}
                         max={this.props.sliderMax}
                     />
-                </div>
+                </Shell>
         );
     }
 }
 
 export default (Slider);
+
+const Shell = styled.div`
+    margin-left: 10px;
+  ${({ disabled }) =>
+    disabled &&
+    `
+        opacity: .5
+      `}
+`;
+
