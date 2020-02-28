@@ -73,6 +73,7 @@ class Categories extends Component {
                 <input
                     name="radius"
                     type="checkbox"
+
                     checked={this.props.categoryEdit.checkedAttrs.includes('radius')}
                     onChange={this.handleCheckboxChange.bind(this)} />
                 <div>radius</div>
@@ -86,6 +87,7 @@ class Categories extends Component {
                 <input
                     name="fontSize"
                     type="checkbox"
+
                     checked={this.props.categoryEdit.checkedAttrs.includes('fontSize')}
                     onChange={this.handleCheckboxChange.bind(this)} />
                 <div>font size</div>

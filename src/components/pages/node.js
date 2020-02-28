@@ -98,6 +98,7 @@ class Node extends Component {
           <input
               name="radius"
               type="checkbox"
+
               checked={this.props.liveNodeEdit.checkedAttrs.includes('radius')}
               onChange={this.handleCheckboxChange.bind(this)} />
         <div>radius</div>
@@ -118,6 +119,7 @@ class Node extends Component {
           <input
               name="fontSize"
               type="checkbox"
+
               checked={this.props.liveNodeEdit.checkedAttrs.includes('fontSize')}
               onChange={this.handleCheckboxChange.bind(this)} />
         <div>font size</div>
@@ -135,6 +137,7 @@ class Node extends Component {
           <input
               name="category"
               type="checkbox"
+
               checked={this.props.liveNodeEdit.checkedAttrs.includes('category')}
               onChange={this.handleCheckboxChange.bind(this)} />
           <select  onChange={e => this.props.changeSelectedCategory(e.target.value)} value={this.props.liveNodeEdit.category || 'none'} >
@@ -149,6 +152,7 @@ class Node extends Component {
           <input
               name="newCategoryName"
               type="checkbox"
+
               checked={this.props.liveNodeEdit.checkedAttrs.includes('newCategoryName')}
               onChange={this.handleCheckboxChange.bind(this)} />
           <div>save custom attrs as new category</div>

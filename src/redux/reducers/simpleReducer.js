@@ -79,6 +79,8 @@ export default (state = initialState, action) => {
       let currSelNodeIndex = edited.nodes.findIndex(e => {
         return e.id === liveNodeEdit.selNodeId;
       });
+      console.log('edited.nodes[currSelNodeIndex].name', edited.nodes[currSelNodeIndex].name)
+      console.log('liveNodeEdit.name', liveNodeEdit.name)
       edited.nodes[currSelNodeIndex].name = liveNodeEdit.name
       edited.nodes[currSelNodeIndex].customAttrs = {}
       if (changes.includes('newCategoryName')) {
