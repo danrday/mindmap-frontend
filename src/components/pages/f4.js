@@ -315,9 +315,8 @@ class Graph extends React.Component {
       .force("link", d3.forceLink(this.props.data.links)
           .id(function(d) { /*reference by id, not index */return d.id })
           .distance(this.props.globalSettings.linkDistance || 900))
-      .force("collide", d3.forceCollide([65]).iterations([60]));
-
-    force.on("tick", () => {
+      .force("collide", d3.forceCollide([65]).iterations([60]))
+      .on("tick", () => {
       this.d3Graph.call(updateGraph);
     });
 
@@ -530,36 +529,19 @@ const enterNode = selection => {
         })
   })
 
-
-
   selection
     .select("text")
     .style("font-size", function (d) { return displayAttr(d, 'fontSize', 'px', '30px')})
     .attr("dy", ".95em")
-    .call(getBoundingBox);
-
-  function getBoundingBox(selection) {
-    selection.each(function(d) {
+    .call(selection => selection.each(function(d) {
       d.bbox = this.getBBox();
-    });
-  }
+    }));
 
   selection
     .select("rect")
       .attr("filter", 'url(#dropshadowunanchored)')
       .style("fill", function(d) {
-      if (
-        d.id === 0 ||
-        d.id === 3 ||
-        d.id === 7 ||
-        d.id === 8 ||
-        d.id === 11 ||
-        d.id === 15
-      ) {
-        return "orange";
-      } else {
         return "yellow";
-      }
     })
     .attr("width", function(d) {
       return d.bbox.width;
@@ -569,9 +551,7 @@ const enterNode = selection => {
     });
 };
 
-////////
-////////
-////////
+
 ////////
 
 const mapStateToProps = (state, props) => ({
