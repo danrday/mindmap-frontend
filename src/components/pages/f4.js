@@ -1,18 +1,17 @@
+import React from "react";
 import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import savePdf from 'd3-save-pdf'
+import * as d3 from 'd3'
 
 import { saveAction, selectNode, handleZoom } from "../../redux/actions/simpleAction";
 import { populateCurrentNodeValues } from "../../redux/actions/liveNodeEdit";
 import { selectPage } from "../../redux/actions/ui";
 
-let d3 = require("d3");
-let React = require("react");
-
 const color = d3.scaleOrdinal(d3.schemeCategory10);
 
-/////// App component holds graph data in state and renders Graph component.
-/////// Graph component in turn renders Link and Node components.
+/*App component holds graph data in state and renders Graph component.
+Graph component in turn renders Link and Node components.*/
 
 class App extends React.Component {
   state = {
@@ -20,33 +19,37 @@ class App extends React.Component {
   };
 
   render() {
+    /*        Important: zooming does not cause a re-render at this level,
+   only clicking nodes, saving, deleting, and editing any temporary attributes that will reflect in the display.
+   On each render we write all the tempCustomAttrs(selected node edits)
+   and also tempCategoryAttrs(selected category edits temporarily apply to all members of a category)*/
+    // console.log("RENDER UPDATE: this.props:", this.props);
 
-    // console.log('RENDER UPDATE?', this.state.data)
-    // console.log("this.props", this.props);
-    if (this.props.file) {
-
+    if (this.props.file) {  // if file is loaded
       const liveNodeEdit = this.props.liveNodeEdit
-
       let modData = this.props.file
-
-
       const categoryEdit = this.props.categoryEdit
-      modData.nodes.forEach(node => {
+
+      modData.nodes.forEach(node => { // first erase any 'temporary category attributes' --
+        // (in process edits to a category's properties) applied earlier but not saved
+        // also delete 'temporary custom attributes'
+        // this way we ensure a fresh update on all nodes
 
         if (node.tempCategoryAttrs) {
           delete node.tempCategoryAttrs
         }
+        if (node.tempCustomAttrs) {
+          delete node.tempCustomAttrs
+        }
 
+        /*if you are currently editing a categories' properties,
+        apply those temp changes onto member node's tempCategoryAttrs*/
         if (node.category === categoryEdit.category) {
           node.tempCategoryAttrs = {}
           categoryEdit.checkedAttrs.forEach(attr => {
             node.tempCategoryAttrs[attr]= categoryEdit[attr]
           })
         }
-            if (node.tempCustomAttrs) {
-              delete node.tempCustomAttrs
-            }
-
       })
 
       // overwrite currently selected node with temp editing values to show live update
@@ -57,23 +60,19 @@ class App extends React.Component {
 
         // if the node hasn't been deleted'
         if (node !== -1) {
-          console.log('nodeee', node)
-          modData.nodes[node].name = liveNodeEdit.name
 
+          // TODO: Should be reset to previous name, restructure this
+          modData.nodes[node].name = liveNodeEdit.name
           if (liveNodeEdit.checkedAttrs.includes('category')) {
             modData.nodes[node].category = liveNodeEdit.category
           }
 
-
           // populate the temporary custom attributes being edited live
           modData.nodes[node].tempCustomAttrs = modData.nodes[node].tempCustomAttrs || {}
-
           liveNodeEdit.checkedAttrs.forEach(attr => {
             modData.nodes[node].tempCustomAttrs[attr]= liveNodeEdit[attr]
           })
         }
-
-
       }
 
       return (
@@ -81,6 +80,7 @@ class App extends React.Component {
         >
           <div
             className="graphContainer"
+            // TODO: ADD INLINE STYLES TO A CLASS
             style={{ width: '100%', height: '100%', position: "fixed", zIndex: 3000 }}
           >
             <Graph
@@ -100,34 +100,21 @@ class App extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
-
-  }
-
-
   handleClick = currentClickedNode => {
     const lastClickedNode = this.props.currentNode
-
     console.log('lst, curr', lastClickedNode, currentClickedNode)
 
     if (lastClickedNode) {
-      if (lastClickedNode === currentClickedNode) {
-        console.log(' 1st block', )
+      if (lastClickedNode === currentClickedNode) { //compare node ids
         this.setState({ lastClickedNode: null });
         this.props.selectNode(null);
       } else {
-        console.log(' 2st block', )
-
-
         const last = this.props.file.nodes.find(e => {
           return e.id === lastClickedNode
         })
-
         const current = this.props.file.nodes.find(e => {
-          return e.id ===  currentClickedNode
+          return e.id === currentClickedNode
         })
-
-        console.log('LAST', last)
 
         const newLink = {
           source: last,
@@ -137,12 +124,14 @@ class App extends React.Component {
         const linkAlreadyExists = this.props.file.links.find(function(
           currentClickedNode
         ) {
+          const currSourceId = currentClickedNode.source.id,
+          currTargetId = currentClickedNode.target.id,
+          newSourceId = newLink.source.id,
+          newTargetId = newLink.target.id
           return (
             // Check for target -> source AND source -> target
-            (currentClickedNode.source.id === newLink.source.id &&
-              currentClickedNode.target.id === newLink.target.id) ||
-            (currentClickedNode.source.id === newLink.target.id &&
-              currentClickedNode.target.id === newLink.source.id)
+            (currSourceId === newSourceId && currTargetId === newTargetId) ||
+            (currSourceId === newTargetId && currTargetId === newSourceId)
           );
         });
 
