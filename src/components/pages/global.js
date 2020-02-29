@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import {editValue, handleCheckboxChange, populateInitialValues} from "../../redux/actions/globalEdit";
-import {saveDefaultsEdit} from "../../redux/actions/simpleAction";
+import {saveDefaultsEdit} from "../../redux/actions/document";
 
 class GlobalSettings extends Component {
 
@@ -31,7 +31,7 @@ class GlobalSettings extends Component {
 
     render() {
         return (
-            <div class="column is-vcentered">
+            <div className="column is-vcentered">
                  <button className="button is-success is-rounded is-light" onClick={this.save.bind(this)}>save</button>
 <br/>
 <br/>
@@ -79,7 +79,7 @@ class GlobalSettings extends Component {
 
 const mapStateToProps = state => ({
     globalEdit: state.globalEdit,
-    globalSettings: state.simpleReducer.editedFile.globalSettings
+    globalSettings: state.document.editedFile.globalSettings
 });
 
 const mapDispatchToProps = dispatch => ({

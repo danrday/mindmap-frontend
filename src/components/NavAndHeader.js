@@ -6,12 +6,12 @@ import Node from "./pages/node";
 
 import { connect } from "react-redux";
 import {
-  simpleAction,
+  document,
   postAction,
   addAction,
   deleteAction,
   saveNameChangeAction
-} from "../redux/actions/simpleAction";
+} from "../redux/actions/document";
 
 import {
     selectPage
@@ -40,7 +40,7 @@ class NavAndHeader extends Component {
   }
 
   componentDidMount() {
-    this.simpleAction();
+    this.openDocument();
   }
 
   selectedMenu() {
@@ -49,12 +49,12 @@ class NavAndHeader extends Component {
     } else {
       return (
         <div>
-          <button onClick={this.simpleAction}>open</button>
+          <button onClick={this.openDocument}>open</button>
           <br />
           <button
             onClick={() => {
-              console.log("simpleReducer.file", this.props.simpleReducer.file);
-              this.postAction(this.props.simpleReducer.editedFile);
+              console.log("document.file", this.props.document.file);
+              this.postAction(this.props.document.editedFile);
             }}
           >
             save
@@ -176,8 +176,8 @@ class NavAndHeader extends Component {
       </StyledHeader>
     );
   }
-  simpleAction = event => {
-    this.props.simpleAction();
+  openDocument = event => {
+    this.props.openDocument();
   };
   postAction = file => {
     this.props.postAction(file);
@@ -347,12 +347,12 @@ const NavItem = styled.div`
 
 const mapStateToProps = state => ({
   ...state,
-  currSelNode: state.simpleReducer.currentNode,
-    currZoomLevel: state.simpleReducer.editedFile ? state.simpleReducer.editedFile.globalSettings.zoom: {x: 0, y: 0},
+  currSelNode: state.document.currentNode,
+    currZoomLevel: state.document.editedFile ? state.document.editedFile.globalSettings.zoom: {x: 0, y: 0},
     selectedPage: state.ui.selectedPage
 });
 const mapDispatchToProps = dispatch => ({
-  simpleAction: () => dispatch(simpleAction()),
+  openDocument: () => dispatch(document()),
   postAction: file => dispatch(postAction(file)),
   addAction: zoomLevel => dispatch(addAction(zoomLevel)),
   deleteAction: () => dispatch(deleteAction()),

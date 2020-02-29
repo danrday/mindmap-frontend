@@ -6,7 +6,7 @@ const serverUrl = environment._serverUrl;
 
 
 
-export const simpleAction = filename => dispatch => {
+export const document = filename => dispatch => {
   const f = "web";
 
   const endpointForAuthUser = serverUrl + `getfile/${f}`;

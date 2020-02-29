@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import savePdf from 'd3-save-pdf'
 import * as d3 from 'd3'
 
-import { saveAction, selectNode, handleZoom } from "../../redux/actions/simpleAction";
+import { saveAction, selectNode, handleZoom } from "../../redux/actions/document";
 import { populateCurrentNodeValues } from "../../redux/actions/liveNodeEdit";
 import { selectPage } from "../../redux/actions/ui";
 
@@ -555,8 +555,8 @@ const enterNode = selection => {
 ////////
 
 const mapStateToProps = (state, props) => ({
-  file: state.simpleReducer.editedFile,
-  currentNode: state.simpleReducer.currentNode,
+  file: state.document.editedFile,
+  currentNode: state.document.currentNode,
   liveNodeEdit: state.liveNodeEdit,
   categoryEdit: state.categoryEdit,
   globalEdit: state.globalEdit

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import {editValue, handleCheckboxChange, populateInitialValues} from "../../redux/actions/globalEdit";
-import {saveDefaultsEdit} from "../../redux/actions/simpleAction";
+import {saveDefaultsEdit} from "../../redux/actions/document";
 import ReactQuill from 'react-quill';
 import styled from "styled-components"; // ES6
 
@@ -29,7 +29,7 @@ class RichText extends Component {
 
 const mapStateToProps = state => ({
     // globalEdit: state.globalEdit,
-    // globalSettings: state.simpleReducer.editedFile.globalSettings
+    // globalSettings: state.document.editedFile.globalSettings
 });
 
 const mapDispatchToProps = dispatch => ({
