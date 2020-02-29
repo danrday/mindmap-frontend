@@ -100,32 +100,33 @@ class App extends React.Component {
     }
   }
 
-  handleClick = currentClickedNode => {
+  handleClick = currentClickedNodeId => {
     const lastClickedNode = this.props.currentNode
-    console.log('lst, curr', lastClickedNode, currentClickedNode)
+    const currentNode = this.props.file.nodes.find(e => {
+      return e.id === currentClickedNodeId
+    })
 
     if (lastClickedNode) {
-      if (lastClickedNode === currentClickedNode) { //compare node ids
+      if (lastClickedNode === currentClickedNodeId) { //compare node ids
         this.setState({ lastClickedNode: null });
         this.props.selectNode(null);
       } else {
-        const last = this.props.file.nodes.find(e => {
+
+        // get full node object by id
+        const lastNode = this.props.file.nodes.find(e => {
           return e.id === lastClickedNode
-        })
-        const current = this.props.file.nodes.find(e => {
-          return e.id === currentClickedNode
         })
 
         const newLink = {
-          source: last,
-          target: current
+          source: lastNode,
+          target: currentNode
         };
 
         const linkAlreadyExists = this.props.file.links.find(function(
-          currentClickedNode
+          link
         ) {
-          const currSourceId = currentClickedNode.source.id,
-          currTargetId = currentClickedNode.target.id,
+          const currSourceId = link.source.id,
+          currTargetId = link.target.id,
           newSourceId = newLink.source.id,
           newTargetId = newLink.target.id
           return (
@@ -142,25 +143,17 @@ class App extends React.Component {
           });
         } else {
           newLinks = [...this.props.file.links, newLink];
-          console.log('new links', newLinks)
         }
-
-        const cats = this.props.file.categories || {}
-
-        const newData = { ...this.props.file, categories: cats, links: newLinks };
-
+        // BUG? WHY CATS HERE?
+        // const cats = this.props.file.categories || {}
+        // const newData = { ...this.props.file, categories: cats, links: newLinks };
+        const newData = { ...this.props.file, links: newLinks };
         this.props.saveAction(newData);
         this.props.selectNode(null);
       }
     } else {
-      this.setState({ lastClickedNode: currentClickedNode });
-      this.props.selectNode(currentClickedNode);
-
-      const currSelNode = this.props.file.nodes.find(e => {
-        return e.id === currentClickedNode;
-      });
-
-      this.props.populateCurrentNodeValues(currSelNode);
+      this.props.selectNode(currentClickedNodeId);
+      this.props.populateCurrentNodeValues(currentNode);
     }
   };
 }
@@ -169,14 +162,8 @@ class App extends React.Component {
 
 class Graph extends React.Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
-
-    // console.log('savePdf', savePdf)
-    // console.log('did component update?', this.props.data.nodes)
-
     const charge = this.props.globalSettings.chargeStrength
     const dist = this.props.globalSettings.linkDistance
-
-
     window.force
         .force("charge", d3.forceManyBody().strength(charge || -60))
         .force("link", d3.forceLink(this.props.data.links).id(function(d) { return d.id; }).distance(function (d) {
@@ -185,11 +172,7 @@ class Graph extends React.Component {
         .alphaTarget(0.5)
         .velocityDecay(0.7)
         .restart()
-
-
     setTimeout(function(){  window.force.alphaTarget(0); }, 3000);
-
-
 
     const lastClicked = this.props.lastClickedNode
     if (lastClicked) {
@@ -198,21 +181,12 @@ class Graph extends React.Component {
         .filter(function(d, i) {
           return d.id === self.props.lastClickedNode;
         })
-        // .style("fill", function(d) {
-        //   return "red";
-        // })
           .style("stroke-width", function(d) {
         return "10";
       })
           .style("stroke", function(d) {
             return "red";
           })
-
-      //     .style("stroke-dasharray", function(d) {
-      //   return "6,10";
-      // }).style("stroke-linecap", function(d) {
-      //   return "round";
-      // });
     } else {
       d3.selectAll("circle").style("fill", function(d) {
         return color(d.name);
@@ -223,22 +197,22 @@ class Graph extends React.Component {
       });
     }
 
+
+    // d3 force related
+
     let force = window.force;
 
     let dragStarted = d => {
       if (!d3.event.active) force.alphaTarget(0.3).restart();
-
       if (d.fx) {
         d.sticky = true;
       }
-
       d.fx = d.x;
       d.fy = d.y;
     };
 
     let dragging = d => {
       console.log("DRAGGING", d);
-
       if (d.sticky) {
         if (this.props.lastClickedNode && this.props.lastClickedNode === d.id) {
           this.props.handleClick(d.id);
