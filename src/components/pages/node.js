@@ -14,7 +14,7 @@ import {
     clearTempCustomAttrs,
     changeSelectedCategory
 } from "../../redux/actions/liveNodeEdit";
-import {deleteAction, saveEdits} from "../../redux/actions/simpleAction";
+import {deleteAction, saveEdits} from "../../redux/actions/document";
 import {editValue, handleCheckboxChange as handleGlobalAttrCheckbox} from "../../redux/actions/globalEdit";
 
 
@@ -175,7 +175,7 @@ class Node extends Component {
 
 const mapStateToProps = state => ({
     liveNodeEdit: state.liveNodeEdit,
-    categories: state.simpleReducer.editedFile.categories,
+    categories: state.document.editedFile.categories,
     globalEdit: state.globalEdit
 });
 

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import {changeSelectedCategory, handleCheckboxChange, editValue} from "../../redux/actions/categoryEdit";
-import { saveCategoryEdit} from "../../redux/actions/simpleAction";
+import { saveCategoryEdit} from "../../redux/actions/document";
 
 class Categories extends Component {
 
@@ -107,7 +107,7 @@ class Categories extends Component {
 
 const mapStateToProps = state => ({
     categoryEdit: state.categoryEdit,
-    categories: state.simpleReducer.editedFile.categories,
+    categories: state.document.editedFile.categories,
 });
 
 const mapDispatchToProps = dispatch => ({

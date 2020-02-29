@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import savePdf from 'd3-save-pdf'
 import * as d3 from 'd3'
 
-import { saveAction, selectNode, handleZoom } from "../../redux/actions/simpleAction";
+import { saveAction, selectNode, handleZoom } from "../../redux/actions/document";
 import { populateCurrentNodeValues } from "../../redux/actions/liveNodeEdit";
 import { selectPage } from "../../redux/actions/ui";
 
@@ -315,9 +315,8 @@ class Graph extends React.Component {
       .force("link", d3.forceLink(this.props.data.links)
           .id(function(d) { /*reference by id, not index */return d.id })
           .distance(this.props.globalSettings.linkDistance || 900))
-      .force("collide", d3.forceCollide([65]).iterations([60]));
-
-    force.on("tick", () => {
+      .force("collide", d3.forceCollide([65]).iterations([60]))
+      .on("tick", () => {
       this.d3Graph.call(updateGraph);
     });
 
@@ -426,7 +425,6 @@ class Node extends React.Component {
       .datum(this.props.data)
       .call(enterNode);
   }
-
   componentDidUpdate() {
     d3.select(ReactDOM.findDOMNode(this))
       // won't update bg if uncommented
@@ -434,7 +432,6 @@ class Node extends React.Component {
       .datum(this.props.data)
       .call(enterNode);
   }
-
   render() {
     return (
       <g className="node">
@@ -456,29 +453,33 @@ class Node extends React.Component {
 }
 
 const enterNode = selection => {
+
+  const displayAttr = function (d, value, unitOfMeasure, defaultValue) {
+    const {tempCustomAttrs, customAttrs, tempCategoryAttrs, categoryAttrs} = d
+    // display in this priority order
+    // 1. temp custom
+    if (tempCustomAttrs && tempCustomAttrs[value]) {
+      return tempCustomAttrs[value];
+    }
+    // 2. custom
+    else if (customAttrs && customAttrs[value]) {
+      return customAttrs[value] + unitOfMeasure;
+    }
+    // 3. temp category
+    else if (tempCategoryAttrs && tempCategoryAttrs[value]) {
+      return d.tempCategoryAttrs[value];
+    }
+    // 4. category
+    else if (categoryAttrs && categoryAttrs[value]) {
+      return categoryAttrs[value];
+    } else {
+      return defaultValue;
+    }
+  }
+
   selection
     .select("circle")
-    .attr("r", function(d) {
-      if (d.tempCustomAttrs && d.tempCustomAttrs.radius) {
-        return d.tempCustomAttrs.radius;
-      }
-      else if (d.customAttrs && d.customAttrs.radius && d.tempCustomAttrs && !d.tempCustomAttrs.radius) {
-        // if radius is a custom attribute, but while editing radius is not checked,
-        // assign radius value as category value or default value if no category
-        return d.tempCategoryAttrs && d.tempCategoryAttrs.radius || d.categoryAttrs && d.categoryAttrs.radius || '30'
-      }
-      else if (d.customAttrs && d.customAttrs.radius) {
-        return d.customAttrs.radius;
-      }
-      else if (d.tempCategoryAttrs && d.tempCategoryAttrs.radius) {
-        return d.tempCategoryAttrs.radius;
-      }
-      else if (d.categoryAttrs && d.categoryAttrs.radius) {
-    return d.categoryAttrs.radius;
-  } else {
-        return 30;
-      }
-    })
+      .attr("r", function(d) { return displayAttr(d, 'radius', 'px', '30px')})
     .attr("stroke", function(d) {
       if (d.fx) {
         return "black";
@@ -530,52 +531,17 @@ const enterNode = selection => {
 
   selection
     .select("text")
-    .style("font-size", function(d) {
-      if (d.tempCustomAttrs && d.tempCustomAttrs.fontSize) {
-        return d.tempCustomAttrs.fontSize;
-      }
-      else if (d.customAttrs && d.customAttrs.fontSize && d.tempCustomAttrs && !d.tempCustomAttrs.fontSize) {
-        // if font size is a custom attribute, but while editing radius is not checked,
-        // assign font size value as category value or default value if no category
-        return d.categoryAttrs && d.categoryAttrs.fontSize || '18'
-      }
-      else if (d.customAttrs && d.customAttrs.fontSize) {
-        return d.customAttrs.fontSize + "px";
-      }
-      else if (d.tempCategoryAttrs && d.tempCategoryAttrs.fontSize) {
-        return d.tempCategoryAttrs.fontSize;
-      }
-      else if (d.categoryAttrs && d.categoryAttrs.fontSize) {
-        return d.categoryAttrs.fontSize;
-      } else {
-        return "30px";
-      }
-    })
+    .style("font-size", function (d) { return displayAttr(d, 'fontSize', 'px', '30px')})
     .attr("dy", ".95em")
-    .call(getBoundingBox);
-
-  function getBoundingBox(selection) {
-    selection.each(function(d) {
+    .call(selection => selection.each(function(d) {
       d.bbox = this.getBBox();
-    });
-  }
+    }));
 
   selection
     .select("rect")
       .attr("filter", 'url(#dropshadowunanchored)')
       .style("fill", function(d) {
-      if (
-        d.id === 0 ||
-        d.id === 3 ||
-        d.id === 7 ||
-        d.id === 8 ||
-        d.id === 11 ||
-        d.id === 15
-      ) {
-        return "orange";
-      } else {
         return "yellow";
-      }
     })
     .attr("width", function(d) {
       return d.bbox.width;
@@ -585,14 +551,12 @@ const enterNode = selection => {
     });
 };
 
-////////
-////////
-////////
+
 ////////
 
 const mapStateToProps = (state, props) => ({
-  file: state.simpleReducer.editedFile,
-  currentNode: state.simpleReducer.currentNode,
+  file: state.document.editedFile,
+  currentNode: state.document.currentNode,
   liveNodeEdit: state.liveNodeEdit,
   categoryEdit: state.categoryEdit,
   globalEdit: state.globalEdit
