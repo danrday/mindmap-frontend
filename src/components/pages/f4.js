@@ -1,18 +1,17 @@
+import React from "react";
 import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import savePdf from 'd3-save-pdf'
+import * as d3 from 'd3'
 
 import { saveAction, selectNode, handleZoom } from "../../redux/actions/simpleAction";
 import { populateCurrentNodeValues } from "../../redux/actions/liveNodeEdit";
 import { selectPage } from "../../redux/actions/ui";
 
-let d3 = require("d3");
-let React = require("react");
-
 const color = d3.scaleOrdinal(d3.schemeCategory10);
 
-/////// App component holds graph data in state and renders Graph component.
-/////// Graph component in turn renders Link and Node components.
+/*App component holds graph data in state and renders Graph component.
+Graph component in turn renders Link and Node components.*/
 
 class App extends React.Component {
   state = {
@@ -20,33 +19,37 @@ class App extends React.Component {
   };
 
   render() {
+    /*        Important: zooming does not cause a re-render at this level,
+   only clicking nodes, saving, deleting, and editing any temporary attributes that will reflect in the display.
+   On each render we write all the tempCustomAttrs(selected node edits)
+   and also tempCategoryAttrs(selected category edits temporarily apply to all members of a category)*/
+    // console.log("RENDER UPDATE: this.props:", this.props);
 
-    // console.log('RENDER UPDATE?', this.state.data)
-    // console.log("this.props", this.props);
-    if (this.props.file) {
-
+    if (this.props.file) {  // if file is loaded
       const liveNodeEdit = this.props.liveNodeEdit
-
       let modData = this.props.file
-
-
       const categoryEdit = this.props.categoryEdit
-      modData.nodes.forEach(node => {
+
+      modData.nodes.forEach(node => { // first erase any 'temporary category attributes' --
+        // (in process edits to a category's properties) applied earlier but not saved
+        // also delete 'temporary custom attributes'
+        // this way we ensure a fresh update on all nodes
 
         if (node.tempCategoryAttrs) {
           delete node.tempCategoryAttrs
         }
+        if (node.tempCustomAttrs) {
+          delete node.tempCustomAttrs
+        }
 
+        /*if you are currently editing a categories' properties,
+        apply those temp changes onto member node's tempCategoryAttrs*/
         if (node.category === categoryEdit.category) {
           node.tempCategoryAttrs = {}
           categoryEdit.checkedAttrs.forEach(attr => {
             node.tempCategoryAttrs[attr]= categoryEdit[attr]
           })
         }
-            if (node.tempCustomAttrs) {
-              delete node.tempCustomAttrs
-            }
-
       })
 
       // overwrite currently selected node with temp editing values to show live update
@@ -57,23 +60,19 @@ class App extends React.Component {
 
         // if the node hasn't been deleted'
         if (node !== -1) {
-          console.log('nodeee', node)
-          modData.nodes[node].name = liveNodeEdit.name
 
+          // TODO: Should be reset to previous name, restructure this
+          modData.nodes[node].name = liveNodeEdit.name
           if (liveNodeEdit.checkedAttrs.includes('category')) {
             modData.nodes[node].category = liveNodeEdit.category
           }
 
-
           // populate the temporary custom attributes being edited live
           modData.nodes[node].tempCustomAttrs = modData.nodes[node].tempCustomAttrs || {}
-
           liveNodeEdit.checkedAttrs.forEach(attr => {
             modData.nodes[node].tempCustomAttrs[attr]= liveNodeEdit[attr]
           })
         }
-
-
       }
 
       return (
@@ -81,6 +80,7 @@ class App extends React.Component {
         >
           <div
             className="graphContainer"
+            // TODO: ADD INLINE STYLES TO A CLASS
             style={{ width: '100%', height: '100%', position: "fixed", zIndex: 3000 }}
           >
             <Graph
@@ -100,49 +100,39 @@ class App extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
-
-  }
-
-
-  handleClick = currentClickedNode => {
+  handleClick = currentClickedNodeId => {
     const lastClickedNode = this.props.currentNode
-
-    console.log('lst, curr', lastClickedNode, currentClickedNode)
+    const currentNode = this.props.file.nodes.find(e => {
+      return e.id === currentClickedNodeId
+    })
 
     if (lastClickedNode) {
-      if (lastClickedNode === currentClickedNode) {
-        console.log(' 1st block', )
+      if (lastClickedNode === currentClickedNodeId) { //compare node ids
         this.setState({ lastClickedNode: null });
         this.props.selectNode(null);
       } else {
-        console.log(' 2st block', )
 
-
-        const last = this.props.file.nodes.find(e => {
+        // get full node object by id
+        const lastNode = this.props.file.nodes.find(e => {
           return e.id === lastClickedNode
         })
 
-        const current = this.props.file.nodes.find(e => {
-          return e.id ===  currentClickedNode
-        })
-
-        console.log('LAST', last)
-
         const newLink = {
-          source: last,
-          target: current
+          source: lastNode,
+          target: currentNode
         };
 
         const linkAlreadyExists = this.props.file.links.find(function(
-          currentClickedNode
+          link
         ) {
+          const currSourceId = link.source.id,
+          currTargetId = link.target.id,
+          newSourceId = newLink.source.id,
+          newTargetId = newLink.target.id
           return (
             // Check for target -> source AND source -> target
-            (currentClickedNode.source.id === newLink.source.id &&
-              currentClickedNode.target.id === newLink.target.id) ||
-            (currentClickedNode.source.id === newLink.target.id &&
-              currentClickedNode.target.id === newLink.source.id)
+            (currSourceId === newSourceId && currTargetId === newTargetId) ||
+            (currSourceId === newTargetId && currTargetId === newSourceId)
           );
         });
 
@@ -153,25 +143,17 @@ class App extends React.Component {
           });
         } else {
           newLinks = [...this.props.file.links, newLink];
-          console.log('new links', newLinks)
         }
-
-        const cats = this.props.file.categories || {}
-
-        const newData = { ...this.props.file, categories: cats, links: newLinks };
-
+        // BUG? WHY CATS HERE?
+        // const cats = this.props.file.categories || {}
+        // const newData = { ...this.props.file, categories: cats, links: newLinks };
+        const newData = { ...this.props.file, links: newLinks };
         this.props.saveAction(newData);
         this.props.selectNode(null);
       }
     } else {
-      this.setState({ lastClickedNode: currentClickedNode });
-      this.props.selectNode(currentClickedNode);
-
-      const currSelNode = this.props.file.nodes.find(e => {
-        return e.id === currentClickedNode;
-      });
-
-      this.props.populateCurrentNodeValues(currSelNode);
+      this.props.selectNode(currentClickedNodeId);
+      this.props.populateCurrentNodeValues(currentNode);
     }
   };
 }
@@ -180,14 +162,9 @@ class App extends React.Component {
 
 class Graph extends React.Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
-
-    // console.log('savePdf', savePdf)
-    // console.log('did component update?', this.props.data.nodes)
-
+    console.log('COMPONENT DID UPDATE', this.props)
     const charge = this.props.globalSettings.chargeStrength
     const dist = this.props.globalSettings.linkDistance
-
-
     window.force
         .force("charge", d3.forceManyBody().strength(charge || -60))
         .force("link", d3.forceLink(this.props.data.links).id(function(d) { return d.id; }).distance(function (d) {
@@ -196,11 +173,7 @@ class Graph extends React.Component {
         .alphaTarget(0.5)
         .velocityDecay(0.7)
         .restart()
-
-
     setTimeout(function(){  window.force.alphaTarget(0); }, 3000);
-
-
 
     const lastClicked = this.props.lastClickedNode
     if (lastClicked) {
@@ -209,21 +182,12 @@ class Graph extends React.Component {
         .filter(function(d, i) {
           return d.id === self.props.lastClickedNode;
         })
-        // .style("fill", function(d) {
-        //   return "red";
-        // })
           .style("stroke-width", function(d) {
-        return "10";
+        return "60";
       })
           .style("stroke", function(d) {
             return "red";
           })
-
-      //     .style("stroke-dasharray", function(d) {
-      //   return "6,10";
-      // }).style("stroke-linecap", function(d) {
-      //   return "round";
-      // });
     } else {
       d3.selectAll("circle").style("fill", function(d) {
         return color(d.name);
@@ -234,59 +198,43 @@ class Graph extends React.Component {
       });
     }
 
+
+    // d3 force related
+
     let force = window.force;
 
     let dragStarted = d => {
       if (!d3.event.active) force.alphaTarget(0.3).restart();
-
       if (d.fx) {
         d.sticky = true;
       }
-
       d.fx = d.x;
       d.fy = d.y;
     };
 
     let dragging = d => {
-      console.log("DRAGGING", d);
-
-      if (d.sticky) {
-        if (this.props.lastClickedNode && this.props.lastClickedNode === d.id) {
-          this.props.handleClick(d.id);
-          d.sticky = false;
-        } else {
-          // needed for some reason
-          d.sticky = "f";
-        }
-      }
-
       d.fx = d3.event.x;
       d.fy = d3.event.y;
+      // console.log('drag node', )
+      if (d.sticky && this.props.lastClickedNode === d.id) {
+        // console.log('select Sticky node, then start to drag it: Unstick and Unselect node.', )
+          this.props.handleClick(d.id);
+          d.sticky = false;
+        }
     };
 
     let dragEnded = d => {
-      console.log("DRAG ENDED", d);
       if (!d3.event.active) force.alphaTarget(0);
       if (this.props.lastClickedNode && this.props.lastClickedNode === d.id) {
-        console.log("last node", this.props.lastClickedNode, d);
-        if (d.sticky === "f") {
-          d.fx = null;
-          d.fy = null;
-          d.sticky = false;
-        } else {
-          console.log("no d.fx");
-          d.fx = d3.event.x;
-          d.fy = d3.event.y;
-          d.sticky = false;
-        }
+        // console.log('select an unsticky node and drag it, make it stick there', )
+        d.sticky = false;
       } else {
-        if (d.sticky) {
-          console.log("STIKCY");
-          d.fx = d3.event.x;
-          d.fy = d3.event.y;
-        } else {
+        if (!d.sticky) {
+          // console.log(' finish drag a selected sticky node, Unstick', )
           d.fx = null;
           d.fy = null;
+        } else {
+          // console.log('finish drag an unselected node', )
         }
       }
     };
@@ -306,103 +254,68 @@ class Graph extends React.Component {
 
   componentDidMount() {
 
+    const updateGraph = selection => {
+      selection.selectAll(".node").call(updateNode);
+      selection.selectAll(".link").call(updateLink);
+    };
+
+    const updateLink = selection => {
+      selection
+          .attr("x1", d => d.source.x)
+          .attr("y1", d => d.source.y)
+          .attr("x2", d => d.target.x)
+          .attr("y2", d => d.target.y);
+    };
+
+
+    const updateNode = selection => {
+      selection.attr("transform", d => {
+        return "translate(" + d.x + "," + d.y + ")";
+      });
+    };
+
     // set initial zoom frame from saved value
     d3.select(".frameForZoom")
         .attr("transform", `translate(${this.props.initialZoom.x}, ${this.props.initialZoom.y})scale(${this.props.initialZoom.k})`)
-        .on('click', d => {
-          // let x = (d3.event.x - zoomTrans.x)/zoomTrans.scale;
-          // let y = (d3.event.y - zoomTrans.y)/zoomTrans.scale;
-          // data.push({ x, y, id: Math.random() });
-          console.log('click!', d3.event.x, d3.event.y)
-        });
 
-    console.log("find dom node", this);
     // after initial render, this sets up d3 to do its thing outside of react
-    // x and y coords get added onto the nodes but react doesn't recognnize the changes
+
+    // React doesn't know much about d3's event system firing off. We can add custom dispatch methods onto d3 events.
+    // otherwise, we aren't aware of updates being performed by d3.
+    // Now I'm curious about displaying a  node's coordinates through react to see how it updates
+
     this.d3Graph = d3.select(ReactDOM.findDOMNode(this));
 
-    this.d3Graph.call(d3.zoom().on("zoom", () => zoomed(this))).on("dblclick.zoom", () => {
+    // view / zoom related:
+
+    this.d3Graph.call(d3.zoom().transform, d3.zoomIdentity
+        // set 'zoom identity' so d3 knows what zoom level you are at from the initialized value
+        .translate(this.props.initialZoom.x, this.props.initialZoom.y)
+        .scale(this.props.initialZoom.k)
+    )
+
+    this.d3Graph.call(d3.zoom()
+        .on("zoom", () => handleZoom(this)))
+        .on("dblclick.zoom", () => {
       return null; /*disable zoom on double click by default*/
     });
 
-    // set 'zoom identity' so d3 knows what zoom level you are at from the initialized value
-    let transform = d3.zoomIdentity.translate(this.props.initialZoom.x, this.props.initialZoom.y).scale(this.props.initialZoom.k);
-    this.d3Graph.call(d3.zoom().transform, transform)
-
-    function zoomed(self) {
+    function handleZoom(self) {
+      // console.log('Zoom:', {x, y, k})
       let {x, y, k} = d3.event.transform;
-      console.log('ZZZOOOOM', {x, y, k})
-      // d3.select(".frameForZoom").attr("transform", `translate(${x}, ${y})scale(${k})`);
-
       d3.select(".frameForZoom").attr("transform", d3.event.transform);
       self.props.handleZoom(d3.event.transform)
     }
 
+  // force directed graph:
+
     let force = d3
       .forceSimulation(this.props.data.nodes)
       .force("charge", d3.forceManyBody().strength(this.props.globalSettings.chargeStrength || -60))
-      .force("link", d3.forceLink(this.props.data.links).id(function(d) { /*reference by id, not index */return d.id }).distance(this.props.globalSettings.linkDistance || 900))
+      .force("link", d3.forceLink(this.props.data.links)
+          .id(function(d) { /*reference by id, not index */return d.id })
+          .distance(this.props.globalSettings.linkDistance || 900))
       .force("collide", d3.forceCollide([65]).iterations([60]));
-
-    function dragStarted(d) {
-      if (!d3.event.active) force.alphaTarget(0.3).restart();
-      if (d.fx) {
-        d.sticky = true;
-      }
-      d.fx = d.x;
-      d.fy = d.y;
-    }
-
-    let dragging = d => {
-      console.log("DRAGGING");
-      if (d.sticky) {
-        if (this.props.lastClickedNode && this.props.lastClickedNode === d.id) {
-          this.props.handleClick(d);
-          d.sticky = false;
-        } else {
-          // needed for some reason
-          d.sticky = "f";
-        }
-      }
-
-      d.fx = d3.event.x;
-      d.fy = d3.event.y;
-    };
-
-    let dragEnded = d => {
-      console.log("DRAG ENDED", d);
-      if (!d3.event.active) force.alphaTarget(0);
-      if (this.props.lastClickedNode && this.props.lastClickedNode === d.id) {
-        console.log("last node", this.props.lastClickedNode, d);
-        if (d.sticky === "f") {
-          d.fx = null;
-          d.fy = null;
-          d.sticky = false;
-        } else {
-          console.log("no d.fx");
-          d.fx = d3.event.x;
-          d.fy = d3.event.y;
-          d.sticky = false;
-        }
-      } else {
-        if (d.sticky) {
-          console.log("STIKCY");
-          d.fx = d3.event.x;
-          d.fy = d3.event.y;
-        } else {
-          d.fx = null;
-          d.fy = null;
-        }
-      }
-    };
-
-    d3.selectAll("g.node").call(
-      d3
-        .drag()
-        .on("start", dragStarted)
-        .on("drag", dragging)
-        .on("end", dragEnded)
-    );
 
     force.on("tick", () => {
       this.d3Graph.call(updateGraph);
@@ -416,17 +329,15 @@ class Graph extends React.Component {
     return this.props.data.categories[cat]
   }
 
+
+
   render() {
     const nodes = this.props.data.nodes.map(node => {
-      let attrs
       if (node.category) {
-        // console.log('node category', node.category)
        let cat = this.getCategory(node.category)
-
-        if (cat) {
+        if (cat) { /*check if it exists*/
           node.categoryAttrs = cat
         }
-
       }
       return (
           <Node
@@ -434,7 +345,7 @@ class Graph extends React.Component {
               name={node.name}
               key={node.id}
               handleClick={this.props.handleClick}
-              selectPage={this.props.selectPage}
+              selectPage={this.props.selectPage} /*when node is clicked, auto select edit nodes page*/
           />
       );
     })
@@ -492,45 +403,19 @@ class Graph extends React.Component {
 
 class Link extends React.Component {
   componentDidMount() {
-    this.d3Link = d3
-      .select(ReactDOM.findDOMNode(this))
+    d3.select(ReactDOM.findDOMNode(this))
       .datum(this.props.data)
       .call(enterLink);
   }
-
-  componentDidUpdate() {
-    this.d3Link.datum(this.props.data).call(updateLink);
-  }
-
   render() {
     return <line className="link" />;
   }
 }
-
 const enterLink = selection => {
   selection
     .attr("stroke-width", 2)
     .style("stroke", "brown")
     .style("opacity", ".2");
-};
-
-const updateLink = selection => {
-  selection
-    .attr("x1", d => d.source.x)
-    .attr("y1", d => d.source.y)
-    .attr("x2", d => d.target.x)
-    .attr("y2", d => d.target.y);
-};
-
-const updateGraph = selection => {
-  selection.selectAll(".node").call(updateNode);
-  selection.selectAll(".link").call(updateLink);
-};
-
-const updateNode = selection => {
-  selection.attr("transform", d => {
-    return "translate(" + d.x + "," + d.y + ")";
-  });
 };
 
 ///////
@@ -605,7 +490,6 @@ const enterNode = selection => {
     .style("fill", function(d) {
       return color(d.name);
     }).on('mouseover', function(d, i) {
-    console.log("mouseover on", this);
     d3.select(this)
         .transition().duration(200)
         // .style("fill", function(d) {
@@ -614,7 +498,6 @@ const enterNode = selection => {
         .style("stroke-width", '10')
         .style("stroke", "black")
   }).on('mouseout', function(d, i) {
-    console.log("mouseover on", this);
     d3.select(this)
         .transition().duration(200)
         .style("fill", function(d) {
