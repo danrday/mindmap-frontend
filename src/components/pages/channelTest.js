@@ -15,7 +15,7 @@ class ChannelTest extends Component {
     render() {
         return (
             <div>
-                <button onClick={this.props.addTodo('testing123')}></button>
+                <button onClick={() => this.props.addTodo('testing123')}></button>
             </div>
         )
     }
