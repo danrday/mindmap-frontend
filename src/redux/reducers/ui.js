@@ -4,7 +4,7 @@ const initialState = {
         msg: '',
         type: 'info',
     },
-    selectedPage: null
+    selectedPage: null,
 };
 
 export default (state = initialState, action) => {

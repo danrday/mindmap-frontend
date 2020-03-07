@@ -4,6 +4,7 @@ import Node from "./pages/node";
 import Categories from './pages/categories'
 import GlobalSettings from './pages/global'
 import RichText from './pages/richText'
+import ChannelTest from './pages/channelTest'
 
 const navLinks = [
   {
@@ -33,6 +34,17 @@ const navLinks = [
     component: props => {
       const customProps = props;
       return <Node {...customProps} />;
+    }
+  },
+  {
+    link: "/channels",
+    className: "icon ion-android-add-circle",
+    altClassName: "icon ion-android-create",
+    navItemText: "Channel Test",
+    altNavItemText: "Channel Test",
+    component: props => {
+      const customProps = props;
+      return <ChannelTest {...customProps} />;
     }
   },
   {
