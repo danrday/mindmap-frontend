@@ -154,7 +154,8 @@ export const saveDefaultsEdit = edits => dispatch => {
 export const handleZoom = zoomAttrs => dispatch => {
   dispatch({
     type: `HANDLE_ZOOM`,
-    payload: zoomAttrs
+    payload: zoomAttrs,
+    audit: {user: 'danday', time_stamp: 'Saturday 12.17 pm'}
   });
 };
 
