@@ -129,18 +129,18 @@ class App extends React.Component {
   };
 }
 
+function returnGlobalSetting(setting, section, globalSettings){
+  return globalSettings.checkedAttrs.includes(setting)
+      ? globalSettings[section].chargeStrength.customValue
+      : globalSettings[section].chargeStrength.defaultValue
+}
 /////// Graph component. Holds Link and Node components
 
 class Graph extends React.Component {
 
-  getAttributeValue = (d, attr) => {
-
-
-  }
-
   componentDidUpdate(prevProps, prevState, snapshot) {
     console.log('COMPONENT DID UPDATE', this.props)
-    const charge = this.props.globalSettings.checkedAttrs.includes('chargeStrength') && this.props.globalSettings.general.chargeStrength.customValue || this.props.globalSettings.general.chargeStrength.defaultValue
+    const charge = returnGlobalSetting('chargeStrength', 'general', this.props.globalSettings)
     const dist = this.props.globalSettings.linkDistance
     window.force
         .force("charge", d3.forceManyBody().strength(charge || -60))
@@ -286,10 +286,9 @@ class Graph extends React.Component {
     }
 
   // force directed graph:
-
     let force = d3
       .forceSimulation(this.props.data.nodes)
-      .force("charge", d3.forceManyBody().strength(this.props.globalSettings.checkedAttrs.includes('chargeStrength') && this.props.globalSettings.general.chargeStrength.customValue || this.props.globalSettings.general.chargeStrength.defaultValue))
+      .force("charge", d3.forceManyBody().strength(returnGlobalSetting('chargeStrength', 'general', this.props.globalSettings)))
       .force("link", d3.forceLink(this.props.data.links)
           .id(function(d) { /*reference by id, not index */return d.id })
           .distance(this.props.globalSettings.linkDistance || 900))

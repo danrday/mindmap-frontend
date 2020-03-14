@@ -49,7 +49,7 @@ class GlobalSettings extends Component {
                     disabled={!this.props.globalEdit.checkedAttrs.includes('chargeStrength')}
                     type="number"
                     className="input"
-                    value={this.props.globalEdit.general.chargeStrength.customValue || this.props.globalEdit.general.chargeStrength.defaultValue}
+                    value={this.props.globalEdit.checkedAttrs.includes('chargeStrength') ? this.props.globalEdit.general.chargeStrength.customValue : this.props.globalEdit.general.chargeStrength.defaultValue}
                     onChange={event => this.props.editValue({section: 'general', key: 'chargeStrength', value: event.target.value})}
                 />
                 <br/>
