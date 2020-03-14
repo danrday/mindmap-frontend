@@ -4,19 +4,18 @@ import { connect } from "react-redux";
 import savePdf from 'd3-save-pdf'
 import * as d3 from 'd3'
 
-import { saveAction, selectNode, handleZoom } from "../../redux/actions/document";
+import { saveAction, selectNode, selectAndLinkNode, handleZoom, handleMouseMove } from "../../redux/actions/document";
 import { populateCurrentNodeValues } from "../../redux/actions/liveNodeEdit";
 import { selectPage } from "../../redux/actions/ui";
 
 const color = d3.scaleOrdinal(d3.schemeCategory10);
 
-/*App component holds graph data in state and renders Graph component.
-Graph component in turn renders Link and Node components.*/
+/*
+App component holds graph data in state and renders Graph component.
+Graph component in turn renders Link and Node components.
+*/
 
 class App extends React.Component {
-  state = {
-    fileLoaded: false
-  };
 
   render() {
     /*        Important: zooming does not cause a re-render at this level,
@@ -25,7 +24,11 @@ class App extends React.Component {
    and also tempCategoryAttrs(selected category edits temporarily apply to all members of a category)*/
     // console.log("RENDER UPDATE: this.props:", this.props);
 
-    if (this.props.file) {  // if file is loaded
+
+    if (this.props.file && (Object.keys(this.props.globalEdit).length > 0)) {  // if file is loaded AND globalEdit populated (populateInitialValues)
+      console.log('this.props.globalEdit', this.props.globalEdit)
+      console.log('Object.keys(this.props.globalEdit).length', Object.keys(this.props.globalEdit).length)
+
       const liveNodeEdit = this.props.liveNodeEdit
       let modData = this.props.file
       const categoryEdit = this.props.categoryEdit
@@ -41,6 +44,12 @@ class App extends React.Component {
         if (node.tempCustomAttrs) {
           delete node.tempCustomAttrs
         }
+        if (node.globalSettings) {
+          delete node.globalSettings
+        }
+
+        // add global settings for default values
+        node.globalSettings = this.props.globalEdit.node
 
         /*if you are currently editing a categories' properties,
         apply those temp changes onto member node's tempCategoryAttrs*/
@@ -91,6 +100,8 @@ class App extends React.Component {
               handleZoom={this.props.handleZoom}
               selectPage={this.props.selectPage}
               initialZoom={this.props.file.globalSettings.zoom || null}
+              handleMouseMove={this.props.handleMouseMove}
+              mouse={this.props.mouse || {coords: {x: 0, y: 0}}}
             />
           </div>
         </div>
@@ -108,47 +119,9 @@ class App extends React.Component {
 
     if (lastClickedNode) {
       if (lastClickedNode === currentClickedNodeId) { //compare node ids
-        this.setState({ lastClickedNode: null });
         this.props.selectNode(null);
       } else {
-
-        // get full node object by id
-        const lastNode = this.props.file.nodes.find(e => {
-          return e.id === lastClickedNode
-        })
-
-        const newLink = {
-          source: lastNode,
-          target: currentNode
-        };
-
-        const linkAlreadyExists = this.props.file.links.find(function(
-          link
-        ) {
-          const currSourceId = link.source.id,
-          currTargetId = link.target.id,
-          newSourceId = newLink.source.id,
-          newTargetId = newLink.target.id
-          return (
-            // Check for target -> source AND source -> target
-            (currSourceId === newSourceId && currTargetId === newTargetId) ||
-            (currSourceId === newTargetId && currTargetId === newSourceId)
-          );
-        });
-
-        let newLinks;
-        if (linkAlreadyExists) {
-          newLinks = this.props.file.links.filter(function(e) {
-            return e !== linkAlreadyExists;
-          });
-        } else {
-          newLinks = [...this.props.file.links, newLink];
-        }
-        // BUG? WHY CATS HERE?
-        // const cats = this.props.file.categories || {}
-        // const newData = { ...this.props.file, categories: cats, links: newLinks };
-        const newData = { ...this.props.file, links: newLinks };
-        this.props.saveAction(newData);
+        this.props.selectAndLinkNode({currentClickedNodeId, lastClickedNode})
         this.props.selectNode(null);
       }
     } else {
@@ -158,12 +131,18 @@ class App extends React.Component {
   };
 }
 
+function returnGlobalSetting(setting, section, globalSettings){
+  return globalSettings.checkedAttrs.includes(setting)
+      ? globalSettings[section].chargeStrength.customValue
+      : globalSettings[section].chargeStrength.defaultValue
+}
 /////// Graph component. Holds Link and Node components
 
 class Graph extends React.Component {
+
   componentDidUpdate(prevProps, prevState, snapshot) {
     console.log('COMPONENT DID UPDATE', this.props)
-    const charge = this.props.globalSettings.chargeStrength
+    const charge = returnGlobalSetting('chargeStrength', 'general', this.props.globalSettings)
     const dist = this.props.globalSettings.linkDistance
     window.force
         .force("charge", d3.forceManyBody().strength(charge || -60))
@@ -183,7 +162,8 @@ class Graph extends React.Component {
           return d.id === self.props.lastClickedNode;
         })
           .style("stroke-width", function(d) {
-        return "60";
+            // return getAttributeValue(d, attr)
+        return "30";
       })
           .style("stroke", function(d) {
             return "red";
@@ -278,13 +258,17 @@ class Graph extends React.Component {
     d3.select(".frameForZoom")
         .attr("transform", `translate(${this.props.initialZoom.x}, ${this.props.initialZoom.y})scale(${this.props.initialZoom.k})`)
 
+
     // after initial render, this sets up d3 to do its thing outside of react
 
     // React doesn't know much about d3's event system firing off. We can add custom dispatch methods onto d3 events.
     // otherwise, we aren't aware of updates being performed by d3.
     // Now I'm curious about displaying a  node's coordinates through react to see how it updates
 
-    this.d3Graph = d3.select(ReactDOM.findDOMNode(this));
+    this.d3Graph = d3.select(ReactDOM.findDOMNode(this)).on("mousemove", () => {
+
+      this.props.handleMouseMove({x: d3.event.pageX, y: d3.event.pageY})
+    });
 
     // view / zoom related:
 
@@ -308,10 +292,9 @@ class Graph extends React.Component {
     }
 
   // force directed graph:
-
     let force = d3
       .forceSimulation(this.props.data.nodes)
-      .force("charge", d3.forceManyBody().strength(this.props.globalSettings.chargeStrength || -60))
+      .force("charge", d3.forceManyBody().strength(returnGlobalSetting('chargeStrength', 'general', this.props.globalSettings)))
       .force("link", d3.forceLink(this.props.data.links)
           .id(function(d) { /*reference by id, not index */return d.id })
           .distance(this.props.globalSettings.linkDistance || 900))
@@ -328,9 +311,37 @@ class Graph extends React.Component {
     return this.props.data.categories[cat]
   }
 
+  displayAttr (d, value) {
+    const {
+      tempCustomAttrs,
+      customAttrs,
+      tempCategoryAttrs,
+      categoryAttrs,
+      globalSettings
+    } = d
+    // display in the following priority order
+    // 1. temp custom
+    if (tempCustomAttrs && tempCustomAttrs[value]) {
+      return tempCustomAttrs[value];
+    } // 2. custom
+    else if (customAttrs && customAttrs[value]) {
+      return customAttrs[value];
+    }// 3. temp category
+    else if (tempCategoryAttrs && tempCategoryAttrs[value]) {
+      return d.tempCategoryAttrs[value];
+    }// 4. category
+    else if (categoryAttrs && categoryAttrs[value]) {
+      return categoryAttrs[value];
+    }// 5. custom set global settings
+    else if (globalSettings.checkedAttrs[value]) {
+      return globalSettings[value].customValue
+    }// 6. default global settings
+    else {return globalSettings[value].defaultValue}
+  }
 
 
   render() {
+    console.log('re render nodes and links?' )
     const nodes = this.props.data.nodes.map(node => {
       if (node.category) {
        let cat = this.getCategory(node.category)
@@ -342,6 +353,7 @@ class Graph extends React.Component {
           <Node
               data={node}
               name={node.name}
+              displayAttr={this.displayAttr}
               key={node.id}
               handleClick={this.props.handleClick}
               selectPage={this.props.selectPage} /*when node is clicked, auto select edit nodes page*/
@@ -360,34 +372,35 @@ class Graph extends React.Component {
       >
         <defs>
           <filter id="dropshadow" width="150%" height="180%">
-            <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"></feGaussianBlur>
-            <feOffset in="blur" dx="6" dy="6" result="offsetBlur"></feOffset>
+            <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
+            <feOffset in="blur" dx="6" dy="6" result="offsetBlur"/>
             <feMerge>
-              <feMergeNode></feMergeNode>
-              <feMergeNode in="SourceGraphic"></feMergeNode>
+              <feMergeNode/>
+              <feMergeNode in="SourceGraphic"/>
             </feMerge>
           </filter>
           <filter id="dropshadowtext" width="150%" height="180%">
-            <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"></feGaussianBlur>
-            <feOffset in="blur" dx="3" dy="3" result="offsetBlur"></feOffset>
+            <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
+            <feOffset in="blur" dx="3" dy="3" result="offsetBlur"/>
             <feMerge>
-              <feMergeNode></feMergeNode>
-              <feMergeNode in="SourceGraphic"></feMergeNode>
+              <feMergeNode/>
+              <feMergeNode in="SourceGraphic"/>
             </feMerge>
           </filter>
           <filter id="dropshadowunanchored" width="150%" height="180%" >
-            <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"></feGaussianBlur>
-            <feOffset in="blur" dx="20" dy="20" result="offsetBlur"></feOffset>
+            <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
+            <feOffset in="blur" dx="20" dy="20" result="offsetBlur"/>
             <feComponentTransfer>
               <feFuncA type="linear" slope=".2"/>
             </feComponentTransfer>
             <feMerge>
-              <feMergeNode></feMergeNode>
-              <feMergeNode in="SourceGraphic"></feMergeNode>
+              <feMergeNode/>
+              <feMergeNode in="SourceGraphic"/>
             </feMerge>
           </filter>
         </defs>
         <rect width="100%" height="100%" fill="powderblue"/>
+        <rect width="20px" height="20px" x={this.props.mouse.coords.x -270} y={this.props.mouse.coords.y -60} fill="black"/>
         <g className="frameForZoom">
 
           <g>{nodes}</g>
@@ -406,6 +419,13 @@ class Link extends React.Component {
       .datum(this.props.data)
       .call(enterLink);
   }
+  componentDidUpdate() {
+    d3.select(ReactDOM.findDOMNode(this))
+        // won't update bg if uncommented
+        // .selectAll(".node")
+        .datum(this.props.data)
+        .call(enterLink);
+  }
   render() {
     return <line className="link" />;
   }
@@ -420,17 +440,19 @@ const enterLink = selection => {
 ///////
 
 class Node extends React.Component {
+
   componentDidMount() {
     d3.select(ReactDOM.findDOMNode(this))
       .datum(this.props.data)
-      .call(enterNode);
+      .call(enterNode(this.props.displayAttr));
   }
   componentDidUpdate() {
+    console.log('node update', this.props.data)
     d3.select(ReactDOM.findDOMNode(this))
       // won't update bg if uncommented
       // .selectAll(".node")
       .datum(this.props.data)
-      .call(enterNode);
+      .call(enterNode(this.props.displayAttr));
   }
   render() {
     return (
@@ -452,103 +474,84 @@ class Node extends React.Component {
   }
 }
 
-const enterNode = selection => {
+const enterNode = (displayAttr) => {
 
-  const displayAttr = function (d, value, unitOfMeasure, defaultValue) {
-    const {tempCustomAttrs, customAttrs, tempCategoryAttrs, categoryAttrs} = d
-    // display in this priority order
-    // 1. temp custom
-    if (tempCustomAttrs && tempCustomAttrs[value]) {
-      return tempCustomAttrs[value];
-    }
-    // 2. custom
-    else if (customAttrs && customAttrs[value]) {
-      return customAttrs[value] + unitOfMeasure;
-    }
-    // 3. temp category
-    else if (tempCategoryAttrs && tempCategoryAttrs[value]) {
-      return d.tempCategoryAttrs[value];
-    }
-    // 4. category
-    else if (categoryAttrs && categoryAttrs[value]) {
-      return categoryAttrs[value];
-    } else {
-      return defaultValue;
-    }
+  return (selection) => {
+    selection
+        .select("circle")
+        .attr("r", function(d) { return displayAttr(d, 'radius', 'px')})
+        .attr("stroke", function(d) {
+          if (d.fx) {
+            return "black";
+          } else {
+            return "purple";
+          }
+        })
+        .attr("filter", 'url(#dropshadowunanchored)')
+        .style("fill", function(d) {
+          return color(d.name);
+        })
+    //     .on('mouseover', function(d, i) {
+    //   d3.select(this)
+    //       .transition().duration(200)
+    //       // .style("fill", function(d) {
+    //       //   return 'purple';
+    //       // })
+    //       .style("stroke-width", '10')
+    //       .style("stroke", "black")
+    // }).on('mouseout', function(d, i) {
+    //   d3.select(this)
+    //       .transition().duration(200)
+    //       .style("fill", function(d) {
+    //         if (d.tempCustomAttrs) {
+    //           // return 'red';
+    //
+    //           return color(d.name);
+    //
+    //         } else {
+    //           return color(d.name);
+    //         }
+    //       })
+    //       .style("stroke-width", function(d) {
+    //         if (d.tempCustomAttrs) {
+    //           return '10'
+    //
+    //         } else {
+    //           return '1'
+    //         }
+    //       })
+    //       .style("stroke", function(d) {
+    //         if (d.tempCustomAttrs) {
+    //           return 'red'
+    //
+    //         } else {
+    //           return "black"
+    //         }
+    //       })
+    // })
+
+    selection
+        .select("text")
+        .style("font-size", function (d) { return displayAttr(d, 'fontSize', 'px')})
+        .attr("dy", ".95em")
+        .call(selection => selection.each(function(d) {
+          d.bbox = this.getBBox();
+        }));
+
+    selection
+        .select("rect")
+        .attr("filter", 'url(#dropshadowunanchored)')
+        .style("fill", function(d) {
+          return "yellow";
+        })
+        .attr("width", function(d) {
+          return d.bbox.width;
+        })
+        .attr("height", function(d) {
+          return d.bbox.height;
+        });
   }
 
-  selection
-    .select("circle")
-      .attr("r", function(d) { return displayAttr(d, 'radius', 'px', '30px')})
-    .attr("stroke", function(d) {
-      if (d.fx) {
-        return "black";
-      } else {
-        return "purple";
-      }
-    })
-    .attr("filter", 'url(#dropshadowunanchored)')
-    .style("fill", function(d) {
-      return color(d.name);
-    }).on('mouseover', function(d, i) {
-    d3.select(this)
-        .transition().duration(200)
-        // .style("fill", function(d) {
-        //   return 'purple';
-        // })
-        .style("stroke-width", '10')
-        .style("stroke", "black")
-  }).on('mouseout', function(d, i) {
-    d3.select(this)
-        .transition().duration(200)
-        .style("fill", function(d) {
-          if (d.tempCustomAttrs) {
-            // return 'red';
-
-            return color(d.name);
-
-          } else {
-            return color(d.name);
-          }
-        })
-        .style("stroke-width", function(d) {
-          if (d.tempCustomAttrs) {
-            return '10'
-
-          } else {
-            return '1'
-          }
-        })
-        .style("stroke", function(d) {
-          if (d.tempCustomAttrs) {
-            return 'red'
-
-          } else {
-            return "black"
-          }
-        })
-  })
-
-  selection
-    .select("text")
-    .style("font-size", function (d) { return displayAttr(d, 'fontSize', 'px', '30px')})
-    .attr("dy", ".95em")
-    .call(selection => selection.each(function(d) {
-      d.bbox = this.getBBox();
-    }));
-
-  selection
-    .select("rect")
-      .attr("filter", 'url(#dropshadowunanchored)')
-      .style("fill", function(d) {
-        return "yellow";
-    })
-    .attr("width", function(d) {
-      return d.bbox.width;
-    })
-    .attr("height", function(d) {
-      return d.bbox.height;
-    });
 };
 
 
@@ -559,14 +562,17 @@ const mapStateToProps = (state, props) => ({
   currentNode: state.document.currentNode,
   liveNodeEdit: state.liveNodeEdit,
   categoryEdit: state.categoryEdit,
-  globalEdit: state.globalEdit
+  globalEdit: state.globalEdit,
+  mouse: state.document.mouse
 });
 
 const mapDispatchToProps = dispatch => ({
   saveAction: file => dispatch(saveAction(file)),
   selectNode: node => dispatch(selectNode(node)),
+  selectAndLinkNode: node => dispatch(selectAndLinkNode(node)),
   populateCurrentNodeValues: node => dispatch(populateCurrentNodeValues(node)),
   handleZoom: zoomAttrs => dispatch(handleZoom(zoomAttrs)),
+  handleMouseMove: coords => dispatch(handleMouseMove(coords)),
   selectPage: i => dispatch(selectPage(i))
 });
 

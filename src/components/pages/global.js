@@ -49,8 +49,8 @@ class GlobalSettings extends Component {
                     disabled={!this.props.globalEdit.checkedAttrs.includes('chargeStrength')}
                     type="number"
                     className="input"
-                    value={this.props.globalEdit.chargeStrength || ""}
-                    onChange={event => this.props.editValue({key: 'chargeStrength', value: event.target.value})}
+                    value={this.props.globalEdit.checkedAttrs.includes('chargeStrength') ? this.props.globalEdit.general.chargeStrength.customValue : this.props.globalEdit.general.chargeStrength.defaultValue}
+                    onChange={event => this.props.editValue({section: 'general', key: 'chargeStrength', value: event.target.value})}
                 />
                 <br/>
                 <br/>
@@ -69,7 +69,7 @@ class GlobalSettings extends Component {
                     type="number"
                     className="input"
                     value={this.props.globalEdit.linkDistance || ""}
-                    onChange={event => this.props.editValue({key: 'linkDistance', value: event.target.value})}
+                    onChange={event => this.props.editValue({section: 'general', key: 'linkDistance', value: event.target.value})}
                 />
             </div>
         );

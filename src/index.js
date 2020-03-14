@@ -12,6 +12,18 @@ import { Provider } from "react-redux";
 import configureStore from "./redux/store";
 
 
+const {store, channel} = configureStore()
+
+// store.dispatch((msg) => {
+// console.log('hello?', )
+//     return {
+//         type: "WTF",
+//         payload: "AAAAAH",
+//         server_msg: true
+//     }
+// })
+
+
 const alertOptions = {
     // you can also just use 'bottom center'
     position: positions.BOTTOM_CENTER,
@@ -26,9 +38,9 @@ const alertOptions = {
 
 
 ReactDOM.render(
-  <Provider store={configureStore()}>
+  <Provider store={store}>
       <AlertProvider template={AlertTemplate} {...alertOptions}>
-          <App style={{width: '100%', height: '100%'}}/>
+          <App channel={channel} style={{width: '100%', height: '100%'}}/>
       </AlertProvider>
   </Provider>,
   document.getElementById("root")

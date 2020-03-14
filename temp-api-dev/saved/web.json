@@ -1,1 +1,174 @@
-{"categories":{"4":{"radius":"555","newCategoryName":"4"},"asdf":{"radius":"61","newCategoryName":"asdf"},"sd":{"radius":"2","newCategoryName":"sd"},"terw":{"radius":"18","newCategoryName":"terw"},"er":{"radius":"27","newCategoryName":"er"},"e":{"radius":"213","newCategoryName":"e"},"sdf":{"radius":"500","newCategoryName":"sdf"},"re":{"radius":"444","newCategoryName":"re"},"fuu":{"radius":"41","newCategoryName":"fuu","fontSize":"47"},"butthole":{"fontSize":"69","newCategoryName":"butthole"},"po":{"newCategoryName":"po","radius":"44"},"ppppp":{"newCategoryName":"ppppp","radius":"77","fontSize":"430"},"butthole1":{"fontSize":"106","newCategoryName":"butthole1"},"fuck":{"newCategoryName":"fuck","fontSize":"222"},"finally":{"fontSize":null,"newCategoryName":"finally","radius":"62","category":"finally"},"FUCKUBICH":{"radius":"45","newCategoryName":"FUCKUBICH","category":"FUCKUBICH"},"YO":{"newCategoryName":"YO","category":"YO","fontSize":"776","radius":"548"},"iuytiutiu":{"radius":"66","fontSize":"90","newCategoryName":"iuytiutiu","category":"iuytiutiu"},"hi":{"radius":"76","fontSize":"118","newCategoryName":"hi","category":"hi"},"lol":{"category":"lol","radius":"2000","newCategoryName":"lol"},"lol2":{"category":"lol2","newCategoryName":"lol2"}},"nodes":[{"name":"to do","id":"e4d7ff68-2ea8-4463-80af-f1cda518c45b","index":0,"x":-3608.402656034855,"y":443.81821547061986,"vy":0,"vx":0,"sticky":true,"fx":-3608.402656034855,"fy":443.81821547061986,"bbox":{},"customAttrs":{"category":"lol","fontSize":"300"},"category":"lol","categoryAttrs":{"category":"lol","radius":"2000","newCategoryName":"lol"}},{"name":"save multiple versions","id":"ccdfda6a-cfba-4594-bbcf-a9cd4b11ecf5","index":1,"x":-3386.761292000201,"y":-835.065765449152,"vy":0,"vx":0,"sticky":"f","fx":-3386.761292000201,"fy":-835.065765449152,"bbox":{}},{"name":"png screenshots attached to each version, allow step-through","id":"70111cfb-beee-4b1b-adb8-e8d76f6d7460","index":2,"x":-3582.395786884804,"y":-522.7966805390045,"vy":0,"vx":0,"sticky":"f","fx":-3582.395786884804,"fy":-522.7966805390045,"bbox":{},"customAttrs":{}},{"name":"software marketing strategies","id":"c301f95f-516a-4681-b109-60d9bdd431c0","index":3,"x":-2356.034484775644,"y":-2604.963267380441,"vy":0,"vx":0,"sticky":true,"fx":-2356.034484775644,"fy":-2604.963267380441,"bbox":{},"customAttrs":{}},{"name":"creative industry","id":"57ec524a-5b65-4d77-9676-e6957c826570","index":4,"x":-984.3150123675841,"y":-1881.0379406659945,"vy":0,"vx":0,"sticky":"f","fx":-984.3150123675841,"fy":-1881.0379406659945,"bbox":{}},{"name":"screenwriting","id":"b91a06a6-758f-4925-a84e-accf2a5faacc","index":5,"x":-909.1060092325156,"y":-1645.257981796657,"vy":0,"vx":0,"sticky":"f","fx":-909.1060092325156,"fy":-1645.257981796657,"bbox":{},"customAttrs":{}},{"name":"note taking","id":"19b07bf8-c8f7-452e-a665-531b8921b90d","index":6,"x":-2503.2763092946443,"y":-2900.94946597653,"vy":0,"vx":0,"sticky":true,"fx":-2503.2763092946443,"fy":-2900.94946597653,"bbox":{}},{"name":"school","id":"bc879d68-91c0-4ee6-aa65-69c4fd355374","index":7,"x":-3632.147147159505,"y":-7410.17973171004,"vy":0,"vx":0,"sticky":true,"fx":-3632.147147159505,"fy":-7410.17973171004,"bbox":{},"customAttrs":{"fontSize":"3000","radius":397},"tempCustomAttrs":{"fontSize":"3000","radius":397}},{"name":"work","id":"39f90d62-771f-4728-b752-41de936dbcfe","index":8,"x":-2010.9582414045594,"y":-2821.2099580244358,"vy":0,"vx":0,"sticky":true,"fx":-2010.9582414045594,"fy":-2821.2099580244358,"bbox":{}},{"name":"open files screen","id":"d41b39aa-bee0-4b4d-819d-16ab5c160112","index":9,"x":-3505.073235610259,"y":-1115.2680136046201,"vy":0,"vx":0,"sticky":true,"fx":-3505.073235610259,"fy":-1115.2680136046201,"bbox":{},"customAttrs":{}},{"name":"occupations","id":"86eb46ff-8d2f-45ff-a7b0-0d27f74f1d70","index":10,"x":-2830.9001946721896,"y":-2408.11908093388,"vy":0,"vx":0,"sticky":false,"fx":-2830.9001946721896,"fy":-2408.11908093388,"bbox":{},"customAttrs":{}},{"name":"crash test operator","id":"1ac300ff-5172-4f12-9baa-02cb53f65e49","index":11,"x":-2575.858451976188,"y":-2237.922079885367,"vy":0,"vx":0,"sticky":"f","fx":-2575.858451976188,"fy":-2237.922079885367,"bbox":{},"customAttrs":{}},{"name":"hologram of the past in an abandoned factory","id":"b1d194d3-a85b-4d31-913b-9e889ee0dc9e","index":12,"x":-1889.1213959631864,"y":-1263.7460208983332,"vy":0,"vx":0,"sticky":true,"fx":-1889.1213959631864,"fy":-1263.7460208983332,"bbox":{},"customAttrs":{}},{"name":"st louis","id":"fde35289-85a1-4e0e-982a-b9f071b17db2","index":13,"x":-2044.3277369404082,"y":-860.9038427945651,"vy":0.0938868917587233,"vx":-0.09658952674473346,"sticky":false,"fx":null,"fy":null,"bbox":{},"customAttrs":{}},{"name":"elixir/phoenix/liveview","id":"bb8303ac-17a0-4904-b9b2-ba69807b31aa","index":14,"x":802.4181071475082,"y":-3532.802972488612,"vy":0,"vx":0,"sticky":false,"fx":802.4181071475082,"fy":-3532.802972488612,"bbox":{},"customAttrs":{"fontSize":"200","radius":"217"}},{"name":"the OCD market","id":"d8e97c12-d59e-4c5b-af11-14b54e9cb23a","index":15,"x":-957.7454377532717,"y":-2182.05297802252,"vy":0,"vx":0,"sticky":true,"fx":-957.7454377532717,"fy":-2182.05297802252,"bbox":{},"customAttrs":{}},{"name":"autism","id":"79825e91-2748-4e15-a767-7baf28cf8e0b","index":16,"x":-815.4459031893434,"y":-2416.2071875669963,"vy":0,"vx":0,"sticky":false,"fx":-815.4459031893434,"fy":-2416.2071875669963,"bbox":{},"customAttrs":{}},{"name":"hologram of the future","id":"311dda56-ce1b-4f42-b8fa-dec14f7e13d4","index":17,"x":-1791.0609016617952,"y":-947.6204687564417,"vy":0.014898188487625488,"vx":-0.010365877547842153,"sticky":false,"fx":null,"fy":null,"bbox":{}},{"name":"new big planet","id":"2b974e38-d999-4e7e-9396-80ed619f9ec2","index":18,"x":1556.1888666044388,"y":-1130.4553931309283,"vy":0,"vx":0,"sticky":true,"fx":1556.1888666044388,"fy":-1130.4553931309283,"bbox":{},"category":"lol","categoryAttrs":{"category":"lol","radius":"2000","newCategoryName":"lol"},"customAttrs":{"category":"lol","fontSize":"300","radius":827}},{"name":"Got a text editor here..","id":"336d368e-4558-422f-8ec7-9248a9ab1c52","index":19,"x":-2942.6608613849035,"y":-956.5836422574334,"vy":0,"vx":0,"sticky":true,"fx":-2942.6608613849035,"fy":-956.5836422574334,"bbox":{},"customAttrs":{"radius":139}}],"links":[{"source":"ccdfda6a-cfba-4594-bbcf-a9cd4b11ecf5","target":"70111cfb-beee-4b1b-adb8-e8d76f6d7460","index":0},{"source":"c301f95f-516a-4681-b109-60d9bdd431c0","target":"e4d7ff68-2ea8-4463-80af-f1cda518c45b","index":1},{"source":"c301f95f-516a-4681-b109-60d9bdd431c0","target":"57ec524a-5b65-4d77-9676-e6957c826570","index":2},{"source":"57ec524a-5b65-4d77-9676-e6957c826570","target":"b91a06a6-758f-4925-a84e-accf2a5faacc","index":3},{"source":"19b07bf8-c8f7-452e-a665-531b8921b90d","target":"c301f95f-516a-4681-b109-60d9bdd431c0","index":4},{"source":"bc879d68-91c0-4ee6-aa65-69c4fd355374","target":"19b07bf8-c8f7-452e-a665-531b8921b90d","index":5},{"source":"39f90d62-771f-4728-b752-41de936dbcfe","target":"19b07bf8-c8f7-452e-a665-531b8921b90d","index":6},{"source":"d41b39aa-bee0-4b4d-819d-16ab5c160112","target":"e4d7ff68-2ea8-4463-80af-f1cda518c45b","index":7},{"source":"ccdfda6a-cfba-4594-bbcf-a9cd4b11ecf5","target":"d41b39aa-bee0-4b4d-819d-16ab5c160112","index":8},{"source":"86eb46ff-8d2f-45ff-a7b0-0d27f74f1d70","target":"1ac300ff-5172-4f12-9baa-02cb53f65e49","index":9},{"source":"e4d7ff68-2ea8-4463-80af-f1cda518c45b","target":"b1d194d3-a85b-4d31-913b-9e889ee0dc9e","index":10},{"source":"b1d194d3-a85b-4d31-913b-9e889ee0dc9e","target":"fde35289-85a1-4e0e-982a-b9f071b17db2","index":11},{"source":"bb8303ac-17a0-4904-b9b2-ba69807b31aa","target":"c301f95f-516a-4681-b109-60d9bdd431c0","index":12},{"source":"d8e97c12-d59e-4c5b-af11-14b54e9cb23a","target":"c301f95f-516a-4681-b109-60d9bdd431c0","index":13},{"source":"79825e91-2748-4e15-a767-7baf28cf8e0b","target":"d8e97c12-d59e-4c5b-af11-14b54e9cb23a","index":14},{"source":"311dda56-ce1b-4f42-b8fa-dec14f7e13d4","target":"b1d194d3-a85b-4d31-913b-9e889ee0dc9e","index":15},{"source":"e4d7ff68-2ea8-4463-80af-f1cda518c45b","target":"2b974e38-d999-4e7e-9396-80ed619f9ec2","index":16},{"source":"c301f95f-516a-4681-b109-60d9bdd431c0","target":"bc879d68-91c0-4ee6-aa65-69c4fd355374","index":17}],"globalSettings":{"checkedAttrs":["chargeStrength","linkDistance"],"radius":null,"radiusRangeMax":756,"fontSize":null,"chargeStrength":"-320","linkDistance":"300","defaults":{"radius":30,"fontSize":30,"chargeStrength":-320,"linkDistance":300,"bgColor":"powderblue","sideMenuOpenOnInit":true,"goToEditNodePageWhenNodeIsClicked":true,"nodeColor":"blue","nodeHoverColor":"green"},"zoom":{"k":0.08520114338687154,"x":544.7766991915114,"y":800.1526285617186}}}
+{
+  "categories": {},
+  "globalSettings": {
+    "chargeStrength": "-700",
+    "checkedAttrs": [
+      "linkDistance"
+    ],
+    "controls": {
+      "radiusRangeMax": {
+        "customValue": 2833,
+        "defaultValue": 2000
+      }
+    },
+    "defaults": {
+      "bgColor": "powderblue",
+      "fontSize": 30,
+      "goToEditNodePageWhenNodeIsClicked": true,
+      "linkDistance": 300,
+      "nodeColor": "blue",
+      "nodeHoverColor": "green",
+      "radius": 30,
+      "sideMenuOpenOnInit": true
+    },
+    "fontSize": null,
+    "general": {
+      "chargeStrength": {
+        "customValue": "-700",
+        "defaultValue": "-700"
+      },
+      "linkDistance": {
+        "customValue": "505",
+        "defaultValue": "505"
+      }
+    },
+    "linkDistance": "505",
+    "node": {
+      "checkedAttrs": [],
+      "fontSize": {
+        "customValue": null,
+        "defaultValue": 50
+      },
+      "radius": {
+        "customValue": null,
+        "defaultValue": 30
+      },
+      "radiusRangeMax": {
+        "customValue": null,
+        "defaultValue": 1000
+      }
+    },
+    "radius": null,
+    "radiusRangeMax": 756,
+    "zoom": {
+      "k": 0.4079329796515761,
+      "x": 2031.315035870646,
+      "y": 3907.9446603136703
+    }
+  },
+  "links": [
+    {
+      "source": "af0f8b50-dffd-47cf-a936-1b2627628e53",
+      "target": "2fc4ce12-b49c-4590-a6dc-afc361320e85",
+      "index": 0
+    },
+    {
+      "source": "2fc4ce12-b49c-4590-a6dc-afc361320e85",
+      "target": "ee37261b-e659-4e68-91a6-a6846422e476",
+      "index": 1
+    },
+    {
+      "source": "ee37261b-e659-4e68-91a6-a6846422e476",
+      "target": "af0f8b50-dffd-47cf-a936-1b2627628e53",
+      "index": 2
+    }
+  ],
+  "nodes": [
+    {
+      "name": "new",
+      "id": "af0f8b50-dffd-47cf-a936-1b2627628e53",
+      "index": 0,
+      "x": -4431.874529348066,
+      "y": -8603.301490308226,
+      "vy": 0,
+      "vx": 0,
+      "sticky": true,
+      "fx": -4431.874529348066,
+      "fy": -8603.301490308226,
+      "bbox": {},
+      "customAttrs": {
+        "fontSize": "150",
+        "radius": 397
+      },
+      "globalSettings": {
+        "checkedAttrs": [],
+        "fontSize": {
+          "customValue": null,
+          "defaultValue": 50
+        },
+        "radius": {
+          "customValue": null,
+          "defaultValue": 30
+        },
+        "radiusRangeMax": {
+          "customValue": null,
+          "defaultValue": 1000
+        }
+      },
+      "tempCustomAttrs": {
+        "fontSize": "150",
+        "radius": 397
+      }
+    },
+    {
+      "name": "asdf",
+      "id": "ee37261b-e659-4e68-91a6-a6846422e476",
+      "index": 1,
+      "x": -3870.382289679577,
+      "y": -9410.482139214966,
+      "vy": 0,
+      "vx": 0,
+      "sticky": true,
+      "fx": -3870.382289679577,
+      "fy": -9410.482139214966,
+      "bbox": {},
+      "customAttrs": {},
+      "globalSettings": {
+        "checkedAttrs": [],
+        "fontSize": {
+          "customValue": null,
+          "defaultValue": 50
+        },
+        "radius": {
+          "customValue": null,
+          "defaultValue": 30
+        },
+        "radiusRangeMax": {
+          "customValue": null,
+          "defaultValue": 1000
+        }
+      }
+    },
+    {
+      "name": "123",
+      "id": "2fc4ce12-b49c-4590-a6dc-afc361320e85",
+      "index": 2,
+      "x": -3024.315433950241,
+      "y": -8543.611727222364,
+      "vy": 0,
+      "vx": 0,
+      "sticky": true,
+      "fx": -3024.315433950241,
+      "fy": -8543.611727222364,
+      "bbox": {},
+      "customAttrs": {
+        "radius": 667
+      },
+      "globalSettings": {
+        "checkedAttrs": [],
+        "fontSize": {
+          "customValue": null,
+          "defaultValue": 50
+        },
+        "radius": {
+          "customValue": null,
+          "defaultValue": 30
+        },
+        "radiusRangeMax": {
+          "customValue": null,
+          "defaultValue": 1000
+        }
+      }
+    }
+  ]
+}

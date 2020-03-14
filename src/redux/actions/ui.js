@@ -21,3 +21,4 @@ export const selectPage = pageName => dispatch => {
         payload: pageName
     });
 };
+

@@ -100,6 +100,20 @@ export const selectNode = node => dispatch => {
   });
 };
 
+export const handleMouseMove = coords => dispatch => {
+  dispatch({
+    type: "HANDLE_MOUSE_MOVE",
+    payload: coords
+  });
+};
+
+export const selectAndLinkNode = node => dispatch => {
+  dispatch({
+    type: "SELECT_AND_LINK_NODE",
+    payload: node
+  });
+};
+
 export const postAction = file => dispatch => {
   const h = "web";
 
@@ -154,7 +168,8 @@ export const saveDefaultsEdit = edits => dispatch => {
 export const handleZoom = zoomAttrs => dispatch => {
   dispatch({
     type: `HANDLE_ZOOM`,
-    payload: zoomAttrs
+    payload: zoomAttrs,
+    audit: {user: 'danday', time_stamp: 'Saturday 12.17 pm'}
   });
 };
 

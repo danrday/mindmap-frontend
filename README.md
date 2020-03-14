@@ -47,9 +47,10 @@ screen.
 + ~~Make slider component~~
 + ~~Add delete button onto edit node screen~~
 + ~~BUG: have link distances auto load saved values~~
++ ~~REFACTOR~~
 
 In Progress:
-+ REFACTOR
+
 + Print out a pdf
 +  - a. Select proportions by using svg mask
 + Add shadow under unanchored nodes

@@ -1,26 +1,4 @@
-const initialState = {
-    checkedAttrs: ['radiusRangeMax'],
-    radius: null,
-    radiusRangeMax: null,
-    fontSize: null,
-    chargeStrength: null,
-    linkDistance: null,
-    defaults: {
-        radius: 30,
-        radiusRangeMin: 0,
-        radiusRangeMax: 500,
-        fontSize: 30,
-        chargeStrength: -320,
-        linkDistance: 300,
-        bgColor: 'powderblue',
-        sideMenuOpenOnInit: true,
-        goToEditNodePageWhenNodeIsClicked: true,
-        nodeColor: 'blue',
-        nodeHoverColor: 'green',
-        seeLinksOverlapNodes: true,
-
-    }
-};
+const initialState = {};
 
 export default (state = initialState, action) => {
     switch (action.type) {
@@ -32,8 +10,10 @@ export default (state = initialState, action) => {
             return { ...state, checkedAttrs: action.payload };
         }
         case `globalEdit/HANDLE_ATTRIBUTE_VALUE_CHANGE`: {
-            const {key, value} = action.payload
-            return { ...state, [key]: value };
+            const {section, key, value} = action.payload
+            return { ...state,
+                [section]: {...state[section], [key]: {...state[section][key], customValue: value}}
+            };
         }
         default:
             return state;
