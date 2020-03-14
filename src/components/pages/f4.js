@@ -24,7 +24,11 @@ class App extends React.Component {
    and also tempCategoryAttrs(selected category edits temporarily apply to all members of a category)*/
     // console.log("RENDER UPDATE: this.props:", this.props);
 
-    if (this.props.file) {  // if file is loaded
+
+    if (this.props.file && (Object.keys(this.props.globalEdit).length > 0)) {  // if file is loaded AND globalEdit populated (populateInitialValues)
+      console.log('this.props.globalEdit', this.props.globalEdit)
+      console.log('Object.keys(this.props.globalEdit).length', Object.keys(this.props.globalEdit).length)
+
       const liveNodeEdit = this.props.liveNodeEdit
       let modData = this.props.file
       const categoryEdit = this.props.categoryEdit
@@ -136,7 +140,7 @@ class Graph extends React.Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     console.log('COMPONENT DID UPDATE', this.props)
-    const charge = this.props.globalSettings.chargeStrength
+    const charge = this.props.globalSettings.checkedAttrs.includes('chargeStrength') && this.props.globalSettings.general.chargeStrength.customValue || this.props.globalSettings.general.chargeStrength.defaultValue
     const dist = this.props.globalSettings.linkDistance
     window.force
         .force("charge", d3.forceManyBody().strength(charge || -60))
@@ -285,7 +289,7 @@ class Graph extends React.Component {
 
     let force = d3
       .forceSimulation(this.props.data.nodes)
-      .force("charge", d3.forceManyBody().strength(this.props.globalSettings.chargeStrength || -60))
+      .force("charge", d3.forceManyBody().strength(this.props.globalSettings.checkedAttrs.includes('chargeStrength') && this.props.globalSettings.general.chargeStrength.customValue || this.props.globalSettings.general.chargeStrength.defaultValue))
       .force("link", d3.forceLink(this.props.data.links)
           .id(function(d) { /*reference by id, not index */return d.id })
           .distance(this.props.globalSettings.linkDistance || 900))
@@ -434,7 +438,7 @@ class Node extends React.Component {
   componentDidMount() {
     d3.select(ReactDOM.findDOMNode(this))
       .datum(this.props.data)
-      .call(enterNode);
+      .call(enterNode(this.props.displayAttr));
   }
   componentDidUpdate() {
     console.log('node update', this.props.data)

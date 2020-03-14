@@ -1,26 +1,4 @@
-const initialState = {
-    checkedAttrs: ['radiusRangeMax'],
-    radius: null,
-    radiusRangeMax: null,
-    fontSize: null,
-    chargeStrength: null,
-    linkDistance: null,
-    defaults: {
-        radius: 30,
-        radiusRangeMin: 0,
-        radiusRangeMax: 500,
-        fontSize: 30,
-        chargeStrength: -320,
-        linkDistance: 300,
-        bgColor: 'powderblue',
-        sideMenuOpenOnInit: true,
-        goToEditNodePageWhenNodeIsClicked: true,
-        nodeColor: 'blue',
-        nodeHoverColor: 'green',
-        seeLinksOverlapNodes: true,
-
-    }
-};
+const initialState = {};
 
 export default (state = initialState, action) => {
     switch (action.type) {
