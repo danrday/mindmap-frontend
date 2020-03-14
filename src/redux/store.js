@@ -9,22 +9,15 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import {Socket} from "phoenix";
 export default function configureStore(initialState = {}, ) {
   // const createStoreWithMiddleware = composeWithDevTools(applyMiddleware(thunk, createLogger()))(
+  // const createStoreWithMiddleware = composeWithDevTools(applyMiddleware(thunk, test))(
   const createStoreWithMiddleware = composeWithDevTools(applyMiddleware(thunk, test))(
     createStore
   );
 
   const store = createStoreWithMiddleware(rootReducer, initialState);
 
-
-
-
-
-
-
-  let socket = new Socket("ws://localhost:4000/socket", {params: {token: window.userToken}})
+  let socket = new Socket("ws://192.168.1.177:4000/socket", {params: {token: window.userToken}})
   socket.connect()
-
-
 
 // Now that you are connected, you can join channels with a topic:
   let  channel           = socket.channel("room:lobby", {})
@@ -34,6 +27,7 @@ export default function configureStore(initialState = {}, ) {
       return function ho(action) {
         console.log('dispatching', action)
 
+        // if action is coming from the server or it's one of the initializer actions'
         if (action.server_msg || action.type === "file/FETCH_FILE"
             || action.type === "file/UPDATE_FILE"
             || action.type === "file/FETCH_FILE_RECEIVED"
@@ -41,9 +35,7 @@ export default function configureStore(initialState = {}, ) {
           let result = next(action)
           console.log('next state??????', store.getState())
           return result
-
         }
-
         else {
           channel.push("new_msg", {type: action.type, payload: action.payload})
           return

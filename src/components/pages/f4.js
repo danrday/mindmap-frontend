@@ -10,13 +10,12 @@ import { selectPage } from "../../redux/actions/ui";
 
 const color = d3.scaleOrdinal(d3.schemeCategory10);
 
-/*App component holds graph data in state and renders Graph component.
-Graph component in turn renders Link and Node components.*/
+/*
+App component holds graph data in state and renders Graph component.
+Graph component in turn renders Link and Node components.
+*/
 
 class App extends React.Component {
-  state = {
-    fileLoaded: false
-  };
 
   render() {
     /*        Important: zooming does not cause a re-render at this level,
@@ -161,6 +160,12 @@ class App extends React.Component {
 /////// Graph component. Holds Link and Node components
 
 class Graph extends React.Component {
+
+  getAttributeValue = (d, attr) => {
+
+
+  }
+
   componentDidUpdate(prevProps, prevState, snapshot) {
     console.log('COMPONENT DID UPDATE', this.props)
     const charge = this.props.globalSettings.chargeStrength
@@ -183,7 +188,8 @@ class Graph extends React.Component {
           return d.id === self.props.lastClickedNode;
         })
           .style("stroke-width", function(d) {
-        return "60";
+            // return getAttributeValue(d, attr)
+        return "30";
       })
           .style("stroke", function(d) {
             return "red";
@@ -360,30 +366,30 @@ class Graph extends React.Component {
       >
         <defs>
           <filter id="dropshadow" width="150%" height="180%">
-            <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"></feGaussianBlur>
-            <feOffset in="blur" dx="6" dy="6" result="offsetBlur"></feOffset>
+            <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
+            <feOffset in="blur" dx="6" dy="6" result="offsetBlur"/>
             <feMerge>
-              <feMergeNode></feMergeNode>
-              <feMergeNode in="SourceGraphic"></feMergeNode>
+              <feMergeNode/>
+              <feMergeNode in="SourceGraphic"/>
             </feMerge>
           </filter>
           <filter id="dropshadowtext" width="150%" height="180%">
-            <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"></feGaussianBlur>
-            <feOffset in="blur" dx="3" dy="3" result="offsetBlur"></feOffset>
+            <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
+            <feOffset in="blur" dx="3" dy="3" result="offsetBlur"/>
             <feMerge>
-              <feMergeNode></feMergeNode>
-              <feMergeNode in="SourceGraphic"></feMergeNode>
+              <feMergeNode/>
+              <feMergeNode in="SourceGraphic"/>
             </feMerge>
           </filter>
           <filter id="dropshadowunanchored" width="150%" height="180%" >
-            <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"></feGaussianBlur>
-            <feOffset in="blur" dx="20" dy="20" result="offsetBlur"></feOffset>
+            <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
+            <feOffset in="blur" dx="20" dy="20" result="offsetBlur"/>
             <feComponentTransfer>
               <feFuncA type="linear" slope=".2"/>
             </feComponentTransfer>
             <feMerge>
-              <feMergeNode></feMergeNode>
-              <feMergeNode in="SourceGraphic"></feMergeNode>
+              <feMergeNode/>
+              <feMergeNode in="SourceGraphic"/>
             </feMerge>
           </filter>
         </defs>
