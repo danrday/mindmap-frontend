@@ -303,28 +303,31 @@ class Graph extends React.Component {
   }
 
   displayAttr (d, value) {
-    const {tempCustomAttrs, customAttrs, tempCategoryAttrs, categoryAttrs, globalSettings} = d
-    // display in this priority order
+    const {
+      tempCustomAttrs,
+      customAttrs,
+      tempCategoryAttrs,
+      categoryAttrs,
+      globalSettings
+    } = d
+    // display in the following priority order
     // 1. temp custom
     if (tempCustomAttrs && tempCustomAttrs[value]) {
       return tempCustomAttrs[value];
-    }
-    // 2. custom
+    } // 2. custom
     else if (customAttrs && customAttrs[value]) {
       return customAttrs[value];
-    }
-    // 3. temp category
+    }// 3. temp category
     else if (tempCategoryAttrs && tempCategoryAttrs[value]) {
       return d.tempCategoryAttrs[value];
-    }
-    // 4. category
+    }// 4. category
     else if (categoryAttrs && categoryAttrs[value]) {
       return categoryAttrs[value];
-    } else if (globalSettings.checkedAttrs[value]) {
+    }// 5. custom set global settings
+    else if (globalSettings.checkedAttrs[value]) {
       return globalSettings[value].customValue
-    } else {
-      return globalSettings[value].defaultValue
-    }
+    }// 6. default global settings
+    else {return globalSettings[value].defaultValue}
   }
 
 

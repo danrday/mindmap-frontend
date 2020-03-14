@@ -32,8 +32,12 @@ export default (state = initialState, action) => {
             return { ...state, checkedAttrs: action.payload };
         }
         case `globalEdit/HANDLE_ATTRIBUTE_VALUE_CHANGE`: {
-            const {key, value} = action.payload
-            return { ...state, [key]: value };
+            const {section, key, value} = action.payload
+            console.log('{section, key, value}', {section, key, value})
+            console.log('[state[section]]', [state[section]])
+            console.log('[state[section][key]]', [state[section][key]])
+            console.log('[key]', [key][0])
+            return { ...state, [section]: {...state[section], [key]: {...state[section][key], customValue: value} } };
         }
         default:
             return state;

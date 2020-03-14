@@ -5,10 +5,10 @@ export const handleCheckboxChange = checks=> dispatch => {
     });
 };
 
-export const editValue = (keyAndValue) => dispatch => {
+export const editValue = (section_key_value) => dispatch => {
     dispatch({
         type: `globalEdit/HANDLE_ATTRIBUTE_VALUE_CHANGE`,
-        payload: keyAndValue
+        payload: section_key_value
     });
 };
 

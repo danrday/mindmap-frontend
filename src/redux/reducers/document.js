@@ -73,7 +73,7 @@ export default (state = initialState, action) => {
         editedFile: {...state.editedFile, links: action.payload}
       };
     case "SAVE_EDIT": {
-      const { liveNodeEdit, customAttrs } = action.payload;
+      const { liveNodeEdit, customAttrs, globalEdit } = action.payload;
       const changes = customAttrs
       const edited = Object.assign({}, state.editedFile);
       let currSelNodeIndex = edited.nodes.findIndex(e => {
@@ -101,6 +101,10 @@ export default (state = initialState, action) => {
           edited.nodes[currSelNodeIndex].customAttrs[attr] = liveNodeEdit[attr]
         })
       }
+
+      edited.globalSettings = globalEdit
+
+
       return {
         ...state,
         editedFile: edited

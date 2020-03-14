@@ -23,6 +23,7 @@ class Node extends Component {
         this.props.saveEdits({
             customAttrs: this.props.liveNodeEdit.checkedAttrs,
             liveNodeEdit: this.props.liveNodeEdit,
+            globalEdit: this.props.globalEdit
         });
       // this.props.clearTempCustomAttrs()
   }
@@ -109,9 +110,9 @@ class Node extends Component {
           onChange={event => this.props.editRadius(event.target.value)}
         />
           <Slider sliderVal={this.props.liveNodeEdit.radius}
-                  sliderMin={0} sliderMax={this.props.globalEdit.radiusRangeMax || this.props.globalEdit.defaults.radiusRangeMax}
+                  sliderMin={0} sliderMax={this.props.globalEdit.controls.radiusRangeMax.customValue || this.props.globalEdit.controls.radiusRangeMax.defaultValue}
                   editRadius={this.props.editRadius}
-                  updateSliderRangeMax={(v) => this.props.editValue({key: 'radiusRangeMax', value: v})}
+                  updateSliderRangeMax={(v) => this.props.editValue({section: 'controls', key: 'radiusRangeMax', value: v})}
                   disabled={!this.props.liveNodeEdit.checkedAttrs.includes('radius')}
           />
 
