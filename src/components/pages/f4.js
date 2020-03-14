@@ -40,6 +40,13 @@ class App extends React.Component {
         if (node.tempCustomAttrs) {
           delete node.tempCustomAttrs
         }
+        if (node.globalSettings) {
+          delete node.globalSettings
+        }
+
+        // add global settings for default values
+        console.log('THIS PROPS GLOBAL EDIT', this.props)
+        node.globalSettings = this.props.globalEdit.node
 
         /*if you are currently editing a categories' properties,
         apply those temp changes onto member node's tempCategoryAttrs*/
@@ -297,8 +304,35 @@ class Graph extends React.Component {
   }
 
 
+  displayAttr (d, value) {
+    console.log('d, value', {d, value})
+    const {tempCustomAttrs, customAttrs, tempCategoryAttrs, categoryAttrs, globalSettings} = d
+    // display in this priority order
+    // 1. temp custom
+    if (tempCustomAttrs && tempCustomAttrs[value]) {
+      return tempCustomAttrs[value];
+    }
+    // 2. custom
+    else if (customAttrs && customAttrs[value]) {
+      return customAttrs[value];
+    }
+    // 3. temp category
+    else if (tempCategoryAttrs && tempCategoryAttrs[value]) {
+      return d.tempCategoryAttrs[value];
+    }
+    // 4. category
+    else if (categoryAttrs && categoryAttrs[value]) {
+      return categoryAttrs[value];
+    } else if (globalSettings.checkedAttrs[value]) {
+      return globalSettings[value].customValue
+    } else {
+      return globalSettings[value].defaultValue
+    }
+  }
+
 
   render() {
+    console.log('re render nodes and links?' )
     const nodes = this.props.data.nodes.map(node => {
       if (node.category) {
        let cat = this.getCategory(node.category)
@@ -311,6 +345,7 @@ class Graph extends React.Component {
               data={node}
               name={node.name}
               key={node.id}
+              displayAttr={this.displayAttr}
               handleClick={this.props.handleClick}
               selectPage={this.props.selectPage} /*when node is clicked, auto select edit nodes page*/
           />
@@ -394,18 +429,20 @@ const enterLink = selection => {
 
 ///////
 
+
 class Node extends React.Component {
   componentDidMount() {
     d3.select(ReactDOM.findDOMNode(this))
       .datum(this.props.data)
-      .call(enterNode);
+      .call(enterNode(this.props.displayAttr));
   }
   componentDidUpdate() {
+    console.log('node update', this.props.data)
     d3.select(ReactDOM.findDOMNode(this))
       // won't update bg if uncommented
       // .selectAll(".node")
       .datum(this.props.data)
-      .call(enterNode);
+      .call(enterNode(this.props.displayAttr));
   }
   render() {
     return (
@@ -427,104 +464,111 @@ class Node extends React.Component {
   }
 }
 
-const enterNode = selection => {
+const enterNode = (displayAttr) => {
 
-  const displayAttr = function (d, value, unitOfMeasure, defaultValue) {
-    const {tempCustomAttrs, customAttrs, tempCategoryAttrs, categoryAttrs} = d
-    // display in this priority order
-    // 1. temp custom
-    if (tempCustomAttrs && tempCustomAttrs[value]) {
-      return tempCustomAttrs[value];
-    }
-    // 2. custom
-    else if (customAttrs && customAttrs[value]) {
-      return customAttrs[value] + unitOfMeasure;
-    }
-    // 3. temp category
-    else if (tempCategoryAttrs && tempCategoryAttrs[value]) {
-      return d.tempCategoryAttrs[value];
-    }
-    // 4. category
-    else if (categoryAttrs && categoryAttrs[value]) {
-      return categoryAttrs[value];
-    } else {
-      return defaultValue;
-    }
+  return (selection) => {
+
+    // console.log(' NODE DEFAULTS', nodeDefaults)
+    // const displayAttr = function (d, value) {
+    //   const {tempCustomAttrs, customAttrs, tempCategoryAttrs, categoryAttrs, globalSettings} = d
+    //   // display in this priority order
+    //   // 1. temp custom
+    //   if (tempCustomAttrs && tempCustomAttrs[value]) {
+    //     return tempCustomAttrs[value];
+    //   }
+    //   // 2. custom
+    //   else if (customAttrs && customAttrs[value]) {
+    //     return customAttrs[value];
+    //   }
+    //   // 3. temp category
+    //   else if (tempCategoryAttrs && tempCategoryAttrs[value]) {
+    //     return d.tempCategoryAttrs[value];
+    //   }
+    //   // 4. category
+    //   else if (categoryAttrs && categoryAttrs[value]) {
+    //     return categoryAttrs[value];
+    //   } else if (globalSettings.checkedAttrs[value]) {
+    //       return globalSettings[value].customValue
+    //     } else {
+    //       return globalSettings[value].defaultValue
+    //     }
+    // }
+
+    selection
+        .select("circle")
+        .attr("r", function(d) { return displayAttr(d, 'radius', 'px')})
+        .attr("stroke", function(d) {
+          if (d.fx) {
+            return "black";
+          } else {
+            return "purple";
+          }
+        })
+        .attr("filter", 'url(#dropshadowunanchored)')
+        .style("fill", function(d) {
+          return color(d.name);
+        })
+    //     .on('mouseover', function(d, i) {
+    //   d3.select(this)
+    //       .transition().duration(200)
+    //       // .style("fill", function(d) {
+    //       //   return 'purple';
+    //       // })
+    //       .style("stroke-width", '10')
+    //       .style("stroke", "black")
+    // }).on('mouseout', function(d, i) {
+    //   d3.select(this)
+    //       .transition().duration(200)
+    //       .style("fill", function(d) {
+    //         if (d.tempCustomAttrs) {
+    //           // return 'red';
+    //
+    //           return color(d.name);
+    //
+    //         } else {
+    //           return color(d.name);
+    //         }
+    //       })
+    //       .style("stroke-width", function(d) {
+    //         if (d.tempCustomAttrs) {
+    //           return '10'
+    //
+    //         } else {
+    //           return '1'
+    //         }
+    //       })
+    //       .style("stroke", function(d) {
+    //         if (d.tempCustomAttrs) {
+    //           return 'red'
+    //
+    //         } else {
+    //           return "black"
+    //         }
+    //       })
+    // })
+
+    selection
+        .select("text")
+        .style("font-size", function (d) { return displayAttr(d, 'fontSize', 'px')})
+        .attr("dy", ".95em")
+        .call(selection => selection.each(function(d) {
+          d.bbox = this.getBBox();
+        }));
+
+    selection
+        .select("rect")
+        .attr("filter", 'url(#dropshadowunanchored)')
+        .style("fill", function(d) {
+          return "yellow";
+        })
+        .attr("width", function(d) {
+          return d.bbox.width;
+        })
+        .attr("height", function(d) {
+          return d.bbox.height;
+        });
   }
 
-  selection
-    .select("circle")
-      .attr("r", function(d) { return displayAttr(d, 'radius', 'px', '30px')})
-    .attr("stroke", function(d) {
-      if (d.fx) {
-        return "black";
-      } else {
-        return "purple";
-      }
-    })
-    .attr("filter", 'url(#dropshadowunanchored)')
-    .style("fill", function(d) {
-      return color(d.name);
-    })
-  //     .on('mouseover', function(d, i) {
-  //   d3.select(this)
-  //       .transition().duration(200)
-  //       // .style("fill", function(d) {
-  //       //   return 'purple';
-  //       // })
-  //       .style("stroke-width", '10')
-  //       .style("stroke", "black")
-  // }).on('mouseout', function(d, i) {
-  //   d3.select(this)
-  //       .transition().duration(200)
-  //       .style("fill", function(d) {
-  //         if (d.tempCustomAttrs) {
-  //           // return 'red';
-  //
-  //           return color(d.name);
-  //
-  //         } else {
-  //           return color(d.name);
-  //         }
-  //       })
-  //       .style("stroke-width", function(d) {
-  //         if (d.tempCustomAttrs) {
-  //           return '10'
-  //
-  //         } else {
-  //           return '1'
-  //         }
-  //       })
-  //       .style("stroke", function(d) {
-  //         if (d.tempCustomAttrs) {
-  //           return 'red'
-  //
-  //         } else {
-  //           return "black"
-  //         }
-  //       })
-  // })
-
-  selection
-    .select("text")
-    .style("font-size", function (d) { return displayAttr(d, 'fontSize', 'px', '30px')})
-    .attr("dy", ".95em")
-    .call(selection => selection.each(function(d) {
-      d.bbox = this.getBBox();
-    }));
-
-  selection
-    .select("rect")
-      .attr("filter", 'url(#dropshadowunanchored)')
-      .style("fill", function(d) {
-        return "yellow";
-    })
-    .attr("width", function(d) {
-      return d.bbox.width;
-    })
-    .attr("height", function(d) {
-      return d.bbox.height;
-    });
 };
 
 
