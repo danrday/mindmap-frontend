@@ -45,7 +45,6 @@ class App extends React.Component {
         }
 
         // add global settings for default values
-        console.log('THIS PROPS GLOBAL EDIT', this.props)
         node.globalSettings = this.props.globalEdit.node
 
         /*if you are currently editing a categories' properties,
@@ -303,9 +302,7 @@ class Graph extends React.Component {
     return this.props.data.categories[cat]
   }
 
-
   displayAttr (d, value) {
-    console.log('d, value', {d, value})
     const {tempCustomAttrs, customAttrs, tempCategoryAttrs, categoryAttrs, globalSettings} = d
     // display in this priority order
     // 1. temp custom
@@ -344,8 +341,8 @@ class Graph extends React.Component {
           <Node
               data={node}
               name={node.name}
-              key={node.id}
               displayAttr={this.displayAttr}
+              key={node.id}
               handleClick={this.props.handleClick}
               selectPage={this.props.selectPage} /*when node is clicked, auto select edit nodes page*/
           />
@@ -429,12 +426,12 @@ const enterLink = selection => {
 
 ///////
 
-
 class Node extends React.Component {
+
   componentDidMount() {
     d3.select(ReactDOM.findDOMNode(this))
       .datum(this.props.data)
-      .call(enterNode(this.props.displayAttr));
+      .call(enterNode);
   }
   componentDidUpdate() {
     console.log('node update', this.props.data)
@@ -467,33 +464,6 @@ class Node extends React.Component {
 const enterNode = (displayAttr) => {
 
   return (selection) => {
-
-    // console.log(' NODE DEFAULTS', nodeDefaults)
-    // const displayAttr = function (d, value) {
-    //   const {tempCustomAttrs, customAttrs, tempCategoryAttrs, categoryAttrs, globalSettings} = d
-    //   // display in this priority order
-    //   // 1. temp custom
-    //   if (tempCustomAttrs && tempCustomAttrs[value]) {
-    //     return tempCustomAttrs[value];
-    //   }
-    //   // 2. custom
-    //   else if (customAttrs && customAttrs[value]) {
-    //     return customAttrs[value];
-    //   }
-    //   // 3. temp category
-    //   else if (tempCategoryAttrs && tempCategoryAttrs[value]) {
-    //     return d.tempCategoryAttrs[value];
-    //   }
-    //   // 4. category
-    //   else if (categoryAttrs && categoryAttrs[value]) {
-    //     return categoryAttrs[value];
-    //   } else if (globalSettings.checkedAttrs[value]) {
-    //       return globalSettings[value].customValue
-    //     } else {
-    //       return globalSettings[value].defaultValue
-    //     }
-    // }
-
     selection
         .select("circle")
         .attr("r", function(d) { return displayAttr(d, 'radius', 'px')})
