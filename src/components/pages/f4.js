@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import savePdf from 'd3-save-pdf'
 import * as d3 from 'd3'
 
-import { saveAction, selectNode, handleZoom } from "../../redux/actions/document";
+import { saveAction, selectNode, selectAndLinkNode, handleZoom } from "../../redux/actions/document";
 import { populateCurrentNodeValues } from "../../redux/actions/liveNodeEdit";
 import { selectPage } from "../../redux/actions/ui";
 
@@ -107,47 +107,9 @@ class App extends React.Component {
 
     if (lastClickedNode) {
       if (lastClickedNode === currentClickedNodeId) { //compare node ids
-        this.setState({ lastClickedNode: null });
         this.props.selectNode(null);
       } else {
-
-        // get full node object by id
-        const lastNode = this.props.file.nodes.find(e => {
-          return e.id === lastClickedNode
-        })
-
-        const newLink = {
-          source: lastNode,
-          target: currentNode
-        };
-
-        const linkAlreadyExists = this.props.file.links.find(function(
-          link
-        ) {
-          const currSourceId = link.source.id,
-          currTargetId = link.target.id,
-          newSourceId = newLink.source.id,
-          newTargetId = newLink.target.id
-          return (
-            // Check for target -> source AND source -> target
-            (currSourceId === newSourceId && currTargetId === newTargetId) ||
-            (currSourceId === newTargetId && currTargetId === newSourceId)
-          );
-        });
-
-        let newLinks;
-        if (linkAlreadyExists) {
-          newLinks = this.props.file.links.filter(function(e) {
-            return e !== linkAlreadyExists;
-          });
-        } else {
-          newLinks = [...this.props.file.links, newLink];
-        }
-        // BUG? WHY CATS HERE?
-        // const cats = this.props.file.categories || {}
-        // const newData = { ...this.props.file, categories: cats, links: newLinks };
-        const newData = { ...this.props.file, links: newLinks };
-        this.props.saveAction(newData);
+        this.props.selectAndLinkNode({currentClickedNodeId, lastClickedNode})
         this.props.selectNode(null);
       }
     } else {
@@ -412,6 +374,13 @@ class Link extends React.Component {
       .datum(this.props.data)
       .call(enterLink);
   }
+  componentDidUpdate() {
+    d3.select(ReactDOM.findDOMNode(this))
+        // won't update bg if uncommented
+        // .selectAll(".node")
+        .datum(this.props.data)
+        .call(enterLink);
+  }
   render() {
     return <line className="link" />;
   }
@@ -496,44 +465,45 @@ const enterNode = selection => {
     .attr("filter", 'url(#dropshadowunanchored)')
     .style("fill", function(d) {
       return color(d.name);
-    }).on('mouseover', function(d, i) {
-    d3.select(this)
-        .transition().duration(200)
-        // .style("fill", function(d) {
-        //   return 'purple';
-        // })
-        .style("stroke-width", '10')
-        .style("stroke", "black")
-  }).on('mouseout', function(d, i) {
-    d3.select(this)
-        .transition().duration(200)
-        .style("fill", function(d) {
-          if (d.tempCustomAttrs) {
-            // return 'red';
-
-            return color(d.name);
-
-          } else {
-            return color(d.name);
-          }
-        })
-        .style("stroke-width", function(d) {
-          if (d.tempCustomAttrs) {
-            return '10'
-
-          } else {
-            return '1'
-          }
-        })
-        .style("stroke", function(d) {
-          if (d.tempCustomAttrs) {
-            return 'red'
-
-          } else {
-            return "black"
-          }
-        })
-  })
+    })
+  //     .on('mouseover', function(d, i) {
+  //   d3.select(this)
+  //       .transition().duration(200)
+  //       // .style("fill", function(d) {
+  //       //   return 'purple';
+  //       // })
+  //       .style("stroke-width", '10')
+  //       .style("stroke", "black")
+  // }).on('mouseout', function(d, i) {
+  //   d3.select(this)
+  //       .transition().duration(200)
+  //       .style("fill", function(d) {
+  //         if (d.tempCustomAttrs) {
+  //           // return 'red';
+  //
+  //           return color(d.name);
+  //
+  //         } else {
+  //           return color(d.name);
+  //         }
+  //       })
+  //       .style("stroke-width", function(d) {
+  //         if (d.tempCustomAttrs) {
+  //           return '10'
+  //
+  //         } else {
+  //           return '1'
+  //         }
+  //       })
+  //       .style("stroke", function(d) {
+  //         if (d.tempCustomAttrs) {
+  //           return 'red'
+  //
+  //         } else {
+  //           return "black"
+  //         }
+  //       })
+  // })
 
   selection
     .select("text")
@@ -571,6 +541,7 @@ const mapStateToProps = (state, props) => ({
 const mapDispatchToProps = dispatch => ({
   saveAction: file => dispatch(saveAction(file)),
   selectNode: node => dispatch(selectNode(node)),
+  selectAndLinkNode: node => dispatch(selectAndLinkNode(node)),
   populateCurrentNodeValues: node => dispatch(populateCurrentNodeValues(node)),
   handleZoom: zoomAttrs => dispatch(handleZoom(zoomAttrs)),
   selectPage: i => dispatch(selectPage(i))

@@ -40,7 +40,7 @@ const alertOptions = {
 ReactDOM.render(
   <Provider store={store}>
       <AlertProvider template={AlertTemplate} {...alertOptions}>
-          <App style={{width: '100%', height: '100%'}}/>
+          <App channel={channel} style={{width: '100%', height: '100%'}}/>
       </AlertProvider>
   </Provider>,
   document.getElementById("root")

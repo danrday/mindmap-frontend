@@ -100,6 +100,13 @@ export const selectNode = node => dispatch => {
   });
 };
 
+export const selectAndLinkNode = node => dispatch => {
+  dispatch({
+    type: "SELECT_AND_LINK_NODE",
+    payload: node
+  });
+};
+
 export const postAction = file => dispatch => {
   const h = "web";
 

@@ -12,7 +12,7 @@ console.log('EVER FIRING?', )
 
 
 
-let socket = new Socket("ws://localhost:4000/socket", {params: {token: window.userToken}})
+let socket = new Socket(`ws://${process.env.REACT_APP_HOST}:4000/socket`, {params: {token: window.userToken}})
 
 // When you connect, you'll often need to authenticate the client.
 // For example, imagine you have an authentication plug, `MyAuth`,

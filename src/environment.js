@@ -7,10 +7,10 @@ if (environment) {
   _type = environment.toLowerCase();
   switch (_type) {
     case "dev":
-      _serverUrl = "http://192.168.1.177:3005/api/";
+      _serverUrl = `http://${process.env.REACT_APP_HOST}:3005/api/`;
       break;
     default:
-      _serverUrl = "http://192.168.1.177:3005/api/";
+      _serverUrl = `http://${process.env.REACT_APP_HOST}:3005/api/`;
   }
 } else {
   throw Error("App environment variable is not set");

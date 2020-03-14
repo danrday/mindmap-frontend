@@ -7,10 +7,6 @@ import Page from "./components/Page";
 import F4 from "./components/pages/f4";
 import {withAlert} from "react-alert";
 
-// import socket from "../socket"
-import {Socket} from "phoenix"
-
-
 
 
 
@@ -20,7 +16,7 @@ class App extends Component {
     console.log('channel', this.props.channel)
 
 
-      window.channel.on("server_msg", msg => {
+    this.props.channel.on("server_msg", msg => {
       console.log('new msg', msg)
       this.props.dispatchMsg(msg)
       // let messageItem = document.createElement("li")

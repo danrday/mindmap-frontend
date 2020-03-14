@@ -16,7 +16,7 @@ export default function configureStore(initialState = {}, ) {
 
   const store = createStoreWithMiddleware(rootReducer, initialState);
 
-  let socket = new Socket("ws://192.168.1.177:4000/socket", {params: {token: window.userToken}})
+  let socket = new Socket(`ws://${process.env.REACT_APP_HOST}:4000/socket`, {params: {token: window.userToken}})
   socket.connect()
 
 // Now that you are connected, you can join channels with a topic:

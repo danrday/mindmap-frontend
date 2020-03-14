@@ -70,7 +70,7 @@ export default (state = initialState, action) => {
     case "SAVE_ACTION":
       return {
         ...state,
-        editedFile: action.payload
+        editedFile: {...state.editedFile, links: action.payload}
       };
     case "SAVE_EDIT": {
       const { liveNodeEdit, customAttrs } = action.payload;
@@ -164,6 +164,67 @@ export default (state = initialState, action) => {
       return {
         ...state,
         currentNode: action.payload
+      };
+    case "SELECT_AND_LINK_NODE":
+
+      console.log('select and link node', action.payload)
+
+      // get full node object by id
+      const lastNode = state.editedFile.nodes.find(e => {
+        return e.id === action.payload.lastClickedNode
+      })
+
+      const currentNode = state.editedFile.nodes.find(e => {
+        return e.id === action.payload.currentClickedNodeId
+      })
+
+      const newLink = {
+        source: lastNode,
+        target: currentNode
+      };
+
+      console.log('new link', newLink)
+
+
+      const linkAlreadyExists = state.editedFile.links.find(function(
+          link
+      ) {
+        const currSourceId = link.source.id,
+            currTargetId = link.target.id,
+            newSourceId = newLink.source.id,
+            newTargetId = newLink.target.id
+        return (
+            // Check for target -> source AND source -> target
+            (currSourceId === newSourceId && currTargetId === newTargetId) ||
+            (currSourceId === newTargetId && currTargetId === newSourceId)
+        );
+      });
+
+      console.log('link already exists?', linkAlreadyExists)
+
+      let newLinks;
+      if (linkAlreadyExists) {
+        newLinks = state.editedFile.links.filter(function(e) {
+          return e !== linkAlreadyExists;
+        });
+      } else {
+        newLinks = [...state.editedFile.links, newLink];
+      }
+
+      console.log(' new links', newLinks)
+      // BUG? WHY CATS HERE?
+      // const cats = this.props.file.categories || {}
+      // const newData = { ...this.props.file, categories: cats, links: newLinks };
+      // const newData = { ...this.state.editedFile.file, links: newLinks };
+      // this.props.saveAction(newData);
+      // this.props.selectNode(null);
+
+
+
+
+      return {
+        ...state,
+        editedFile: { ...state.editedFile, links: newLinks }
       };
     case "file/POST_FILE_ERROR":
       return { ...state, error: action.payload, fetching: false };
