@@ -100,6 +100,13 @@ export const selectNode = node => dispatch => {
   });
 };
 
+export const handleMouseMove = coords => dispatch => {
+  dispatch({
+    type: "HANDLE_MOUSE_MOVE",
+    payload: coords
+  });
+};
+
 export const selectAndLinkNode = node => dispatch => {
   dispatch({
     type: "SELECT_AND_LINK_NODE",

@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import savePdf from 'd3-save-pdf'
 import * as d3 from 'd3'
 
-import { saveAction, selectNode, selectAndLinkNode, handleZoom } from "../../redux/actions/document";
+import { saveAction, selectNode, selectAndLinkNode, handleZoom, handleMouseMove } from "../../redux/actions/document";
 import { populateCurrentNodeValues } from "../../redux/actions/liveNodeEdit";
 import { selectPage } from "../../redux/actions/ui";
 
@@ -100,6 +100,8 @@ class App extends React.Component {
               handleZoom={this.props.handleZoom}
               selectPage={this.props.selectPage}
               initialZoom={this.props.file.globalSettings.zoom || null}
+              handleMouseMove={this.props.handleMouseMove}
+              mouse={this.props.mouse || {coords: {x: 0, y: 0}}}
             />
           </div>
         </div>
@@ -256,13 +258,14 @@ class Graph extends React.Component {
     d3.select(".frameForZoom")
         .attr("transform", `translate(${this.props.initialZoom.x}, ${this.props.initialZoom.y})scale(${this.props.initialZoom.k})`)
 
+
     // after initial render, this sets up d3 to do its thing outside of react
 
     // React doesn't know much about d3's event system firing off. We can add custom dispatch methods onto d3 events.
     // otherwise, we aren't aware of updates being performed by d3.
     // Now I'm curious about displaying a  node's coordinates through react to see how it updates
 
-    this.d3Graph = d3.select(ReactDOM.findDOMNode(this));
+    this.d3Graph = d3.select(ReactDOM.findDOMNode(this)).on("mousemove", () => this.props.handleMouseMove({x: d3.event.pageX, y: d3.event.pageY}));
 
     // view / zoom related:
 
@@ -394,6 +397,7 @@ class Graph extends React.Component {
           </filter>
         </defs>
         <rect width="100%" height="100%" fill="powderblue"/>
+        <rect width="20px" height="20px" x={this.props.mouse.coords.x -270} y={this.props.mouse.coords.y -60} fill="black"/>
         <g className="frameForZoom">
 
           <g>{nodes}</g>
@@ -555,7 +559,8 @@ const mapStateToProps = (state, props) => ({
   currentNode: state.document.currentNode,
   liveNodeEdit: state.liveNodeEdit,
   categoryEdit: state.categoryEdit,
-  globalEdit: state.globalEdit
+  globalEdit: state.globalEdit,
+  mouse: state.document.mouse
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -564,6 +569,7 @@ const mapDispatchToProps = dispatch => ({
   selectAndLinkNode: node => dispatch(selectAndLinkNode(node)),
   populateCurrentNodeValues: node => dispatch(populateCurrentNodeValues(node)),
   handleZoom: zoomAttrs => dispatch(handleZoom(zoomAttrs)),
+  handleMouseMove: coords => dispatch(handleMouseMove(coords)),
   selectPage: i => dispatch(selectPage(i))
 });
 

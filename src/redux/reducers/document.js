@@ -72,6 +72,11 @@ export default (state = initialState, action) => {
         ...state,
         editedFile: {...state.editedFile, links: action.payload}
       };
+    case "HANDLE_MOUSE_MOVE":
+      return {
+        ...state,
+        mouse: {coords: action.payload}
+      };
     case "SAVE_EDIT": {
       const { liveNodeEdit, customAttrs, globalEdit } = action.payload;
       const changes = customAttrs
