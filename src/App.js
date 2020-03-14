@@ -14,7 +14,7 @@ class App extends Component {
 
   componentDidMount() {
     console.log('channel', this.props.channel)
-
+    console.log('app prosp', this)
 
     this.props.channel.on("server_msg", msg => {
       console.log('new msg', msg)

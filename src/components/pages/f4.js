@@ -265,7 +265,10 @@ class Graph extends React.Component {
     // otherwise, we aren't aware of updates being performed by d3.
     // Now I'm curious about displaying a  node's coordinates through react to see how it updates
 
-    this.d3Graph = d3.select(ReactDOM.findDOMNode(this)).on("mousemove", () => this.props.handleMouseMove({x: d3.event.pageX, y: d3.event.pageY}));
+    this.d3Graph = d3.select(ReactDOM.findDOMNode(this)).on("mousemove", () => {
+
+      this.props.handleMouseMove({x: d3.event.pageX, y: d3.event.pageY})
+    });
 
     // view / zoom related:
 
