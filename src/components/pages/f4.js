@@ -275,12 +275,14 @@ class Graph extends React.Component {
 
       let transform = d3.zoomTransform(d3.select(".frameForZoom").node())
 
+      console.log('TRANSFORM', transform)
+
       let xy = [d3.event.pageX -270, d3.event.pageY -60]
 
       var xy1 = transform.invert(xy);  // relative to zoom
 
 
-      this.props.handleMouseMove({x: xy1[0], y: xy1[1]})
+      this.props.handleMouseMove({x: xy1[0], y: xy1[1], k: transform.k})
     });
 
     // view / zoom related:
@@ -418,7 +420,7 @@ class Graph extends React.Component {
         {/*  {this.props.mouse.coords.x -270} + ', ' + {this.props.mouse.coords.y -60}*/}
         {/*</text>*/}
         <g className="frameForZoom">
-          <text x={this.props.mouse.coords.x} y={this.props.mouse.coords.y} >
+          <text x={this.props.mouse.coords.x} y={this.props.mouse.coords.y} font-size={16 / this.props.mouse.coords.k}>
             {this.props.mouse.coords.x} + ', ' + {this.props.mouse.coords.y}
           </text>
           <g>{nodes}</g>
@@ -428,6 +430,7 @@ class Graph extends React.Component {
     );
   }
 }
+
 
 ///////
 
