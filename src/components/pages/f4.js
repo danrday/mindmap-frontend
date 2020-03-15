@@ -258,6 +258,11 @@ class Graph extends React.Component {
     d3.select(".frameForZoom")
         .attr("transform", `translate(${this.props.initialZoom.x}, ${this.props.initialZoom.y})scale(${this.props.initialZoom.k})`)
 
+    // d3.select(".frameForZoom").on("mousemove", () => {
+    //
+    //
+    //   this.props.handleMouseMove({x: d3.event.pageX, y: d3.event.pageY})
+    // });
 
     // after initial render, this sets up d3 to do its thing outside of react
 
@@ -267,7 +272,15 @@ class Graph extends React.Component {
 
     this.d3Graph = d3.select(ReactDOM.findDOMNode(this)).on("mousemove", () => {
 
-      this.props.handleMouseMove({x: d3.event.pageX, y: d3.event.pageY})
+
+      let transform = d3.zoomTransform(d3.select(".frameForZoom").node())
+
+      let xy = [d3.event.pageX -270, d3.event.pageY -60]
+
+      var xy1 = transform.invert(xy);  // relative to zoom
+
+
+      this.props.handleMouseMove({x: xy1[0], y: xy1[1]})
     });
 
     // view / zoom related:
@@ -401,8 +414,13 @@ class Graph extends React.Component {
         </defs>
         <rect width="100%" height="100%" fill="powderblue"/>
         <rect width="20px" height="20px" x={this.props.mouse.coords.x -270} y={this.props.mouse.coords.y -60} fill="black"/>
+        {/*<text x={this.props.mouse.coords.x -270} y={this.props.mouse.coords.y -60} >*/}
+        {/*  {this.props.mouse.coords.x -270} + ', ' + {this.props.mouse.coords.y -60}*/}
+        {/*</text>*/}
         <g className="frameForZoom">
-
+          <text x={this.props.mouse.coords.x} y={this.props.mouse.coords.y} >
+            {this.props.mouse.coords.x} + ', ' + {this.props.mouse.coords.y}
+          </text>
           <g>{nodes}</g>
           <g>{links}</g>
         </g>
