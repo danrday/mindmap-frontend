@@ -113,3 +113,41 @@ No Rush:
 + Image merge  if 2 people work on it and save different versions- resolve or combine options
 
 
+
+resources:
+
+'Across' tech: https://acrossapp.com/ :
+
+Productivity & Project Management
+GSuite ($12 / month) - Standard email, file storage in Drive, analysis in Sheets, and presentations in Slides
+Slack ($13 / month) - Internal communication and supporting customers in shared Slack channels
+Airtable (free) - CRM to track our sales funnel
+Notion ($16 / month) - Storing interview notes, brainstorming product and feature ideas
+Development & Design
+GitHub ($7 / month) - Version control / source management
+Trello (free) - Product roadmap, issue tracking
+Figma ($24 / month) - Designing product mocks
+Miscellaneous IDEs (free) - Sublime, Vim, VSCode
+Robo 3T (free) - MongoDB GUI
+Analytics
+Mixpanel (free) - Front and backend analytics. We are on a startup plan so receive Mixpanel for free for up to 250K MTUs
+Sentry ($26 / month) - Error logging and reporting
+Fullstory (free) - Session replay. We are on a startup plan so receive Fullstory for free
+Payments, Hosting & Authentication
+Stripe (pricing depends on volume) - Accepting payments
+Heroku (free) - Hosting. We are still using free dynos
+Firebase (free) - Authentication. We are still on the free plan
+Cloudflare ($20 / month) - CDN + DNS
+Sales & Marketing, Customer Support
+Hubspot ($45 per month) - Email outreach and contact management. We are on the Startup plan so receive Hubspot 90% off
+Drift (free) - Chat widget on our website. We've stuck with the basic free plan
+Mailchimp (free) - Automated emails on signups
+LinkedIn Sales Navigator ($80 / month) - Finding leads to contact
+SalesQL ($29 / month) - Finding email addresses for leads
+Zoom (free) - Web conferencing
+Twilio (pricing depends on volume) - Business phone number, used in conjunction with FounderPhone
+Boomerang (free) - Reminders to follow up with people in email
+FounderPhone (free) - Send and receive texts and calls directly in Slack. Free since we built it ourselves :)
+Whatsapp, Facebook, Twitter, Discord - Use these channels to communicate with customers
+Finance & Legal
+Brex (free) - Business cash account and credit cards. Free until we scale

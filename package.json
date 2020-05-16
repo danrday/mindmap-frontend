@@ -30,7 +30,9 @@
     "start": "REACT_APP_ENV=DEV react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "watch": "REACT_APP_ENV=DEV cra-build-watch --build-path ../planatlas/priv/static/react-dev-build",
+    "watchlocal": "REACT_APP_ENV=DEV cra-build-watch"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -46,5 +48,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "cra-build-watch": "^3.2.0"
   }
 }
