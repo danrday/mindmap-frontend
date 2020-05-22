@@ -28,6 +28,7 @@ class Page extends Component {
           navIsHovered={this.state.navIsHovered}
           toggle={this.handleToggleNav}
           hover={this.handleHoverNav}
+          channel={this.props.channel}
         />
         <Inner openNav={this.state.navIsOpen || this.state.navIsHovered}>
           {this.props.children}
