@@ -1,6 +1,3 @@
-import uuidv4 from "uuid/v4";
-
-
 const initialState = {
   file: null,
   currentNode: null,
@@ -8,7 +5,6 @@ const initialState = {
   error: null,
   editedFile: null
 };
-
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -149,10 +145,6 @@ export default (state = initialState, action) => {
       const eedited = Object.assign({}, state.editedFile);
       const length = state.editedFile.nodes.length;
 
-      console.log('ADD ACTION: ', action.payload)
-
-        // const newId = uuidv4()
-      // 480 181
       eedited.nodes.push({
         name: "new",
         id: action.payload.id,

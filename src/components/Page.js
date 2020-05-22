@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import NavAndHeader from "./NavAndHeader";
-// import Meta from "../components/Meta";
 import styled from "styled-components";
-
 import theme from "./styles/theme";
 
 class Page extends Component {
@@ -22,7 +20,6 @@ class Page extends Component {
   render() {
     return (
       <StyledPage>
-        {/*<Meta />*/}
         <NavAndHeader
           navIsOpen={this.state.navIsOpen}
           navIsHovered={this.state.navIsHovered}
@@ -39,21 +36,20 @@ class Page extends Component {
 }
 
 const StyledPage = styled.div``;
-// margin-left: 80px;
-// margin-top: 80px;
+
 const Inner = styled.div`
     margin-top: 60px;
-margin-left: 60px;
+    margin-left: 60px;
 
-  transition: all 0.2s ease-in-out;
-  letter-spacing: 0.2px;
-  font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
-  font-size: 14px;
-  ${({ openNav }) =>
+    transition: all 0.2s ease-in-out;
+    letter-spacing: 0.2px;
+    font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+    font-size: 14px;
+    ${({ openNav }) =>
     openNav &&
     `
         margin-left: 260px;
-      `}
+    `}
 `;
 
 // injectGlobal`
