@@ -16,11 +16,26 @@ export default function configureStore(initialState = {}, ) {
 
   const store = createStoreWithMiddleware(rootReducer, initialState);
 
-  let socket = new Socket(`ws://${process.env.REACT_APP_HOST}:4000/socket`, {params: {token: window.userToken}})
+  // let socket = new Socket(`ws://${process.env.REACT_APP_HOST}:4000/socket`, {params: {token: window.userToken}})
+  console.log("WINDOW", window)
+  let socket = new Socket(`/socket`, {params: {token: window.userToken}})
+  // socket.connect()
+
+  let doc = document.getElementById("doc")
+  let data_id = doc.getAttribute("data-id")
+  console.log("document found!   : ", data_id)
   socket.connect()
 
+  let lastSeenId = 0
+
+  let doc_channel = socket.channel("documents:" + data_id, () => {
+    return {last_seen_id: lastSeenId}
+  })
+
+
+
 // Now that you are connected, you can join channels with a topic:
-  let  channel           = socket.channel("room:lobby", {})
+//   let  channel           = socket.channel("room:lobby", {})
 
   function test(store) {
     return function hi(next) {
@@ -37,7 +52,7 @@ export default function configureStore(initialState = {}, ) {
           return result
         }
         else {
-          channel.push("new_msg", {type: action.type, payload: action.payload})
+          doc_channel.push("new_msg", {type: action.type, payload: action.payload})
           return
         }
       }
@@ -73,15 +88,15 @@ export default function configureStore(initialState = {}, ) {
 //     // messagesContainer.appendChild(messageItem)
 //   })
 
-  channel.join()
+  doc_channel.join()
       .receive("ok", resp => { console.log("Joined successfully", resp) })
       .receive("error", resp => { console.log("Unable to join", resp) })
 
-window.channel = channel
+window.channel = doc_channel
 
 
 
-  return {store, channel};
+  return {store, doc_channel};
 }
 
 

@@ -6,39 +6,63 @@ const serverUrl = environment._serverUrl;
 
 
 
-export const document = filename => dispatch => {
-  const f = "web";
+export const document = channel => dispatch => {
 
-  const endpointForAuthUser = serverUrl + `getfile/${f}`;
+ channel.push("get_file")
+      .receive("ok", (msg) => {
+        dispatch({
+          type: "file/UPDATE_FILE",
+          payload: msg.file
+        });
+        dispatch({
+          type: "file/FETCH_FILE_RECEIVED",
+          payload: msg.file
+        });
+        dispatch({
+          type: "globalEdit/POPULATE_INITIAL_VALUES",
+          payload: msg.file.globalSettings
+        });
+      })
+      .receive("error", e => {
+        console.log('fetch file error', e)
+        dispatch({
+          type: "file/FETCH_FILE_ERROR",
+          payload: e
+        });
+      })
 
-  // Make a request for a user with a given ID
-  dispatch({ type: "file/FETCH_FILE" });
-
-  axios({
-    method: "get",
-    url: endpointForAuthUser,
-    headers: { Pragma: "no-cache" }
-  })
-    .then(function(response) {
-      dispatch({
-        type: "file/UPDATE_FILE",
-        payload: response.data.file
-      });
-      dispatch({
-        type: "file/FETCH_FILE_RECEIVED",
-        payload: response.data.file
-      });
-      dispatch({
-        type: "globalEdit/POPULATE_INITIAL_VALUES",
-        payload: response.data.file.globalSettings
-      });
-    })
-    .catch(function(error) {
-      dispatch({
-        type: "file/FETCH_FILE_ERROR",
-        payload: error.response
-      });
-    });
+  // const f = "web";
+  //
+  // const endpointForAuthUser = serverUrl + `getfile/${f}`;
+  //
+  // // Make a request for a user with a given ID
+  // dispatch({ type: "file/FETCH_FILE" });
+  //
+  // axios({
+  //   method: "get",
+  //   url: endpointForAuthUser,
+  //   headers: { Pragma: "no-cache" }
+  // })
+  //   .then(function(response) {
+  //     dispatch({
+  //       type: "file/UPDATE_FILE",
+  //       payload: response.data.file
+  //     });
+  //     dispatch({
+  //       type: "file/FETCH_FILE_RECEIVED",
+  //       payload: response.data.file
+  //     });
+  //     dispatch({
+  //       type: "globalEdit/POPULATE_INITIAL_VALUES",
+  //       payload: response.data.file.globalSettings
+  //     });
+  //   })
+  //   .catch(function(error) {
+  //     dispatch({
+  //       type: "file/FETCH_FILE_ERROR",
+  //       payload: error.response
+  //     });
+  //   });
 };
 
 export const saveAction = file => dispatch => {

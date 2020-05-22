@@ -12,7 +12,7 @@ import { Provider } from "react-redux";
 import configureStore from "./redux/store";
 
 
-const {store, channel} = configureStore()
+const {store, doc_channel} = configureStore()
 
 // store.dispatch((msg) => {
 // console.log('hello?', )
@@ -40,7 +40,7 @@ const alertOptions = {
 ReactDOM.render(
   <Provider store={store}>
       <AlertProvider template={AlertTemplate} {...alertOptions}>
-          <App channel={channel} style={{width: '100%', height: '100%'}}/>
+          <App channel={doc_channel} style={{width: '100%', height: '100%'}}/>
       </AlertProvider>
   </Provider>,
   document.getElementById("root")

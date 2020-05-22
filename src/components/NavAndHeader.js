@@ -40,7 +40,7 @@ class NavAndHeader extends Component {
   }
 
   componentDidMount() {
-    this.openDocument();
+    this.openDocument(this.props.channel);
   }
 
   selectedMenu() {
@@ -176,8 +176,8 @@ class NavAndHeader extends Component {
       </StyledHeader>
     );
   }
-  openDocument = event => {
-    this.props.openDocument();
+  openDocument = channel => {
+    this.props.openDocument(channel);
   };
   postAction = file => {
     this.props.postAction(file);
@@ -352,7 +352,7 @@ const mapStateToProps = state => ({
     selectedPage: state.ui.selectedPage
 });
 const mapDispatchToProps = dispatch => ({
-  openDocument: () => dispatch(document()),
+  openDocument: (channel) => dispatch(document(channel)),
   postAction: file => dispatch(postAction(file)),
   addAction: zoomLevel => dispatch(addAction(zoomLevel)),
   deleteAction: () => dispatch(deleteAction()),

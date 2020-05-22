@@ -61,7 +61,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Page>
+        <Page channel={this.props.channel}>
           <F4 />
         </Page>
       </div>
