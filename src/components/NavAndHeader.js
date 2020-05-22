@@ -180,7 +180,7 @@ class NavAndHeader extends Component {
     this.props.openDocument(channel);
   };
   postAction = file => {
-    this.props.postAction(file);
+    this.props.postAction(file, this.props.channel);
   };
   saveNameChangeAction = text => {
     this.props.saveNameChangeAction(text);
@@ -353,7 +353,7 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch => ({
   openDocument: (channel) => dispatch(document(channel)),
-  postAction: file => dispatch(postAction(file)),
+  postAction: (file, channel) => dispatch(postAction(file, channel)),
   addAction: zoomLevel => dispatch(addAction(zoomLevel)),
   deleteAction: () => dispatch(deleteAction()),
   saveNameChangeAction: text => dispatch(saveNameChangeAction(text)),

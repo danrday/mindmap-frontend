@@ -3,11 +3,7 @@ import environment from "../../environment";
 import uuidv4 from "uuid/v4";
 const serverUrl = environment._serverUrl;
 
-
-
-
 export const document = channel => dispatch => {
-
  channel.push("get_file")
       .receive("ok", (msg) => {
         dispatch({
@@ -30,39 +26,6 @@ export const document = channel => dispatch => {
           payload: e
         });
       })
-
-  // const f = "web";
-  //
-  // const endpointForAuthUser = serverUrl + `getfile/${f}`;
-  //
-  // // Make a request for a user with a given ID
-  // dispatch({ type: "file/FETCH_FILE" });
-  //
-  // axios({
-  //   method: "get",
-  //   url: endpointForAuthUser,
-  //   headers: { Pragma: "no-cache" }
-  // })
-  //   .then(function(response) {
-  //     dispatch({
-  //       type: "file/UPDATE_FILE",
-  //       payload: response.data.file
-  //     });
-  //     dispatch({
-  //       type: "file/FETCH_FILE_RECEIVED",
-  //       payload: response.data.file
-  //     });
-  //     dispatch({
-  //       type: "globalEdit/POPULATE_INITIAL_VALUES",
-  //       payload: response.data.file.globalSettings
-  //     });
-  //   })
-  //   .catch(function(error) {
-  //     dispatch({
-  //       type: "file/FETCH_FILE_ERROR",
-  //       payload: error.response
-  //     });
-  //   });
 };
 
 export const saveAction = file => dispatch => {
@@ -86,7 +49,6 @@ export const addAction = (zoomLevel) => dispatch => {
   });
   dispatch({
     type: "liveNodeEdit/POPULATE_CURRENT_NODE_VALUES",
-    // const { id, name, customAttrs, category } = action.payload;
     payload: {id: zoomLevel.id, name: 'new', customAttrs: null, category: null}
   });
   dispatch({
@@ -138,41 +100,30 @@ export const selectAndLinkNode = node => dispatch => {
   });
 };
 
-export const postAction = file => dispatch => {
-  const h = "web";
+export const postAction = (file, channel) => dispatch => {
 
-  console.log("POST FILE?", file);
+  file.links.forEach(obj => {
+    obj.source = obj.source.id;
+    obj.target = obj.target.id;
+  });
 
-  const endpointForPostFile = serverUrl + `savefile/${h}`;
-
-  axios({
-    method: "post",
-    url: endpointForPostFile,
-    headers: { Pragma: "no-cache" },
-    data: file
-  })
-    .then(function(response) {
-      dispatch({
-        type: "file/POST_FILE",
-        payload: response.data
-      });
-
-      dispatch({
-        type: 'SHOW_ALERT_MESSAGE',
-        payload: {
-          show: true,
-          msg: 'saved!',
-          type: 'success',
-        }
+  channel.push("save_file", file)
+      .receive("ok", (msg) => {
+        dispatch({
+          type: 'SHOW_ALERT_MESSAGE',
+          payload: {
+            show: true,
+            msg: 'saved!',
+            type: 'success',
+          }
+        })
       })
-
-    })
-    .catch(function(error) {
-      dispatch({
-        type: "file/POST_FILE_ERROR",
-        payload: error.response
-      });
-    });
+      .receive("error", e => {
+        dispatch({
+          type: "file/POST_FILE_ERROR",
+          payload: e
+        });
+      })
 };
 
 export const saveCategoryEdit = edits => dispatch => {
