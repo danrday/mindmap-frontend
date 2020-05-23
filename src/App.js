@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import "./App.css";
 import { hideAlertMessage } from "./redux/actions/ui";
-import { dispatchMsg } from "./redux/actions/toDo";
+import { dispatchMsg } from "./redux/actions/fromChannel";
 import Page from "./components/Page";
 import F4 from "./components/pages/f4";
 import {withAlert} from "react-alert";

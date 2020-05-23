@@ -1,4 +1,4 @@
-const environment = process.env.REACT_APP_ENV;
+/*const environment = process.env.REACT_APP_ENV;
 
 let _serverUrl = null;
 let _type = null;
@@ -16,4 +16,4 @@ if (environment) {
   throw Error("App environment variable is not set");
 }
 
-export default { _serverUrl, _type };
+export default { _serverUrl, _type };*/

@@ -1,7 +1,5 @@
 import axios from "axios";
-import environment from "../../environment";
 import uuidv4 from "uuid/v4";
-const serverUrl = environment._serverUrl;
 
 export const document = channel => dispatch => {
  channel.push("get_file")
