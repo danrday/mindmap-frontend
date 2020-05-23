@@ -8,6 +8,29 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case "file/RECEIVE_DRAGGED_NODE":
+      // const draggedNode = state.editedFile.nodes.find(e => {
+      //   return e.id === action.payload.id;
+      // });
+
+      console.log("action.;alo", action.payload);
+
+      const editedd = Object.assign({}, state.editedFile);
+      let currSelNodeIndex = editedd.nodes.findIndex(e => {
+        return e.id === action.payload.id;
+      });
+      console.log(
+        "edited.nodes[currSelNodeIndex].name",
+        editedd.nodes[currSelNodeIndex]
+      );
+      editedd.nodes[currSelNodeIndex].fx = action.payload.fx;
+      editedd.nodes[currSelNodeIndex].fy = action.payload.fy;
+
+      return {
+        ...state,
+        editedFile: editedd
+      };
+
     case "file/FETCH_FILE_ERROR":
       return { ...state, error: action.payload, fetching: false };
     case "file/UPDATE_FILE":

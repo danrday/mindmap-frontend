@@ -23,6 +23,13 @@ export default function configureStore(initialState = {}) {
     return function(next) {
       return function(action) {
         // if action is coming from the server or it's one of the initializer actions
+        if (action.server_msg && action.server_msg === "everyone_but_me") {
+          doc_channel.push("everyone_but_me", {
+            type: action.type,
+            payload: action.payload
+          });
+          return;
+        }
         if (
           action.server_msg ||
           action.type === "file/FETCH_FILE" ||
@@ -38,6 +45,7 @@ export default function configureStore(initialState = {}) {
             type: action.type,
             payload: action.payload
           });
+          return;
         }
       };
     };

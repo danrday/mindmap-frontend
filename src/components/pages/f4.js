@@ -13,6 +13,7 @@ import {
 } from "../../redux/actions/document";
 import { populateCurrentNodeValues } from "../../redux/actions/liveNodeEdit";
 import { selectPage } from "../../redux/actions/ui";
+import { emitDrag } from "../../redux/actions/channel";
 
 const color = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -114,6 +115,7 @@ class App extends React.Component {
               selectPage={this.props.selectPage}
               initialZoom={this.props.file.globalSettings.zoom || null}
               handleMouseMove={this.props.handleMouseMove}
+              emitDrag={this.props.emitDrag}
               mouse={this.props.mouse || { coords: { x: 0, y: 0 } }}
             />
           </div>
@@ -221,15 +223,17 @@ class Graph extends React.Component {
       d.fy = d.y;
     };
 
-    let dragging = d => {
+    let dragging = (d, self) => {
       d.fx = d3.event.x;
       d.fy = d3.event.y;
-      // console.log('drag node', )
+      console.log("drag node", d);
       if (d.sticky && this.props.lastClickedNode === d.id) {
         // console.log('select Sticky node, then start to drag it: Unstick and Unselect node.', )
         this.props.handleClick(d.id);
         d.sticky = false;
       }
+
+      this.props.emitDrag(d.id, d.fx, d.fy);
     };
 
     let dragEnded = d => {
@@ -654,7 +658,8 @@ const mapDispatchToProps = dispatch => ({
   populateCurrentNodeValues: node => dispatch(populateCurrentNodeValues(node)),
   handleZoom: zoomAttrs => dispatch(handleZoom(zoomAttrs)),
   handleMouseMove: coords => dispatch(handleMouseMove(coords)),
-  selectPage: i => dispatch(selectPage(i))
+  selectPage: i => dispatch(selectPage(i)),
+  emitDrag: (id, fx, fy) => dispatch(emitDrag({ id, fx, fy }))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

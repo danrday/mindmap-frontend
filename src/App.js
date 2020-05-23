@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import "./App.css";
 import { hideAlertMessage } from "./redux/actions/ui";
-import { dispatchMsg } from "./redux/actions/fromChannel";
+import { dispatchMsg } from "./redux/actions/channel";
 import Page from "./components/Page";
 import F4 from "./components/pages/f4";
 import { withAlert } from "react-alert";
@@ -27,7 +27,7 @@ class App extends Component {
     return (
       <div className="App">
         <Page channel={this.props.channel}>
-          <F4 />
+          <F4 channel={this.props.channel} />
         </Page>
       </div>
     );

@@ -6,3 +6,11 @@ export const dispatchMsg = msg => dispatch => {
     server_msg: true
   });
 };
+
+export const emitDrag = msg => dispatch => {
+  dispatch({
+    type: "file/RECEIVE_DRAGGED_NODE",
+    payload: msg,
+    server_msg: "everyone_but_me"
+  });
+};
