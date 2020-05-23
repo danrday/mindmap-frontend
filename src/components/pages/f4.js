@@ -65,7 +65,7 @@ class App extends React.Component {
       if (this.props.currentNode && liveNodeEdit.selNodeId) {
         let node = modData.nodes.findIndex(n => {
           return n.id === liveNodeEdit.selNodeId
-        })
+      })
 
         // if the node hasn't been deleted'
         if (node !== -1) {
