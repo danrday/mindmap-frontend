@@ -1,6 +1,3 @@
-import uuidv4 from "uuid/v4";
-
-
 const initialState = {
   file: null,
   currentNode: null,
@@ -8,7 +5,6 @@ const initialState = {
   error: null,
   editedFile: null
 };
-
 
 export default (state = initialState, action) => {
   switch (action.type) {
