@@ -90,7 +90,7 @@ class NavAndHeader extends Component {
         {/*</button>*/}
 
         <div className="projectTitle">
-          <h4 style={{ color: "#d1e8e3" }}>Force Mapper</h4>
+          <h4 style={{ color: "#d1e8e3" }}>Plan Atlas</h4>
         </div>
 
         <NavBar
