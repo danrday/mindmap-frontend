@@ -5,22 +5,22 @@ import { hideAlertMessage } from "./redux/actions/ui";
 import { dispatchMsg } from "./redux/actions/fromChannel";
 import Page from "./components/Page";
 import F4 from "./components/pages/f4";
-import {withAlert} from "react-alert";
+import { withAlert } from "react-alert";
 
 class App extends Component {
   componentDidMount() {
     // LISTEN FOR ACTIONS FROM THE PHOENIX SERVER
     this.props.channel.on("server_msg", msg => {
-      this.props.dispatchMsg(msg)
-    })
+      this.props.dispatchMsg(msg);
+    });
   }
-  componentDidUpdate(){
+  componentDidUpdate() {
     if (this.props.ui.alert.show && this.props.ui.alert.msg) {
       this.props.alert.show(this.props.ui.alert.msg, {
         type: this.props.ui.alert.type,
-        timeout: 1750,
-      })
-      this.props.hideAlertMessage()
+        timeout: 1750
+      });
+      this.props.hideAlertMessage();
     }
   }
   render() {
@@ -37,7 +37,7 @@ class App extends Component {
 const mapStateToProps = state => ({ ...state });
 const mapDispatchToProps = dispatch => ({
   hideAlertMessage: () => dispatch(hideAlertMessage()),
-  dispatchMsg: (msg) => dispatch(dispatchMsg(msg)),
+  dispatchMsg: msg => dispatch(dispatchMsg(msg))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withAlert()(App));

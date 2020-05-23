@@ -9,5 +9,5 @@ export default combineReducers({
   liveNodeEdit,
   categoryEdit,
   globalEdit,
-  ui,
+  ui
 });

@@ -13,9 +13,7 @@ import {
   saveNameChangeAction
 } from "../redux/actions/document";
 
-import {
-    selectPage
-} from "../redux/actions/ui";
+import { selectPage } from "../redux/actions/ui";
 
 class NavAndHeader extends Component {
   state = {
@@ -24,7 +22,7 @@ class NavAndHeader extends Component {
     selectedMenu: null
   };
   handleSelected(i) {
-      this.props.selectPage(i)
+    this.props.selectPage(i);
     // this.setState({ selected: i });
   }
   handleSelectedSubItem(i) {
@@ -103,8 +101,9 @@ class NavAndHeader extends Component {
             openNav={this.props.navIsOpen}
             hoverNav={this.props.navIsHovered}
           >
-              <div style={{"width": "180px", "height": "100%"}}>{this.selectedMenu()}</div>
-
+            <div style={{ width: "180px", height: "100%" }}>
+              {this.selectedMenu()}
+            </div>
           </Hmm>
 
           {navLinks.map((item, i) => {
@@ -276,7 +275,7 @@ const Hmm = styled.div`
   overflow-x: hidden;
   z-index: 50;
   width: 0px;
-  background-color: #00F8e3;
+  background-color: #00f8e3;
   ${({ openNav, hoverNav }) =>
     (openNav || hoverNav) &&
     `
@@ -348,15 +347,17 @@ const NavItem = styled.div`
 const mapStateToProps = state => ({
   ...state,
   currSelNode: state.document.currentNode,
-    currZoomLevel: state.document.editedFile ? state.document.editedFile.globalSettings.zoom: {x: 0, y: 0},
-    selectedPage: state.ui.selectedPage
+  currZoomLevel: state.document.editedFile
+    ? state.document.editedFile.globalSettings.zoom
+    : { x: 0, y: 0 },
+  selectedPage: state.ui.selectedPage
 });
 const mapDispatchToProps = dispatch => ({
-  openDocument: (channel) => dispatch(document(channel)),
+  openDocument: channel => dispatch(document(channel)),
   postAction: (file, channel) => dispatch(postAction(file, channel)),
   addAction: zoomLevel => dispatch(addAction(zoomLevel)),
   deleteAction: () => dispatch(deleteAction()),
   saveNameChangeAction: text => dispatch(saveNameChangeAction(text)),
-    selectPage: pageName => dispatch(selectPage(pageName))
+  selectPage: pageName => dispatch(selectPage(pageName))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(NavAndHeader);

@@ -1,9 +1,8 @@
 import React from "react";
-
 import Node from "./pages/node";
-import Categories from './pages/categories'
-import GlobalSettings from './pages/global'
-import RichText from './pages/richText'
+import Categories from "./pages/categories";
+import GlobalSettings from "./pages/global";
+import RichText from "./pages/richText";
 
 const navLinks = [
   {

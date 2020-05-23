@@ -5,21 +5,20 @@ const initialState = {
   fontSize: null,
   checkedAttrs: [],
   newCategoryName: null,
-  category: null,
+  category: null
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case "liveNodeEdit/POPULATE_CURRENT_NODE_VALUES": {
-      console.log('populateCurrentNodeValues', action.payload)
+      console.log("populateCurrentNodeValues", action.payload);
       const { id, name, customAttrs, category } = action.payload;
-      let custom = customAttrs
+      let custom = customAttrs;
       if (!customAttrs) {
-        custom = {}
+        custom = {};
       }
-
-      const checkedAttrs = Object.keys(custom) || []
-      if (category) checkedAttrs.push('category')
+      const checkedAttrs = Object.keys(custom) || [];
+      if (category) checkedAttrs.push("category");
       return {
         ...state,
         name: name,
@@ -34,7 +33,7 @@ export default (state = initialState, action) => {
       return { ...state, name: action.payload };
     }
     case "liveNodeEdit/CHANGE_SELECTED_CATEGORY": {
-      console.log('action pay', action.payload)
+      console.log("action pay", action.payload);
       return { ...state, category: action.payload };
     }
     case "liveNodeEdit/CLEAR_TEMP_CUSTOM_ATTRS": {

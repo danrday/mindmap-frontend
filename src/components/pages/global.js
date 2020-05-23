@@ -1,92 +1,123 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import {editValue, handleCheckboxChange, populateInitialValues} from "../../redux/actions/globalEdit";
-import {saveDefaultsEdit} from "../../redux/actions/document";
+import {
+  editValue,
+  handleCheckboxChange,
+  populateInitialValues
+} from "../../redux/actions/globalEdit";
+import { saveDefaultsEdit } from "../../redux/actions/document";
 
 class GlobalSettings extends Component {
+  componentDidMount() {
+    // this.props.populateInitialValues(this.props.globalSettings)
+  }
 
-    componentDidMount() {
-        // this.props.populateInitialValues(this.props.globalSettings)
+  handleCheckboxChange(event) {
+    const target = event.target;
+    let attrs = this.props.globalEdit.checkedAttrs;
+
+    if (attrs.includes(target.name) && !target.checked) {
+      attrs = attrs.filter(e => e !== target.name);
+    } else if (!attrs.includes(target.name) && target.checked) {
+      attrs.push(target.name);
     }
 
-    handleCheckboxChange(event) {
-        const target = event.target;
-        let attrs = this.props.globalEdit.checkedAttrs
+    this.props.handleCheckboxChange(attrs);
+  }
 
-        if (attrs.includes(target.name) && !target.checked) {
-            attrs = attrs.filter(e => e !== target.name)
-        } else if (!attrs.includes(target.name) && target.checked) {
-            attrs.push(target.name)
-        }
+  save() {
+    let edits = this.props.globalEdit;
 
-        this.props.handleCheckboxChange(attrs)
-    }
+    this.props.saveDefaultsEdit(edits);
+  }
 
-    save() {
+  render() {
+    return (
+      <div className="column is-vcentered">
+        <button
+          className="button is-success is-rounded is-light"
+          onClick={this.save.bind(this)}
+        >
+          save
+        </button>
+        <br />
+        <br />
+        <label className="switch">
+          <input
+            name="chargeStrength"
+            type="checkbox"
+            checked={this.props.globalEdit.checkedAttrs.includes(
+              "chargeStrength"
+            )}
+            onChange={this.handleCheckboxChange.bind(this)}
+          />
+          <span className="slider round"></span>
+        </label>
 
-        let edits = this.props.globalEdit
-
-        this.props.saveDefaultsEdit(edits);
-    }
-
-    render() {
-        return (
-            <div className="column is-vcentered">
-                 <button className="button is-success is-rounded is-light" onClick={this.save.bind(this)}>save</button>
-<br/>
-<br/>
-                <label className="switch">
-                <input
-                    name="chargeStrength"
-                    type="checkbox"
-                    checked={this.props.globalEdit.checkedAttrs.includes('chargeStrength')}
-                    onChange={this.handleCheckboxChange.bind(this)} />
-                        <span className="slider round"></span>
-                </label>
-
-                <div>charge strength</div>
-                <input
-                    disabled={!this.props.globalEdit.checkedAttrs.includes('chargeStrength')}
-                    type="number"
-                    className="input"
-                    value={this.props.globalEdit.checkedAttrs.includes('chargeStrength') ? this.props.globalEdit.general.chargeStrength.customValue : this.props.globalEdit.general.chargeStrength.defaultValue}
-                    onChange={event => this.props.editValue({section: 'general', key: 'chargeStrength', value: event.target.value})}
-                />
-                <br/>
-                <br/>
-                <label className="switch">
-                <input
-                    name="linkDistance"
-                    type="checkbox"
-
-                    checked={this.props.globalEdit.checkedAttrs.includes('linkDistance')}
-                    onChange={this.handleCheckboxChange.bind(this)} />
-                    <span className="slider round"></span>
-                </label>
-                <div>link distance</div>
-                <input
-                    disabled={!this.props.globalEdit.checkedAttrs.includes('linkDistance')}
-                    type="number"
-                    className="input"
-                    value={this.props.globalEdit.linkDistance || ""}
-                    onChange={event => this.props.editValue({section: 'general', key: 'linkDistance', value: event.target.value})}
-                />
-            </div>
-        );
-    }
+        <div>charge strength</div>
+        <input
+          disabled={
+            !this.props.globalEdit.checkedAttrs.includes("chargeStrength")
+          }
+          type="number"
+          className="input"
+          value={
+            this.props.globalEdit.checkedAttrs.includes("chargeStrength")
+              ? this.props.globalEdit.general.chargeStrength.customValue
+              : this.props.globalEdit.general.chargeStrength.defaultValue
+          }
+          onChange={event =>
+            this.props.editValue({
+              section: "general",
+              key: "chargeStrength",
+              value: event.target.value
+            })
+          }
+        />
+        <br />
+        <br />
+        <label className="switch">
+          <input
+            name="linkDistance"
+            type="checkbox"
+            checked={this.props.globalEdit.checkedAttrs.includes(
+              "linkDistance"
+            )}
+            onChange={this.handleCheckboxChange.bind(this)}
+          />
+          <span className="slider round"></span>
+        </label>
+        <div>link distance</div>
+        <input
+          disabled={
+            !this.props.globalEdit.checkedAttrs.includes("linkDistance")
+          }
+          type="number"
+          className="input"
+          value={this.props.globalEdit.linkDistance || ""}
+          onChange={event =>
+            this.props.editValue({
+              section: "general",
+              key: "linkDistance",
+              value: event.target.value
+            })
+          }
+        />
+      </div>
+    );
+  }
 }
 
-
 const mapStateToProps = state => ({
-    globalEdit: state.globalEdit,
-    globalSettings: state.document.editedFile.globalSettings
+  globalEdit: state.globalEdit,
+  globalSettings: state.document.editedFile.globalSettings
 });
 
 const mapDispatchToProps = dispatch => ({
-    editValue: keyAndValue => dispatch(editValue(keyAndValue)),
-    handleCheckboxChange: checkedAttrs => dispatch(handleCheckboxChange(checkedAttrs)),
-    populateInitialValues: (defaults) => dispatch(populateInitialValues(defaults)),
-    saveDefaultsEdit: edits => dispatch(saveDefaultsEdit(edits))
-
+  editValue: keyAndValue => dispatch(editValue(keyAndValue)),
+  handleCheckboxChange: checkedAttrs =>
+    dispatch(handleCheckboxChange(checkedAttrs)),
+  populateInitialValues: defaults => dispatch(populateInitialValues(defaults)),
+  saveDefaultsEdit: edits => dispatch(saveDefaultsEdit(edits))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(GlobalSettings);

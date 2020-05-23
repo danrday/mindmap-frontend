@@ -38,14 +38,14 @@ class Page extends Component {
 const StyledPage = styled.div``;
 
 const Inner = styled.div`
-    margin-top: 60px;
-    margin-left: 60px;
+  margin-top: 60px;
+  margin-left: 60px;
 
-    transition: all 0.2s ease-in-out;
-    letter-spacing: 0.2px;
-    font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
-    font-size: 14px;
-    ${({ openNav }) =>
+  transition: all 0.2s ease-in-out;
+  letter-spacing: 0.2px;
+  font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+  font-size: 14px;
+  ${({ openNav }) =>
     openNav &&
     `
         margin-left: 260px;
