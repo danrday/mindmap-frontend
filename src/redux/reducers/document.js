@@ -220,9 +220,6 @@ export default (state = initialState, action) => {
       // this.props.saveAction(newData);
       // this.props.selectNode(null);
 
-
-
-
       return {
         ...state,
         editedFile: { ...state.editedFile, links: newLinks }

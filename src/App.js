@@ -7,18 +7,13 @@ import Page from "./components/Page";
 import F4 from "./components/pages/f4";
 import {withAlert} from "react-alert";
 
-
-
-
 class App extends Component {
-
   componentDidMount() {
     // LISTEN FOR ACTIONS FROM THE PHOENIX SERVER
     this.props.channel.on("server_msg", msg => {
       this.props.dispatchMsg(msg)
     })
   }
-
   componentDidUpdate(){
     if (this.props.ui.alert.show && this.props.ui.alert.msg) {
       this.props.alert.show(this.props.ui.alert.msg, {
@@ -28,7 +23,6 @@ class App extends Component {
       this.props.hideAlertMessage()
     }
   }
-
   render() {
     return (
       <div className="App">
@@ -40,9 +34,7 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  ...state,
-});
+const mapStateToProps = state => ({ ...state });
 const mapDispatchToProps = dispatch => ({
   hideAlertMessage: () => dispatch(hideAlertMessage()),
   dispatchMsg: (msg) => dispatch(dispatchMsg(msg)),
