@@ -1,5 +1,12 @@
 import uuidv4 from "uuid/v4";
 
+export const dragNode = msg => dispatch => {
+  dispatch({
+    type: "file/DRAG_NODE",
+    payload: msg
+  });
+};
+
 export const document = channel => dispatch => {
   channel
     .push("get_file")
@@ -77,7 +84,8 @@ export const saveNameChangeAction = text => dispatch => {
 export const selectNode = node => dispatch => {
   dispatch({
     type: "SELECT_NODE",
-    payload: node
+    payload: node,
+    broadcast: "LOCK_NODE"
   });
 };
 
@@ -88,7 +96,7 @@ export const handleMouseMove = coords => dispatch => {
   });
 };
 
-export const selectAndLinkNode = node => dispatch => {
+export const linkNode = node => dispatch => {
   dispatch({
     type: "SELECT_AND_LINK_NODE",
     payload: node
@@ -137,7 +145,6 @@ export const saveDefaultsEdit = edits => dispatch => {
 export const handleZoom = zoomAttrs => dispatch => {
   dispatch({
     type: `HANDLE_ZOOM`,
-    payload: zoomAttrs,
-    audit: { user: "danday", time_stamp: "Saturday 12.17 pm" }
+    payload: zoomAttrs
   });
 };

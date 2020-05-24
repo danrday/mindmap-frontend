@@ -34,11 +34,11 @@ class NavAndHeader extends Component {
   }
 
   handleSaveNameChange() {
-    this.saveNameChangeAction(this.state.nameValue);
+    this.props.saveNameChangeAction(this.state.nameValue);
   }
 
   componentDidMount() {
-    this.openDocument(this.props.channel);
+    this.props.openDocument();
   }
 
   selectedMenu() {
@@ -47,12 +47,12 @@ class NavAndHeader extends Component {
     } else {
       return (
         <div>
-          <button onClick={this.openDocument}>open</button>
+          <button onClick={this.props.openDocument}>open</button>
           <br />
           <button
             onClick={() => {
               console.log("document.file", this.props.document.file);
-              this.postAction(this.props.document.editedFile);
+              this.props.postAction(this.props.document.editedFile);
             }}
           >
             save
@@ -175,15 +175,6 @@ class NavAndHeader extends Component {
       </StyledHeader>
     );
   }
-  openDocument = channel => {
-    this.props.openDocument(channel);
-  };
-  postAction = file => {
-    this.props.postAction(file, this.props.channel);
-  };
-  saveNameChangeAction = text => {
-    this.props.saveNameChangeAction(text);
-  };
   addAction = () => {
     this.props.addAction(this.props.currZoomLevel);
   };
@@ -352,9 +343,9 @@ const mapStateToProps = state => ({
     : { x: 0, y: 0 },
   selectedPage: state.ui.selectedPage
 });
-const mapDispatchToProps = dispatch => ({
-  openDocument: channel => dispatch(document(channel)),
-  postAction: (file, channel) => dispatch(postAction(file, channel)),
+const mapDispatchToProps = (dispatch, props) => ({
+  openDocument: () => dispatch(document(props.channel)),
+  postAction: file => dispatch(postAction(file, props.channel)),
   addAction: zoomLevel => dispatch(addAction(zoomLevel)),
   deleteAction: () => dispatch(deleteAction()),
   saveNameChangeAction: text => dispatch(saveNameChangeAction(text)),

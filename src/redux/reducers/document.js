@@ -1,6 +1,7 @@
 const initialState = {
   file: null,
   currentNode: null,
+  lockedNodes: [],
   fetching: false,
   error: null,
   editedFile: null
@@ -8,7 +9,7 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case "file/RECEIVE_DRAGGED_NODE":
+    case "file/DRAG_NODE":
       // const draggedNode = state.editedFile.nodes.find(e => {
       //   return e.id === action.payload.id;
       // });
@@ -179,7 +180,7 @@ export default (state = initialState, action) => {
         y: (50 - zoomLevel.y) / zoomLevel.k,
         vy: 0,
         vx: 0,
-        sticky: "f",
+        sticky: true,
         fx: (50 - zoomLevel.x) / zoomLevel.k,
         fy: (50 - zoomLevel.y) / zoomLevel.k
       });
@@ -188,9 +189,28 @@ export default (state = initialState, action) => {
         editedFile: editedFile
       };
     case "SELECT_NODE":
+      let value = null;
+      if (action.payload === state.currentNode) {
+        value = null;
+      } else {
+        value = action.payload;
+      }
       return {
         ...state,
-        currentNode: action.payload
+        currentNode: value
+      };
+    case "LOCK_NODE":
+      const newLockedNodes = Object.assign([], state.lockedNodes);
+      const lockedNode = newLockedNodes.findIndex(n => n === action.payload);
+      if (lockedNode === -1) {
+        newLockedNodes.push(action.payload);
+      } else {
+        newLockedNodes.splice(lockedNode, 1);
+      }
+      console.log("WTF", action.payload);
+      return {
+        ...state,
+        lockedNodes: newLockedNodes
       };
     case "SELECT_AND_LINK_NODE":
       // get full node object by id

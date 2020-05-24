@@ -7,13 +7,13 @@ import * as d3 from "d3";
 import {
   saveAction,
   selectNode,
-  selectAndLinkNode,
+  linkNode,
   handleZoom,
-  handleMouseMove
+  handleMouseMove,
+  dragNode
 } from "../../redux/actions/document";
 import { populateCurrentNodeValues } from "../../redux/actions/liveNodeEdit";
 import { selectPage } from "../../redux/actions/ui";
-import { emitDrag } from "../../redux/actions/channel";
 
 const color = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -110,12 +110,13 @@ class App extends React.Component {
               data={modData}
               globalSettings={this.props.globalEdit}
               lastClickedNode={this.props.currentNode}
+              lockedNodes={this.props.lockedNodes}
               handleClick={this.handleClick}
               handleZoom={this.props.handleZoom}
               selectPage={this.props.selectPage}
               initialZoom={this.props.file.globalSettings.zoom || null}
               handleMouseMove={this.props.handleMouseMove}
-              emitDrag={this.props.emitDrag}
+              dragNode={this.props.dragNode}
               mouse={this.props.mouse || { coords: { x: 0, y: 0 } }}
             />
           </div>
@@ -135,10 +136,10 @@ class App extends React.Component {
     if (lastClickedNode) {
       if (lastClickedNode === currentClickedNodeId) {
         //compare node ids
-        this.props.selectNode(null);
+        this.props.selectNode(currentClickedNodeId);
       } else {
-        this.props.selectAndLinkNode({ currentClickedNodeId, lastClickedNode });
-        this.props.selectNode(null);
+        this.props.linkNode({ currentClickedNodeId, lastClickedNode });
+        this.props.selectNode(lastClickedNode);
       }
     } else {
       this.props.selectNode(currentClickedNodeId);
@@ -215,37 +216,31 @@ class Graph extends React.Component {
     let force = window.force;
 
     let dragStarted = d => {
+      // (fires on any mousedown)
       if (!d3.event.active) force.alphaTarget(0.3).restart();
       if (d.fx) {
         d.sticky = true;
       }
-      d.fx = d.x;
-      d.fy = d.y;
     };
 
-    let dragging = (d, self) => {
-      d.fx = d3.event.x;
-      d.fy = d3.event.y;
-      console.log("drag node", d);
+    let dragging = d => {
       if (d.sticky && this.props.lastClickedNode === d.id) {
         // console.log('select Sticky node, then start to drag it: Unstick and Unselect node.', )
         this.props.handleClick(d.id);
         d.sticky = false;
       }
-
-      this.props.emitDrag(d.id, d.fx, d.fy);
+      this.props.dragNode(d.id, d3.event.x, d3.event.y); //EMIT TO OTHER USERS
     };
 
     let dragEnded = d => {
+      // (fires on any mouseup)
       if (!d3.event.active) force.alphaTarget(0);
       if (this.props.lastClickedNode && this.props.lastClickedNode === d.id) {
         // console.log('select an unsticky node and drag it, make it stick there', )
-        d.sticky = false;
       } else {
         if (!d.sticky) {
           // console.log(' finish drag a selected sticky node, Unstick', )
-          d.fx = null;
-          d.fy = null;
+          this.props.dragNode(d.id, null, null); //EMIT TO OTHER USERS
         } else {
           // console.log('finish drag an unselected node', )
         }
@@ -420,6 +415,7 @@ class Graph extends React.Component {
           data={node}
           name={node.name}
           displayAttr={this.displayAttr}
+          lockedNodes={this.props.lockedNodes}
           key={node.id}
           handleClick={this.props.handleClick}
           selectPage={
@@ -537,14 +533,22 @@ class Node extends React.Component {
       .call(enterNode(this.props.displayAttr));
   }
   render() {
+    let lockedNode = this.props.lockedNodes.includes(this.props.data.id);
     return (
       <g className="node">
         <circle
           name={this.props.data.id}
           ref="dragMe"
+          opacity={lockedNode ? ".2" : "1"}
+          cursor={lockedNode ? "not-allowed" : "pointer"}
           onClick={e => {
-            this.props.handleClick(this.props.data.id);
-            this.props.selectPage(2);
+            if (lockedNode) {
+              alert("This node is being edited by another user...");
+              d3.event.preventDefault();
+            } else {
+              this.props.handleClick(this.props.data.id);
+              this.props.selectPage(2);
+            }
           }}
         />
         <g>
@@ -574,6 +578,13 @@ const enterNode = displayAttr => {
       .style("fill", function(d) {
         return color(d.name);
       });
+    // .attr("cursor", function(d) {
+    //   if (this.props.lockedNodes.includes(d.id)) {
+    //     return "wait";
+    //   } else {
+    //     return "pointer";
+    //   }
+    // });
     //     .on('mouseover', function(d, i) {
     //   d3.select(this)
     //       .transition().duration(200)
@@ -645,6 +656,7 @@ const enterNode = displayAttr => {
 const mapStateToProps = (state, props) => ({
   file: state.document.editedFile,
   currentNode: state.document.currentNode,
+  lockedNodes: state.document.lockedNodes,
   liveNodeEdit: state.liveNodeEdit,
   categoryEdit: state.categoryEdit,
   globalEdit: state.globalEdit,
@@ -654,12 +666,12 @@ const mapStateToProps = (state, props) => ({
 const mapDispatchToProps = dispatch => ({
   saveAction: file => dispatch(saveAction(file)),
   selectNode: node => dispatch(selectNode(node)),
-  selectAndLinkNode: node => dispatch(selectAndLinkNode(node)),
+  linkNode: node => dispatch(linkNode(node)),
   populateCurrentNodeValues: node => dispatch(populateCurrentNodeValues(node)),
   handleZoom: zoomAttrs => dispatch(handleZoom(zoomAttrs)),
   handleMouseMove: coords => dispatch(handleMouseMove(coords)),
   selectPage: i => dispatch(selectPage(i)),
-  emitDrag: (id, fx, fy) => dispatch(emitDrag({ id, fx, fy }))
+  dragNode: (id, fx, fy) => dispatch(dragNode({ id, fx, fy }))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

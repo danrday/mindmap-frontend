@@ -3,14 +3,20 @@ import { connect } from "react-redux";
 import "./App.css";
 import { hideAlertMessage } from "./redux/actions/ui";
 import { dispatchMsg } from "./redux/actions/channel";
+import { getUser } from "./redux/actions/user";
 import Page from "./components/Page";
 import F4 from "./components/pages/f4";
 import { withAlert } from "react-alert";
 
 class App extends Component {
   componentDidMount() {
+    // TO DO
+    // *****get user_info from channel on mount, set it in the store
+    this.props.getUser(this.props.channel);
+
     // LISTEN FOR ACTIONS FROM THE PHOENIX SERVER
     this.props.channel.on("server_msg", msg => {
+      console.log("server msg", msg);
       this.props.dispatchMsg(msg);
     });
   }
@@ -27,7 +33,7 @@ class App extends Component {
     return (
       <div className="App">
         <Page channel={this.props.channel}>
-          <F4 channel={this.props.channel} />
+          <F4 />
         </Page>
       </div>
     );
@@ -37,7 +43,8 @@ class App extends Component {
 const mapStateToProps = state => ({ ...state });
 const mapDispatchToProps = dispatch => ({
   hideAlertMessage: () => dispatch(hideAlertMessage()),
-  dispatchMsg: msg => dispatch(dispatchMsg(msg))
+  dispatchMsg: msg => dispatch(dispatchMsg(msg)),
+  getUser: channel => dispatch(getUser(channel))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withAlert()(App));

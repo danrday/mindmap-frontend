@@ -22,28 +22,40 @@ export default function configureStore(initialState = {}) {
   function channelInterceptor(store) {
     return function(next) {
       return function(action) {
-        // if action is coming from the server or it's one of the initializer actions
-        if (action.server_msg && action.server_msg === "everyone_but_me") {
-          doc_channel.push("everyone_but_me", {
-            type: action.type,
-            payload: action.payload
-          });
-          return;
-        }
-        if (
+        if (action.server_msg && action.broadcast) {
+          // fork actions between user and rest
+          let state = store.getState();
+          let fromUserId = state.user.user.user_id;
+          let currUserId = action.user_id;
+
+          if (fromUserId === currUserId) {
+            let result = next(action);
+            return result;
+          } else {
+            action.type = action.broadcast;
+            action.broadcast = null;
+            let result = next(action);
+            return result;
+          }
+        } else if (
+          // if action is coming from the server or it's one of the initializer actions
           action.server_msg ||
           action.type === "file/FETCH_FILE" ||
           action.type === "file/UPDATE_FILE" ||
           action.type === "file/FETCH_FILE_RECEIVED" ||
-          action.type === "globalEdit/POPULATE_INITIAL_VALUES"
+          action.type === "globalEdit/POPULATE_INITIAL_VALUES" ||
+          action.type === "user/SET_USER"
         ) {
           let result = next(action);
-          // console.log('next state: ', store.getState())
+          console.log("ACTION MOFO", action);
+          // console.log("next state: ", store.getState());
           return result;
         } else {
+          // send to channel first for roundtrip
           doc_channel.push("new_msg", {
             type: action.type,
-            payload: action.payload
+            payload: action.payload,
+            broadcast: action.broadcast
           });
           return;
         }
