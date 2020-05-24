@@ -10,7 +10,8 @@ import {
   postAction,
   addAction,
   deleteAction,
-  saveNameChangeAction
+  saveNameChangeAction,
+  selectNode
 } from "../redux/actions/document";
 
 import { selectPage } from "../redux/actions/ui";
@@ -175,7 +176,11 @@ class NavAndHeader extends Component {
       </StyledHeader>
     );
   }
+
   addAction = () => {
+    if (this.props.currSelNode) {
+      this.props.selectNode(this.props.currSelNode);
+    }
     this.props.addAction(this.props.currZoomLevel);
   };
 }
@@ -347,6 +352,7 @@ const mapDispatchToProps = (dispatch, props) => ({
   openDocument: () => dispatch(document(props.channel)),
   postAction: file => dispatch(postAction(file, props.channel)),
   addAction: zoomLevel => dispatch(addAction(zoomLevel)),
+  selectNode: node => dispatch(selectNode(node)),
   deleteAction: () => dispatch(deleteAction()),
   saveNameChangeAction: text => dispatch(saveNameChangeAction(text)),
   selectPage: pageName => dispatch(selectPage(pageName))

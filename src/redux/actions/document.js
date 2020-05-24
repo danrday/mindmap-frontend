@@ -48,7 +48,8 @@ export const addAction = zoomLevel => dispatch => {
   });
   dispatch({
     type: "SELECT_NODE",
-    payload: id
+    payload: id,
+    broadcast: "LOCK_NODE"
   });
   dispatch({
     type: "liveNodeEdit/POPULATE_CURRENT_NODE_VALUES",
