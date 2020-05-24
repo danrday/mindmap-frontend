@@ -1,27 +1,31 @@
 export const populateCurrentNodeValues = vals => dispatch => {
   dispatch({
     type: "liveNodeEdit/POPULATE_CURRENT_NODE_VALUES",
-    payload: vals
+    payload: vals,
+    local_msg: true
   });
 };
 
 export const editName = name => dispatch => {
   dispatch({
     type: "liveNodeEdit/EDIT_NAME",
-    payload: name
+    payload: name,
+    local_msg: true
   });
 };
 export const clearTempCustomAttrs = () => dispatch => {
   dispatch({
     type: "liveNodeEdit/CLEAR_TEMP_CUSTOM_ATTRS",
-    payload: null
+    payload: null,
+    local_msg: true
   });
 };
 
 export const changeSelectedCategory = cat => dispatch => {
   dispatch({
     type: "liveNodeEdit/CHANGE_SELECTED_CATEGORY",
-    payload: cat
+    payload: cat,
+    local_msg: true
   });
 };
 
@@ -34,21 +38,24 @@ export const handleCheckboxChange = checks => dispatch => {
 export const editNewCategoryName = name => dispatch => {
   dispatch({
     type: "liveNodeEdit/EDIT_NEW_CATEGORY_NAME",
-    payload: name
+    payload: name,
+    local_msg: true
   });
 };
 
 export const editFontSize = fontSize => dispatch => {
   dispatch({
     type: "liveNodeEdit/EDIT_FONT_SIZE",
-    payload: fontSize
+    payload: fontSize,
+    local_msg: true
   });
 };
 
 export const editRadius = r => dispatch => {
   dispatch({
     type: "liveNodeEdit/EDIT_RADIUS",
-    payload: r
+    payload: r,
+    local_msg: true
   });
 };
 

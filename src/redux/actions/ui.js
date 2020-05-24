@@ -18,6 +18,7 @@ export const hideAlertMessage = () => {
 export const selectPage = pageName => dispatch => {
   dispatch({
     type: "UI_SELECT_PAGE",
-    payload: pageName
+    payload: pageName,
+    local_msg: true
   });
 };

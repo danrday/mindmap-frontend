@@ -40,6 +40,7 @@ export default function configureStore(initialState = {}) {
         } else if (
           // if action is coming from the server or it's one of the initializer actions
           action.server_msg ||
+          action.local_msg ||
           action.type === "file/FETCH_FILE" ||
           action.type === "file/UPDATE_FILE" ||
           action.type === "file/FETCH_FILE_RECEIVED" ||
