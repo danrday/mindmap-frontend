@@ -42,6 +42,8 @@ class App extends React.Component {
       let modData = this.props.file;
       const categoryEdit = this.props.categoryEdit;
 
+      const lockedNodes = this.props.lockedNodes;
+
       modData.nodes.forEach(node => {
         // first erase any 'temporary category attributes' --
         // (in process edits to a category's properties) applied earlier but not saved
@@ -67,6 +69,19 @@ class App extends React.Component {
           node.tempCategoryAttrs = {};
           categoryEdit.checkedAttrs.forEach(attr => {
             node.tempCategoryAttrs[attr] = categoryEdit[attr];
+          });
+        }
+
+        if (lockedNodes[node.id]) {
+          let modNode = lockedNodes[node.id];
+          node.name = modNode.name;
+          if (modNode.checkedAttrs.includes("category")) {
+            node.category = modNode.category;
+          }
+          // populate the temporary custom attributes being edited live
+          node.tempCustomAttrs = node.tempCustomAttrs || {};
+          modNode.checkedAttrs.forEach(attr => {
+            node.tempCustomAttrs[attr] = modNode[attr];
           });
         }
       });
@@ -656,7 +671,7 @@ const enterNode = displayAttr => {
 const mapStateToProps = (state, props) => ({
   file: state.document.editedFile,
   currentNode: state.document.currentNode,
-  lockedNodes: state.document.lockedNodes,
+  lockedNodes: state.liveNodeEdit.lockedNodes,
   liveNodeEdit: state.liveNodeEdit,
   categoryEdit: state.categoryEdit,
   globalEdit: state.globalEdit,

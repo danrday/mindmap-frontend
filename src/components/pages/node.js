@@ -43,7 +43,7 @@ class Node extends Component {
     //     customAttrs: attrs
     // });
 
-    this.props.handleCheckboxChange(attrs);
+    this.props.handleCheckboxChange(attrs, this.props.selNodeId);
     // this.props.handleGlobalAttrCheckbox(attrs)
   }
 
@@ -105,7 +105,9 @@ class Node extends Component {
           disabled={!this.props.liveNodeEdit.checkedAttrs.includes("radius")}
           type="number"
           value={this.props.liveNodeEdit.radius || ""}
-          onChange={event => this.props.editRadius(event.target.value)}
+          onChange={event =>
+            this.props.editRadius(event.target.value, this.props.selNodeId)
+          }
         />
         <Slider
           sliderVal={this.props.liveNodeEdit.radius}
@@ -114,6 +116,7 @@ class Node extends Component {
             this.props.globalEdit.controls.radiusRangeMax.customValue ||
             this.props.globalEdit.controls.radiusRangeMax.defaultValue
           }
+          selNodeId={this.props.selNodeId}
           editRadius={this.props.editRadius}
           updateSliderRangeMax={v =>
             this.props.editValue({
@@ -190,6 +193,7 @@ class Node extends Component {
 
 const mapStateToProps = state => ({
   liveNodeEdit: state.liveNodeEdit,
+  selNodeId: state.liveNodeEdit.selNodeId,
   categories: state.document.editedFile.categories,
   globalEdit: state.globalEdit
 });
@@ -197,11 +201,11 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   // handleGlobalAttrCheckbox: checked => dispatch(handleGlobalAttrCheckbox(checked)),
   editName: name => dispatch(editName(name)),
-  editRadius: r => dispatch(editRadius(r)),
+  editRadius: (r, selNodeId) => dispatch(editRadius(r, selNodeId)),
   editFontSize: f => dispatch(editFontSize(f)),
   saveEdits: edits => dispatch(saveEdits(edits)),
-  handleCheckboxChange: checkedAttrs =>
-    dispatch(handleCheckboxChange(checkedAttrs)),
+  handleCheckboxChange: (checkedAttrs, selNodeId) =>
+    dispatch(handleCheckboxChange(checkedAttrs, selNodeId)),
   editNewCategoryName: name => dispatch(editNewCategoryName(name)),
   clearTempCustomAttrs: () => dispatch(clearTempCustomAttrs()),
   changeSelectedCategory: cat => dispatch(changeSelectedCategory(cat)),

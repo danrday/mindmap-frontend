@@ -47,7 +47,7 @@ class Slider extends Component {
           thumbClassName="example-thumb"
           trackClassName="example-track"
           renderThumb={(props, state) => <div {...props}>{state.valueNow}</div>}
-          onChange={val => this.props.editRadius(val)}
+          onChange={val => this.props.editRadius(val, this.props.selNodeId)}
           value={this.props.sliderVal}
           min={this.props.sliderMin}
           max={this.props.sliderMax}

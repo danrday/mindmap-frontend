@@ -1,7 +1,6 @@
 const initialState = {
   file: null,
   currentNode: null,
-  lockedNodes: {},
   fetching: false,
   error: null,
   editedFile: null
@@ -200,21 +199,21 @@ export default (state = initialState, action) => {
         ...state,
         currentNode: value
       };
-    case "LOCK_NODE":
-      const newLockedNodes = Object.assign({}, state.lockedNodes);
-      const lockedNode = Object.keys(newLockedNodes).findIndex(
-        n => n === action.payload
-      );
-      if (lockedNode === -1) {
-        newLockedNodes[action.payload] = {};
-      } else {
-        delete newLockedNodes[action.payload];
-      }
-      console.log("WTF", action.payload);
-      return {
-        ...state,
-        lockedNodes: newLockedNodes
-      };
+    // case "LOCK_NODE":
+    //   const newLockedNodes = Object.assign({}, state.lockedNodes);
+    //   const lockedNode = Object.keys(newLockedNodes).findIndex(
+    //     n => n === action.payload
+    //   );
+    //   if (lockedNode === -1) {
+    //     newLockedNodes[action.payload] = {};
+    //   } else {
+    //     delete newLockedNodes[action.payload];
+    //   }
+    //   console.log("WTF", action.payload);
+    //   return {
+    //     ...state,
+    //     lockedNodes: newLockedNodes
+    //   };
     case "SELECT_AND_LINK_NODE":
       // get full node object by id
       const lastNode = state.editedFile.nodes.find(e => {

@@ -2,7 +2,7 @@ export const populateCurrentNodeValues = vals => dispatch => {
   dispatch({
     type: "liveNodeEdit/POPULATE_CURRENT_NODE_VALUES",
     payload: vals,
-    local_msg: true
+    broadcast: "liveNodeEdit/POPULATE_LOCKED_NODE_VALUES"
   });
 };
 
@@ -29,10 +29,12 @@ export const changeSelectedCategory = cat => dispatch => {
   });
 };
 
-export const handleCheckboxChange = checks => dispatch => {
+export const handleCheckboxChange = (checks, selNodeId) => dispatch => {
   dispatch({
     type: "liveNodeEdit/HANDLE_CHECKBOX_CHANGE",
-    payload: checks
+    payload: checks,
+    addnl_payload: selNodeId,
+    broadcast: "liveNodeEdit/LOCKED_NODE_CHECKBOX_CHANGE"
   });
 };
 export const editNewCategoryName = name => dispatch => {
@@ -51,11 +53,12 @@ export const editFontSize = fontSize => dispatch => {
   });
 };
 
-export const editRadius = r => dispatch => {
+export const editRadius = (r, selNodeId) => dispatch => {
   dispatch({
     type: "liveNodeEdit/EDIT_RADIUS",
     payload: r,
-    local_msg: true
+    addnl_payload: selNodeId,
+    broadcast: "liveNodeEdit/LOCKED_NODE_RADIUS"
   });
 };
 

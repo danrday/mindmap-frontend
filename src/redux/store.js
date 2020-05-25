@@ -56,6 +56,7 @@ export default function configureStore(initialState = {}) {
           doc_channel.push("new_msg", {
             type: action.type,
             payload: action.payload,
+            addnl_payload: action.addnl_payload,
             broadcast: action.broadcast
           });
           return;
