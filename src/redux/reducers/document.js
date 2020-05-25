@@ -1,7 +1,7 @@
 const initialState = {
   file: null,
   currentNode: null,
-  lockedNodes: [],
+  lockedNodes: {},
   fetching: false,
   error: null,
   editedFile: null
@@ -195,17 +195,20 @@ export default (state = initialState, action) => {
       } else {
         value = action.payload;
       }
+
       return {
         ...state,
         currentNode: value
       };
     case "LOCK_NODE":
-      const newLockedNodes = Object.assign([], state.lockedNodes);
-      const lockedNode = newLockedNodes.findIndex(n => n === action.payload);
+      const newLockedNodes = Object.assign({}, state.lockedNodes);
+      const lockedNode = Object.keys(newLockedNodes).findIndex(
+        n => n === action.payload
+      );
       if (lockedNode === -1) {
-        newLockedNodes.push(action.payload);
+        newLockedNodes[action.payload] = {};
       } else {
-        newLockedNodes.splice(lockedNode, 1);
+        delete newLockedNodes[action.payload];
       }
       console.log("WTF", action.payload);
       return {

@@ -533,7 +533,7 @@ class Node extends React.Component {
       .call(enterNode(this.props.displayAttr));
   }
   render() {
-    let lockedNode = this.props.lockedNodes.includes(this.props.data.id);
+    let lockedNode = this.props.lockedNodes[this.props.data.id];
     return (
       <g className="node">
         <circle
