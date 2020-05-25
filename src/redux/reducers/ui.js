@@ -4,7 +4,8 @@ const initialState = {
     msg: "",
     type: "info"
   },
-  selectedPage: null
+  selectedPage: null,
+  lockedPages: []
 };
 
 export default (state = initialState, action) => {
@@ -27,6 +28,27 @@ export default (state = initialState, action) => {
       return {
         ...state,
         selectedPage: action.payload
+      };
+    case "UI_LOCK_PAGE":
+      let pagesToLock = [4];
+      console.log("UI LOCK PAGE", action);
+      let page = action.payload;
+      let prevPage = action.addnl_payload;
+
+      let newLockedPages = state.lockedPages;
+      let exists = state.lockedPages.findIndex(p => page === p);
+
+      let prevPageLocked = state.lockedPages.findIndex(p => prevPage === p);
+
+      if (prevPageLocked !== -1) {
+        newLockedPages.splice(prevPageLocked, 1);
+      }
+      if (exists === -1 && pagesToLock.includes(page)) {
+        newLockedPages.push(page);
+      }
+      return {
+        ...state,
+        lockedPages: newLockedPages
       };
     default:
       return state;

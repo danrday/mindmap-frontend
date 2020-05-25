@@ -23,7 +23,7 @@ class NavAndHeader extends Component {
     selectedMenu: null
   };
   handleSelected(i) {
-    this.props.selectPage(i);
+    this.props.selectPage(i, this.props.selectedPage);
     // this.setState({ selected: i });
   }
   handleSelectedSubItem(i) {
@@ -113,11 +113,18 @@ class NavAndHeader extends Component {
 
             const isNodeItem = item.link === "/node";
 
+            const isLocked = this.props.lockedPages.includes(i);
+
             return (
               <div key={item.link}>
                 <NavItem
+                  disabled={isLocked}
                   onClick={() => {
-                    this.handleSelected(i);
+                    if (isLocked) {
+                      alert("Another user is editing the global settings.");
+                    } else {
+                      this.handleSelected(i);
+                    }
                   }}
                   isSelected={isSelected}
                 >
@@ -313,6 +320,12 @@ const NavItem = styled.div`
     cursor: pointer;
   }
 
+  ${({ disabled }) =>
+    disabled &&
+    `
+        opacity: .4;
+        `}
+
   ${({ isSelected }) =>
     isSelected &&
     `
@@ -346,7 +359,8 @@ const mapStateToProps = state => ({
   currZoomLevel: state.document.editedFile
     ? state.document.editedFile.globalSettings.zoom
     : { x: 0, y: 0 },
-  selectedPage: state.ui.selectedPage
+  selectedPage: state.ui.selectedPage,
+  lockedPages: state.ui.lockedPages
 });
 const mapDispatchToProps = (dispatch, props) => ({
   openDocument: () => dispatch(document(props.channel)),
@@ -355,6 +369,7 @@ const mapDispatchToProps = (dispatch, props) => ({
   selectNode: node => dispatch(selectNode(node)),
   deleteAction: () => dispatch(deleteAction()),
   saveNameChangeAction: text => dispatch(saveNameChangeAction(text)),
-  selectPage: pageName => dispatch(selectPage(pageName))
+  selectPage: (pageName, currentPage) =>
+    dispatch(selectPage(pageName, currentPage))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(NavAndHeader);

@@ -15,10 +15,13 @@ export const hideAlertMessage = () => {
   };
 };
 
-export const selectPage = pageName => dispatch => {
+export const selectPage = (pageName, prevPage) => dispatch => {
+  console.log("SELECT PAGEe", pageName, prevPage);
+
   dispatch({
     type: "UI_SELECT_PAGE",
     payload: pageName,
-    local_msg: true
+    addnl_payload: prevPage,
+    broadcast: "UI_LOCK_PAGE"
   });
 };
