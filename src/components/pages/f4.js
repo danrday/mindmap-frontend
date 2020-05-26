@@ -3,7 +3,15 @@ import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import savePdf from "d3-save-pdf";
 import * as d3 from "d3";
-import { contextMenu } from "react-contexify";
+import {
+  Menu,
+  Item,
+  Separator,
+  Submenu,
+  MenuProvider,
+  contextMenu
+} from "react-contexify";
+import "react-contexify/dist/ReactContexify.min.css";
 
 import {
   saveAction,
@@ -136,6 +144,7 @@ class App extends React.Component {
               mouse={this.props.mouse || { coords: { x: 0, y: 0 } }}
             />
           </div>
+          <MyMenu menuId={"awesome"} />
         </div>
       );
     } else {
@@ -169,9 +178,41 @@ function returnGlobalSetting(setting, section, globalSettings) {
     ? globalSettings[section].chargeStrength.customValue
     : globalSettings[section].chargeStrength.defaultValue;
 }
+
+// context menu related
+const menuId = "awesome";
+
+const MyMenu = ({ menuId, drawBox }) => (
+  <Menu id={menuId} style={{ "z-index": "99999" }}>
+    <Item onClick={() => drawBox("blue")}>
+      <span>🔷</span>
+      Turn box to blue
+    </Item>
+    <Item onClick={() => drawBox("red")}>
+      <span>🛑</span>
+      Turn box to red
+    </Item>
+    <Item onClick={() => drawBox()}>
+      <span>🔄</span>
+      Reset
+    </Item>
+  </Menu>
+);
+
 /////// Graph component. Holds Link and Node components
 
 class Graph extends React.Component {
+  handleContextMenu(e) {
+    // always prevent default behavior
+    e.preventDefault();
+
+    // Don't forget to pass the id and the event and voila!
+    contextMenu.show({
+      id: menuId,
+      event: e
+    });
+  }
+
   componentDidUpdate(prevProps, prevState, snapshot) {
     console.log("COMPONENT DID UPDATE", this.props);
     const charge = returnGlobalSetting(
@@ -445,7 +486,7 @@ class Graph extends React.Component {
     ));
     return (
       <svg
-        onClick={() => alert("TESTING 123")}
+        onClick={this.handleContextMenu}
         className="graph"
         width="100%"
         height="100%"
