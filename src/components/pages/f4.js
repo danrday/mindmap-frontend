@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import savePdf from "d3-save-pdf";
 import * as d3 from "d3";
+import { contextMenu } from "react-contexify";
 
 import {
   saveAction,
@@ -444,6 +445,7 @@ class Graph extends React.Component {
     ));
     return (
       <svg
+        onClick={() => alert("TESTING 123")}
         className="graph"
         width="100%"
         height="100%"
@@ -550,7 +552,7 @@ class Node extends React.Component {
   render() {
     let lockedNode = this.props.lockedNodes[this.props.data.id];
     return (
-      <g className="node">
+      <g className="node" onClick={e => e.stopPropagation()}>
         <circle
           name={this.props.data.id}
           ref="dragMe"

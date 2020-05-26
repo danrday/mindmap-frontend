@@ -30,7 +30,7 @@ export default (state = initialState, action) => {
         selectedPage: action.payload
       };
     case "UI_LOCK_PAGE":
-      let pagesToLock = [4];
+      let pagesToLock = [3, 4];
       console.log("UI LOCK PAGE", action);
       let page = action.payload;
       let prevPage = action.addnl_payload;
