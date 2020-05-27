@@ -166,6 +166,28 @@ export default (state = initialState, action) => {
       };
     }
 
+    case "ADD_NODE_AT_COORDS": {
+      const editedFile = Object.assign({}, state.editedFile);
+      const length = state.editedFile.nodes.length;
+      const coords = action.payload.coords;
+
+      editedFile.nodes.push({
+        name: "new",
+        id: action.payload.id,
+        index: length,
+        x: coords.x,
+        y: coords.y,
+        vy: 0,
+        vx: 0,
+        sticky: true,
+        fx: coords.x,
+        fy: coords.y
+      });
+      return {
+        ...state,
+        editedFile: editedFile
+      };
+    }
     case "ADD_ACTION":
       const editedFile = Object.assign({}, state.editedFile);
       const length = state.editedFile.nodes.length;

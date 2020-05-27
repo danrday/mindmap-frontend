@@ -1,4 +1,5 @@
 import uuidv4 from "uuid/v4";
+import cloneDeep from "lodash.clonedeep";
 
 export const dragNode = msg => dispatch => {
   dispatch({
@@ -61,6 +62,28 @@ export const addAction = zoomLevel => dispatch => {
   });
 };
 
+export const addNodeAtCoords = coords => dispatch => {
+  const id = uuidv4();
+
+  dispatch({
+    type: "ADD_NODE_AT_COORDS",
+    payload: { id, coords }
+  });
+  dispatch({
+    type: "SELECT_NODE",
+    payload: id,
+    broadcast: "LOCK_NODE"
+  });
+  dispatch({
+    type: "liveNodeEdit/POPULATE_CURRENT_NODE_VALUES",
+    payload: { id: id, name: "New", customAttrs: null, category: null }
+  });
+  dispatch({
+    type: "UI_SELECT_PAGE",
+    payload: 2
+  });
+};
+
 export const saveEdits = edits => dispatch => {
   dispatch({
     type: "SAVE_EDIT",
@@ -105,12 +128,17 @@ export const linkNode = node => dispatch => {
 };
 
 export const postAction = (file, channel) => dispatch => {
-  file.links.forEach(obj => {
+  let editedFile = cloneDeep(file);
+  console.log("editedFile", editedFile);
+  // let editedLinks = Object.assign([], file.links);
+  // we need to do the following for d3 to correctly re-load the file...
+  // don't fully understand why or if there is another way to do do this
+  editedFile.links.forEach(obj => {
     obj.source = obj.source.id;
     obj.target = obj.target.id;
   });
   channel
-    .push("save_file", file)
+    .push("save_file", editedFile)
     .receive("ok", msg => {
       dispatch({
         type: "SHOW_ALERT_MESSAGE",

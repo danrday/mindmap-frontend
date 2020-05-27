@@ -36,7 +36,7 @@ class App extends Component {
 
     // LISTEN FOR ACTIONS FROM THE PHOENIX SERVER
     this.props.channel.on("server_msg", msg => {
-      console.log("server msg", msg);
+      // console.log("server msg", msg);
       this.props.dispatchMsg(msg);
     });
   }
