@@ -581,6 +581,7 @@ class Node extends React.Component {
       .call(enterNode(this.props.displayAttr));
   }
   componentDidUpdate() {
+    console.log("THISPROPSDATA", this.props.data);
     d3.select(ReactDOM.findDOMNode(this))
       // won't update bg if uncommented
       // .selectAll(".node")

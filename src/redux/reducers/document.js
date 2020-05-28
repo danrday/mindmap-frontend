@@ -19,10 +19,10 @@ export default (state = initialState, action) => {
       let currSelNodeIndex = editedd.nodes.findIndex(e => {
         return e.id === action.payload.id;
       });
-      console.log(
-        "edited.nodes[currSelNodeIndex].name",
-        editedd.nodes[currSelNodeIndex]
-      );
+      // console.log(
+      //   "edited.nodes[currSelNodeIndex]",
+      //   editedd.nodes[currSelNodeIndex]
+      // );
       editedd.nodes[currSelNodeIndex].fx = action.payload.fx;
       editedd.nodes[currSelNodeIndex].fy = action.payload.fy;
 
@@ -45,8 +45,13 @@ export default (state = initialState, action) => {
         );
       });
 
-      const filteredNodes = state.editedFile.nodes.filter(node => {
-        return node.id !== state.currentNode;
+      /*      THIS IS DONE IN A MUTABLE STYLE HERE BECAUSE
+      D3 FORCE KEEPS TRACK OF THE NODES OBJECT REFERENCE*/
+      const filteredNodes = state.editedFile.nodes;
+      filteredNodes.forEach((node, i) => {
+        if (node.id === state.currentNode) {
+          filteredNodes.splice(i, 1);
+        }
       });
 
       let updatedFile = Object.assign({}, state.editedFile);
@@ -180,8 +185,8 @@ export default (state = initialState, action) => {
         vy: 0,
         vx: 0,
         sticky: true,
-        fx: coords.x,
-        fy: coords.y
+        fx: null,
+        fy: null
       });
       return {
         ...state,
