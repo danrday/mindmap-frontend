@@ -61,7 +61,11 @@ class NavAndHeader extends Component {
           <br />
           <button onClick={this.addAction}>add</button>
           <br />
-          <button onClick={this.props.deleteAction}>delete</button>
+          <button
+            onClick={() => this.props.deleteAction(this.props.currSelNode)}
+          >
+            delete
+          </button>
         </div>
       );
     }
@@ -367,7 +371,7 @@ const mapDispatchToProps = (dispatch, props) => ({
   postAction: file => dispatch(postAction(file, props.channel)),
   addAction: zoomLevel => dispatch(addAction(zoomLevel)),
   selectNode: node => dispatch(selectNode(node)),
-  deleteAction: () => dispatch(deleteAction()),
+  deleteAction: nodeId => dispatch(deleteAction(nodeId)),
   saveNameChangeAction: text => dispatch(saveNameChangeAction(text)),
   selectPage: (pageName, currentPage) =>
     dispatch(selectPage(pageName, currentPage))

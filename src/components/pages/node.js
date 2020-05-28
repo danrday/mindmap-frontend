@@ -77,7 +77,9 @@ class Node extends Component {
         <button onClick={this.save.bind(this)}>save</button>
         <button onClick={this.save.bind(this)}>save and unselect</button>
         <button onClick={this.cancel.bind(this)}>cancel</button>
-        <button onClick={this.props.deleteAction}>delete</button>
+        <button onClick={() => this.props.deleteAction(this.props.selNodeId)}>
+          delete
+        </button>
         <div className="navIconFrame">
           <div className="navIcon">
             <i className="icon ion-android-add-circle" />
@@ -209,7 +211,7 @@ const mapDispatchToProps = dispatch => ({
   editNewCategoryName: name => dispatch(editNewCategoryName(name)),
   clearTempCustomAttrs: () => dispatch(clearTempCustomAttrs()),
   changeSelectedCategory: cat => dispatch(changeSelectedCategory(cat)),
-  deleteAction: () => dispatch(deleteAction()),
+  deleteAction: nodeId => dispatch(deleteAction(nodeId)),
   editValue: keyAndValue => dispatch(editValue(keyAndValue))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Node);

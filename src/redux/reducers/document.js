@@ -19,10 +19,6 @@ export default (state = initialState, action) => {
       let currSelNodeIndex = editedd.nodes.findIndex(e => {
         return e.id === action.payload.id;
       });
-      // console.log(
-      //   "edited.nodes[currSelNodeIndex]",
-      //   editedd.nodes[currSelNodeIndex]
-      // );
       editedd.nodes[currSelNodeIndex].fx = action.payload.fx;
       editedd.nodes[currSelNodeIndex].fy = action.payload.fy;
 
@@ -40,8 +36,7 @@ export default (state = initialState, action) => {
     case "DELETE_ACTION": {
       const filteredLinks = state.editedFile.links.filter(link => {
         return (
-          link.source.id !== state.currentNode &&
-          link.target.id !== state.currentNode
+          link.source.id !== action.payload && link.target.id !== action.payload
         );
       });
 
@@ -49,7 +44,7 @@ export default (state = initialState, action) => {
       D3 FORCE KEEPS TRACK OF THE NODES OBJECT REFERENCE*/
       const filteredNodes = state.editedFile.nodes;
       filteredNodes.forEach((node, i) => {
-        if (node.id === state.currentNode) {
+        if (node.id === action.payload) {
           filteredNodes.splice(i, 1);
         }
       });
@@ -59,7 +54,7 @@ export default (state = initialState, action) => {
       updatedFile.nodes = filteredNodes;
       updatedFile.links = filteredLinks;
 
-      return { ...state, editedFile: updatedFile, currentNode: null };
+      return { ...state, editedFile: updatedFile };
     }
     case "file/FETCH_FILE_RECEIVED":
       return {
@@ -185,8 +180,8 @@ export default (state = initialState, action) => {
         vy: 0,
         vx: 0,
         sticky: true,
-        fx: null,
-        fy: null
+        fx: coords.x,
+        fy: coords.y
       });
       return {
         ...state,

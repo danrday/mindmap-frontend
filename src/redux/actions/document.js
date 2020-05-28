@@ -91,10 +91,16 @@ export const saveEdits = edits => dispatch => {
   });
 };
 
-export const deleteAction = () => dispatch => {
+export const deleteAction = nodeId => dispatch => {
+  console.log("NODE ID", nodeId);
+  dispatch({
+    type: "SELECT_NODE",
+    payload: nodeId,
+    broadcast: "LOCK_NODE"
+  });
   dispatch({
     type: "DELETE_ACTION",
-    payload: ""
+    payload: nodeId
   });
 };
 
