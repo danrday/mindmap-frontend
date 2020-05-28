@@ -183,7 +183,6 @@ function returnGlobalSetting(setting, section, globalSettings) {
 }
 
 const ContextMenu = props => {
-  console.log("YO CONTEXT", props);
   return (
     <Menu id="contextMenu" style={{ zIndex: "99999" }}>
       <Item onClick={e => e.props.addNodeAtCoords(e.props.coords)}>
