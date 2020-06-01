@@ -8,7 +8,7 @@ const navLinks = [
   {
     link: "/open",
     className: "icon ion-android-folder-open",
-    navItemText: "Open",
+    navItemText: "",
     component: props => {
       const customProps = props;
       return <div {...customProps} />;
@@ -17,7 +17,7 @@ const navLinks = [
   {
     link: "/save",
     className: "icon ion-android-archive",
-    navItemText: "Save",
+    navItemText: "",
     component: props => {
       const customProps = props;
       return <div {...customProps} />;
@@ -27,7 +27,7 @@ const navLinks = [
     link: "/node",
     className: "icon ion-android-add-circle",
     altClassName: "icon ion-android-create",
-    navItemText: "Add Node",
+    navItemText: "",
     altNavItemText: "Edit Node",
     component: props => {
       const customProps = props;
@@ -37,7 +37,7 @@ const navLinks = [
   {
     link: "/categories",
     className: "icon ion-ios-albums-outline",
-    navItemText: "Categories",
+    navItemText: "",
     component: props => {
       const customProps = props;
       return <Categories {...customProps} />;
@@ -63,7 +63,7 @@ const navLinks = [
   {
     link: "/settings",
     className: "icon ion-android-globe",
-    navItemText: "Settings",
+    navItemText: "",
     component: props => {
       const customProps = props;
       return <GlobalSettings {...customProps} />;
@@ -72,7 +72,7 @@ const navLinks = [
   {
     link: "/richText",
     className: "icon ion-ios-book-outline",
-    navItemText: "Rich Text",
+    navItemText: "",
     component: props => {
       const customProps = props;
       return <RichText {...customProps} />;

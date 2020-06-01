@@ -8,29 +8,8 @@ import Page from "./components/Page";
 import F4 from "./components/pages/f4";
 import { withAlert } from "react-alert";
 
-// import { Menu, Item, Separator, Submenu, MenuProvider } from "react-contexify";
-// import "react-contexify/dist/ReactContexify.min.css";
-
-// const onClick = ({ event, props }) => console.log(event, props);
-
-// create your menu first
-// const MyAwesomeMenu = () => (
-//   <Menu id="menu_id">
-//     <Item onClick={onClick}>Lorem</Item>
-//     <Item onClick={onClick}>Ipsum</Item>
-//     <Separator />
-//     <Item disabled>Dolor</Item>
-//     <Separator />
-//     <Submenu label="Foobar">
-//       <Item onClick={onClick}>Foo</Item>
-//       <Item onClick={onClick}>Bar</Item>
-//     </Submenu>
-//   </Menu>
-// );
-
 class App extends Component {
   componentDidMount() {
-    // TO DO
     // *****get user_info from channel on mount, set it in the store
     this.props.getUser(this.props.channel);
 
@@ -54,18 +33,6 @@ class App extends Component {
       <div className="App">
         <Page channel={this.props.channel}>
           <F4 />
-
-          {/*<Menu id="menu_id" style={{ "z-index": "99999" }}>*/}
-          {/*  <Item onClick={() => console.log("HI")}>Lorem</Item>*/}
-          {/*  <Item onClick={() => console.log("HI")}>Ipsum</Item>*/}
-          {/*  <Separator />*/}
-          {/*  <Item disabled>Dolor</Item>*/}
-          {/*  <Separator />*/}
-          {/*  <Submenu label="Foobar">*/}
-          {/*    <Item onClick={() => console.log("HI")}>Foo</Item>*/}
-          {/*    <Item onClick={() => console.log("HI")}>Bar</Item>*/}
-          {/*  </Submenu>*/}
-          {/*</Menu>*/}
         </Page>
       </div>
     );

@@ -102,87 +102,94 @@ class NavAndHeader extends Component {
           openNav={this.props.navIsOpen}
           hoverNav={this.props.navIsHovered}
         >
-          <Hmm
+          <SelectedMenuFrame
             openNav={this.props.navIsOpen}
             hoverNav={this.props.navIsHovered}
           >
             <div style={{ width: "180px", height: "100%" }}>
               {this.selectedMenu()}
             </div>
-          </Hmm>
+          </SelectedMenuFrame>
 
-          {navLinks.map((item, i) => {
-            const isSelected = i === this.props.selectedPage;
-            const subItems = item.subItems;
+          <NavItemsFrame>
+            {navLinks.map((item, i) => {
+              const isSelected = i === this.props.selectedPage;
+              const subItems = item.subItems;
 
-            const isNodeItem = item.link === "/node";
+              const isNodeItem = item.link === "/node";
 
-            const isLocked = this.props.lockedPages.includes(i);
+              const isLocked = this.props.lockedPages.includes(i);
 
-            return (
-              <div key={item.link}>
-                <NavItem
-                  disabled={isLocked}
-                  onClick={() => {
-                    if (isLocked) {
-                      alert("Another user is editing the global settings.");
-                    } else {
-                      this.handleSelected(i);
-                    }
-                  }}
-                  isSelected={isSelected}
-                >
-                  <div className="navIconFrame">
-                    <div className="navIcon">
-                      <i
-                        className={
-                          isNodeItem && this.props.currSelNode
-                            ? item.altClassName
-                            : item.className
-                        }
-                      />
+              return (
+                <div key={item.link}>
+                  <NavItem
+                    disabled={isLocked}
+                    onClick={() => {
+                      if (isLocked) {
+                        alert("Another user is editing the global settings.");
+                      } else {
+                        this.handleSelected(i);
+                      }
+                    }}
+                    isSelected={isSelected}
+                  >
+                    <div className="navIconFrame">
+                      <div className="navIcon">
+                        <i
+                          className={
+                            isNodeItem && this.props.currSelNode
+                              ? item.altClassName
+                              : item.className
+                          }
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div className="navItemText">
-                    {isNodeItem && this.props.currSelNode
-                      ? item.altNavItemText
-                      : item.navItemText}
-                  </div>
-                </NavItem>
+                    <div className="navItemText">
+                      {isNodeItem && this.props.currSelNode
+                        ? item.altNavItemText
+                        : item.navItemText}
+                    </div>
+                  </NavItem>
 
-                {isSelected &&
-                  subItems &&
-                  subItems.map((item, i) => {
-                    const isSelectedSubItem = i === this.state.selectedSubItem;
+                  {isSelected &&
+                    subItems &&
+                    subItems.map((item, i) => {
+                      const isSelectedSubItem =
+                        i === this.state.selectedSubItem;
 
-                    const isNodeItem = item.link === "/node";
-                    console.log("refiring?", item.link);
-                    return (
-                      <NavItem
-                        onClick={() => {
-                          this.handleSelectedSubItem(i);
-                        }}
-                        isSelected={isSelectedSubItem}
-                        isSubItem={true}
-                      >
-                        <div className="navIconFrame">
-                          <div className="navIcon">
-                            <i
-                              className={
-                                !isNodeItem ? item.className : item.altClassName
-                              }
-                            />
+                      const isNodeItem = item.link === "/node";
+                      console.log("refiring?", item.link);
+                      return (
+                        <NavItem
+                          onClick={() => {
+                            this.handleSelectedSubItem(i);
+                          }}
+                          isSelected={isSelectedSubItem}
+                          isSubItem={true}
+                        >
+                          <div className="navIconFrame">
+                            <div className="navIcon">
+                              <i
+                                className={
+                                  !isNodeItem
+                                    ? item.className
+                                    : item.altClassName
+                                }
+                              />
+                            </div>
                           </div>
-                        </div>
-                        <div className="navItemText">
-                          {!isNodeItem ? item.navItemText : item.altNavItemText}
-                        </div>
-                      </NavItem>
-                    );
-                  })}
-              </div>
-            );
-          })}
+                          <div className="navItemText">
+                            {!isNodeItem
+                              ? item.navItemText
+                              : item.altNavItemText}
+                          </div>
+                        </NavItem>
+                      );
+                    })}
+                </div>
+              );
+            })}
+          </NavItemsFrame>
         </NavBar>
       </StyledHeader>
     );
@@ -272,7 +279,13 @@ const StyledHeader = styled.div`
   }
 `;
 
-const Hmm = styled.div`
+const SelectedMenuFrame = styled.div`
+  @media (max-width: 768px) {
+    top: 120px;
+    left: 0px;
+    height: 120px;
+    width: 100%;
+  }
   position: fixed;
   top: 60px;
   left: 60px;
@@ -282,7 +295,7 @@ const Hmm = styled.div`
   overflow-x: hidden;
   z-index: 50;
   width: 0px;
-  background-color: #00f8e3;
+  background-color: purple;
   ${({ openNav, hoverNav }) =>
     (openNav || hoverNav) &&
     `
@@ -294,6 +307,9 @@ const Hmm = styled.div`
 `;
 
 const NavBar = styled.div`
+  @media (max-width: 768px) {
+    width: 100%;
+  }
   position: fixed;
   top: 60px;
   left: 0px;
@@ -310,6 +326,14 @@ const NavBar = styled.div`
         width: 180px;
         background: #65bbd8;
       `}
+`;
+
+const NavItemsFrame = styled.div`
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: row;
+  }
+  flex-direction: column;
 `;
 
 const NavItem = styled.div`
