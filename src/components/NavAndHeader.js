@@ -10,7 +10,6 @@ import {
   postAction,
   addAction,
   deleteAction,
-  saveNameChangeAction,
   selectNode
 } from "../redux/actions/document";
 
@@ -19,25 +18,14 @@ import { selectPage } from "../redux/actions/ui";
 class NavAndHeader extends Component {
   state = {
     selectedSubItem: null,
-    nameValue: "null",
     selectedMenu: null
   };
   handleSelected(i) {
     this.props.selectPage(i, this.props.selectedPage);
-    // this.setState({ selected: i });
   }
   handleSelectedSubItem(i) {
     this.setState({ selectedSubItem: i });
   }
-
-  handleNameChange(event) {
-    this.setState({ nameValue: event.target.value });
-  }
-
-  handleSaveNameChange() {
-    this.props.saveNameChangeAction(this.state.nameValue);
-  }
-
   componentDidMount() {
     this.props.openDocument();
   }
@@ -70,9 +58,8 @@ class NavAndHeader extends Component {
       );
     }
   }
-  render() {
-    // console.log("RENDER");
 
+  render() {
     return (
       <StyledHeader openNav={this.props.navIsOpen}>
         <div className="hamburgerFrame" onClick={this.props.toggle}>
@@ -81,16 +68,6 @@ class NavAndHeader extends Component {
             <i className="close icon ion-close" />
           </div>
         </div>
-
-        {/*<input*/}
-        {/*  type="text"*/}
-        {/*  value={this.state.nameValue}*/}
-        {/*  onChange={this.handleNameChange.bind(this)}*/}
-        {/*/>*/}
-
-        {/*<button onClick={this.handleSaveNameChange.bind(this)}>*/}
-        {/*  save to {this.props.currSelNode}*/}
-        {/*</button>*/}
 
         <div className="projectTitle">
           <h4 style={{ color: "#d1e8e3" }}>Plan Atlas</h4>
@@ -396,7 +373,6 @@ const mapDispatchToProps = (dispatch, props) => ({
   addAction: zoomLevel => dispatch(addAction(zoomLevel)),
   selectNode: node => dispatch(selectNode(node)),
   deleteAction: nodeId => dispatch(deleteAction(nodeId)),
-  saveNameChangeAction: text => dispatch(saveNameChangeAction(text)),
   selectPage: (pageName, currentPage) =>
     dispatch(selectPage(pageName, currentPage))
 });
