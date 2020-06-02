@@ -10,13 +10,12 @@ import { withAlert } from "react-alert";
 
 class App extends Component {
   componentDidMount() {
-    // TO DO
     // *****get user_info from channel on mount, set it in the store
     this.props.getUser(this.props.channel);
 
     // LISTEN FOR ACTIONS FROM THE PHOENIX SERVER
     this.props.channel.on("server_msg", msg => {
-      console.log("server msg", msg);
+      // console.log("server msg", msg);
       this.props.dispatchMsg(msg);
     });
   }

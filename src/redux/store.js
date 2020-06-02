@@ -48,7 +48,6 @@ export default function configureStore(initialState = {}) {
           action.type === "user/SET_USER"
         ) {
           let result = next(action);
-          console.log("ACTION MOFO", action);
           // console.log("next state: ", store.getState());
           return result;
         } else {

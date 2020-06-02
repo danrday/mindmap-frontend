@@ -19,10 +19,6 @@ export default (state = initialState, action) => {
       let currSelNodeIndex = editedd.nodes.findIndex(e => {
         return e.id === action.payload.id;
       });
-      console.log(
-        "edited.nodes[currSelNodeIndex].name",
-        editedd.nodes[currSelNodeIndex]
-      );
       editedd.nodes[currSelNodeIndex].fx = action.payload.fx;
       editedd.nodes[currSelNodeIndex].fy = action.payload.fy;
 
@@ -40,13 +36,17 @@ export default (state = initialState, action) => {
     case "DELETE_ACTION": {
       const filteredLinks = state.editedFile.links.filter(link => {
         return (
-          link.source.id !== state.currentNode &&
-          link.target.id !== state.currentNode
+          link.source.id !== action.payload && link.target.id !== action.payload
         );
       });
 
-      const filteredNodes = state.editedFile.nodes.filter(node => {
-        return node.id !== state.currentNode;
+      /*      THIS IS DONE IN A MUTABLE STYLE HERE BECAUSE
+      D3 FORCE KEEPS TRACK OF THE NODES OBJECT REFERENCE*/
+      const filteredNodes = state.editedFile.nodes;
+      filteredNodes.forEach((node, i) => {
+        if (node.id === action.payload) {
+          filteredNodes.splice(i, 1);
+        }
       });
 
       let updatedFile = Object.assign({}, state.editedFile);
@@ -54,7 +54,7 @@ export default (state = initialState, action) => {
       updatedFile.nodes = filteredNodes;
       updatedFile.links = filteredLinks;
 
-      return { ...state, editedFile: updatedFile, currentNode: null };
+      return { ...state, editedFile: updatedFile };
     }
     case "file/FETCH_FILE_RECEIVED":
       return {
@@ -166,6 +166,28 @@ export default (state = initialState, action) => {
       };
     }
 
+    case "ADD_NODE_AT_COORDS": {
+      const editedFile = Object.assign({}, state.editedFile);
+      const length = state.editedFile.nodes.length;
+      const coords = action.payload.coords;
+
+      editedFile.nodes.push({
+        name: "new",
+        id: action.payload.id,
+        index: length,
+        x: coords.x,
+        y: coords.y,
+        vy: 0,
+        vx: 0,
+        sticky: true,
+        fx: coords.x,
+        fy: coords.y
+      });
+      return {
+        ...state,
+        editedFile: editedFile
+      };
+    }
     case "ADD_ACTION":
       const editedFile = Object.assign({}, state.editedFile);
       const length = state.editedFile.nodes.length;

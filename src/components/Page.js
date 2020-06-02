@@ -27,9 +27,9 @@ class Page extends Component {
           hover={this.handleHoverNav}
           channel={this.props.channel}
         />
-        <Inner openNav={this.state.navIsOpen || this.state.navIsHovered}>
+        <PageView openNav={this.state.navIsOpen || this.state.navIsHovered}>
           {this.props.children}
-        </Inner>
+        </PageView>
       </StyledPage>
     );
   }
@@ -37,7 +37,11 @@ class Page extends Component {
 
 const StyledPage = styled.div``;
 
-const Inner = styled.div`
+const PageView = styled.div`
+  @media (max-width: 768px) {
+    margin-top: 240px;
+    margin-left: 0px;
+  }
   margin-top: 60px;
   margin-left: 60px;
 

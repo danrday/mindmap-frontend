@@ -3,6 +3,15 @@ import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import savePdf from "d3-save-pdf";
 import * as d3 from "d3";
+import {
+  Menu,
+  Item,
+  Separator,
+  Submenu,
+  MenuProvider,
+  contextMenu
+} from "react-contexify";
+import "react-contexify/dist/ReactContexify.min.css";
 
 import {
   saveAction,
@@ -10,7 +19,8 @@ import {
   linkNode,
   handleZoom,
   handleMouseMove,
-  dragNode
+  dragNode,
+  addNodeAtCoords
 } from "../../redux/actions/document";
 import { populateCurrentNodeValues } from "../../redux/actions/liveNodeEdit";
 import { selectPage } from "../../redux/actions/ui";
@@ -32,11 +42,12 @@ class App extends React.Component {
 
     if (this.props.file && Object.keys(this.props.globalEdit).length > 0) {
       // if file is loaded AND globalEdit populated (populateInitialValues)
-      console.log("this.props.globalEdit", this.props.globalEdit);
-      console.log(
-        "Object.keys(this.props.globalEdit).length",
-        Object.keys(this.props.globalEdit).length
-      );
+
+      // console.log("this.props.globalEdit", this.props.globalEdit);
+      // console.log(
+      //   "Object.keys(this.props.globalEdit).length",
+      //   Object.keys(this.props.globalEdit).length
+      // );
 
       const liveNodeEdit = this.props.liveNodeEdit;
       let modData = this.props.file;
@@ -132,9 +143,11 @@ class App extends React.Component {
               initialZoom={this.props.file.globalSettings.zoom || null}
               handleMouseMove={this.props.handleMouseMove}
               dragNode={this.props.dragNode}
+              addNodeAtCoords={this.props.addNodeAtCoords}
               mouse={this.props.mouse || { coords: { x: 0, y: 0 } }}
             />
           </div>
+          <ContextMenu />
         </div>
       );
     } else {
@@ -168,11 +181,41 @@ function returnGlobalSetting(setting, section, globalSettings) {
     ? globalSettings[section].chargeStrength.customValue
     : globalSettings[section].chargeStrength.defaultValue;
 }
+
+const ContextMenu = props => {
+  return (
+    <Menu id="contextMenu" style={{ zIndex: "99999" }}>
+      <Item onClick={e => e.props.addNodeAtCoords(e.props.coords)}>
+        <span>🔵</span>
+        Add new node
+      </Item>
+      <Item onClick={() => {}}>
+        <span>🚫</span>
+        Cancel/Close
+      </Item>
+    </Menu>
+  );
+};
+
 /////// Graph component. Holds Link and Node components
 
 class Graph extends React.Component {
+  handleContextMenu(e) {
+    // always prevent default behavior
+    e.preventDefault();
+
+    // Don't forget to pass the id and the event and voila!
+    contextMenu.show({
+      id: "contextMenu",
+      event: e,
+      props: {
+        coords: this.props.mouse.coords,
+        addNodeAtCoords: this.props.addNodeAtCoords
+      }
+    });
+  }
+
   componentDidUpdate(prevProps, prevState, snapshot) {
-    console.log("COMPONENT DID UPDATE", this.props);
     const charge = returnGlobalSetting(
       "chargeStrength",
       "general",
@@ -315,13 +358,9 @@ class Graph extends React.Component {
 
     this.d3Graph = d3.select(ReactDOM.findDOMNode(this)).on("mousemove", () => {
       let transform = d3.zoomTransform(d3.select(".frameForZoom").node());
-
-      console.log("TRANSFORM", transform);
-
+      // console.log("TRANSFORM", transform);
       let xy = [d3.event.pageX - 270, d3.event.pageY - 60];
-
       var xy1 = transform.invert(xy); // relative to zoom
-
       this.props.handleMouseMove({ x: xy1[0], y: xy1[1], k: transform.k });
     });
 
@@ -416,7 +455,6 @@ class Graph extends React.Component {
   }
 
   render() {
-    console.log("re render nodes and links?");
     const nodes = this.props.data.nodes.map(node => {
       if (node.category) {
         let cat = this.getCategory(node.category);
@@ -444,6 +482,7 @@ class Graph extends React.Component {
     ));
     return (
       <svg
+        onClick={e => this.handleContextMenu(e)}
         className="graph"
         width="100%"
         height="100%"
@@ -493,7 +532,9 @@ class Graph extends React.Component {
           <text
             x={this.props.mouse.coords.x}
             y={this.props.mouse.coords.y}
-            font-size={16 / this.props.mouse.coords.k}
+            fontSize={
+              this.props.mouse.coords.k ? 16 / this.props.mouse.coords.k : 16
+            }
           >
             {this.props.mouse.coords.x} + ', ' + {this.props.mouse.coords.y}
           </text>
@@ -540,7 +581,6 @@ class Node extends React.Component {
       .call(enterNode(this.props.displayAttr));
   }
   componentDidUpdate() {
-    console.log("node update", this.props.data);
     d3.select(ReactDOM.findDOMNode(this))
       // won't update bg if uncommented
       // .selectAll(".node")
@@ -550,7 +590,7 @@ class Node extends React.Component {
   render() {
     let lockedNode = this.props.lockedNodes[this.props.data.id];
     return (
-      <g className="node">
+      <g className="node" onClick={e => e.stopPropagation()}>
         <circle
           name={this.props.data.id}
           ref="dragMe"
@@ -679,6 +719,7 @@ const mapStateToProps = (state, props) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  addNodeAtCoords: coords => dispatch(addNodeAtCoords(coords)),
   saveAction: file => dispatch(saveAction(file)),
   selectNode: node => dispatch(selectNode(node)),
   linkNode: node => dispatch(linkNode(node)),
