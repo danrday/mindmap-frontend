@@ -57,7 +57,12 @@ class NavItems extends Component {
 
   render() {
     return (
-      <NavItemsFrame>
+      <NavItemsFrame
+        openNav={this.props.navIsOpen}
+        hoverNav={this.props.navIsHovered}
+        onMouseEnter={() => this.props.hover(true)}
+        onMouseLeave={() => this.props.hover(false)}
+      >
         {navLinks.map((item, i) => {
           const isSelected = i === this.props.selectedPage;
           const subItems = item.subItems;
@@ -142,38 +147,13 @@ class NavItems extends Component {
   };
 }
 
-const SelectedMenuFrame = styled.div`
+const NavItemsFrame = styled.div`
   @media (max-width: 768px) {
-    top: 120px;
-    left: 0px;
-    height: 120px;
+    display: flex;
+    flex-direction: row;
     width: 100%;
   }
-  position: fixed;
-  top: 60px;
-  left: 60px;
-  bottom: 0;
-  padding-top: 15px;
-  transition: all 0.2s ease-in-out;
-  overflow-x: hidden;
-  z-index: 50;
-  width: 0px;
-  background-color: purple;
-  ${({ openNav, hoverNav }) =>
-    (openNav || hoverNav) &&
-    `
-        left: 60px;
-        width: 200px;
-        background-color: #9bccff;
-         box-shadow: inset -4px 0px 2px -2px purple;
-      `}
-`;
-
-const NavBar = styled.div`
-  @media (max-width: 768px) {
-    width: 100%;
-  }
-  position: fixed;
+  flex-direction: column;
   top: 60px;
   left: 0px;
   bottom: 0;
@@ -187,16 +167,8 @@ const NavBar = styled.div`
     `
         left: 0px;
         width: 180px;
-        background: #65bbd8;
+        background: yellow;
       `}
-`;
-
-const NavItemsFrame = styled.div`
-  @media (max-width: 768px) {
-    display: flex;
-    flex-direction: row;
-  }
-  flex-direction: column;
 `;
 
 const NavItem = styled.div`
