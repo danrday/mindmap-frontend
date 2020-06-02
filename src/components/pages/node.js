@@ -72,7 +72,7 @@ class Node extends Component {
     return (
       <div>
         <div>
-          {this.props.liveNodeEdit.selNodeId ? "Edit Node" : "Add new node"}
+          {/*{this.props.liveNodeEdit.selNodeId ? "Edit Node" : "Add new node"}*/}
         </div>
         <button onClick={this.save.bind(this)}>save</button>
         <button onClick={this.save.bind(this)}>save and unselect</button>
