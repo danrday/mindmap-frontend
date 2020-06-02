@@ -28,11 +28,9 @@ class Page extends Component {
       <StyledPage>
         <Header
           navIsOpen={this.state.navIsOpen}
-          navIsHovered={this.state.navIsHovered}
           toggle={this.handleToggleNav}
-          hover={this.handleHoverNav}
           channel={this.props.channel}
-        ></Header>
+        />
 
         <NavBar
           onMouseEnter={() => this.handleHoverNav(true)}
@@ -46,7 +44,7 @@ class Page extends Component {
             toggle={this.handleToggleNav}
             hover={this.handleHoverNav}
             channel={this.props.channel}
-          ></NavItems>
+          />
         </NavBar>
 
         <PageView openNav={this.state.navIsOpen || this.state.navIsHovered}>
