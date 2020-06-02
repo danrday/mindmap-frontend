@@ -1,7 +1,13 @@
 import React, { Component } from "react";
 import NavAndHeader from "./NavAndHeader";
+
+import Header from "./Header";
+import Nav from "./Nav";
+import NavItems from "./NavItems";
 import styled from "styled-components";
 import theme from "./styles/theme";
+
+import navLinks from "./NavLinks";
 
 class Page extends Component {
   state = {
@@ -20,13 +26,29 @@ class Page extends Component {
   render() {
     return (
       <StyledPage>
-        <NavAndHeader
+        <Header
           navIsOpen={this.state.navIsOpen}
           navIsHovered={this.state.navIsHovered}
           toggle={this.handleToggleNav}
           hover={this.handleHoverNav}
           channel={this.props.channel}
-        />
+        ></Header>
+
+        <NavBar
+          onMouseEnter={() => this.handleHoverNav(true)}
+          onMouseLeave={() => this.handleHoverNav(false)}
+          openNav={this.state.navIsOpen}
+          hoverNav={this.state.navIsHovered}
+        >
+          <NavItems
+            navIsOpen={this.state.navIsOpen}
+            navIsHovered={this.state.navIsHovered}
+            toggle={this.handleToggleNav}
+            hover={this.handleHoverNav}
+            channel={this.props.channel}
+          ></NavItems>
+        </NavBar>
+
         <PageView openNav={this.state.navIsOpen || this.state.navIsHovered}>
           {this.props.children}
         </PageView>
@@ -34,6 +56,36 @@ class Page extends Component {
     );
   }
 }
+
+const NavBar = styled.div`
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+  position: fixed;
+  top: 60px;
+  left: 0px;
+  bottom: 0;
+  z-index: 100;
+  width: 60px;
+  background-color: #d1e8e3;
+  transition: all 0.2s ease-in-out;
+  padding-top: 15px;
+  ${({ openNav, hoverNav }) =>
+    (openNav || hoverNav) &&
+    `
+        left: 0px;
+        width: 180px;
+        background: #65bbd8;
+      `}
+`;
+
+// <NavAndHeader
+//     navIsOpen={this.state.navIsOpen}
+//     navIsHovered={this.state.navIsHovered}
+//     toggle={this.handleToggleNav}
+//     hover={this.handleHoverNav}
+//     channel={this.props.channel}
+// />
 
 const StyledPage = styled.div``;
 

@@ -1,0 +1,284 @@
+import React, { Component } from "react";
+import styled from "styled-components";
+import navLinks from "./NavLinks";
+
+import Node from "./pages/node";
+
+import { connect } from "react-redux";
+import {
+  document,
+  postAction,
+  addAction,
+  deleteAction,
+  selectNode
+} from "../redux/actions/document";
+
+import { selectPage } from "../redux/actions/ui";
+
+class Nav extends Component {
+  state = {
+    selectedSubItem: null,
+    selectedMenu: null
+  };
+  handleSelected(i) {
+    this.props.selectPage(i, this.props.selectedPage);
+  }
+  handleSelectedSubItem(i) {
+    this.setState({ selectedSubItem: i });
+  }
+  componentDidMount() {
+    this.props.openDocument();
+  }
+
+  selectedMenu() {
+    if (this.props.selectedPage) {
+      return navLinks[this.props.selectedPage].component();
+    } else {
+      return (
+        <div>
+          <button onClick={this.props.openDocument}>open</button>
+          <br />
+          <button
+            onClick={() => {
+              console.log("document.file", this.props.document.file);
+              this.props.postAction(this.props.document.editedFile);
+            }}
+          >
+            save
+          </button>
+          <br />
+          <button onClick={this.addAction}>add</button>
+          <br />
+          <button
+            onClick={() => this.props.deleteAction(this.props.currSelNode)}
+          >
+            delete
+          </button>
+        </div>
+      );
+    }
+  }
+
+  render() {
+    return (
+      <NavBar
+        onMouseEnter={() => this.props.hover(true)}
+        onMouseLeave={() => this.props.hover(false)}
+        openNav={this.props.navIsOpen}
+        hoverNav={this.props.navIsHovered}
+      >
+        <NavItemsFrame>
+          {navLinks.map((item, i) => {
+            const isSelected = i === this.props.selectedPage;
+            const subItems = item.subItems;
+
+            const isNodeItem = item.link === "/node";
+
+            const isLocked = this.props.lockedPages.includes(i);
+
+            return (
+              <div key={item.link}>
+                <NavItem
+                  disabled={isLocked}
+                  onClick={() => {
+                    if (isLocked) {
+                      alert("Another user is editing the global settings.");
+                    } else {
+                      this.handleSelected(i);
+                    }
+                  }}
+                  isSelected={isSelected}
+                >
+                  <div className="navIconFrame">
+                    <div className="navIcon">
+                      <i
+                        className={
+                          isNodeItem && this.props.currSelNode
+                            ? item.altClassName
+                            : item.className
+                        }
+                      />
+                    </div>
+                  </div>
+                  <div className="navItemText">
+                    {isNodeItem && this.props.currSelNode
+                      ? item.altNavItemText
+                      : item.navItemText}
+                  </div>
+                </NavItem>
+
+                {isSelected &&
+                  subItems &&
+                  subItems.map((item, i) => {
+                    const isSelectedSubItem = i === this.state.selectedSubItem;
+
+                    const isNodeItem = item.link === "/node";
+                    console.log("refiring?", item.link);
+                    return (
+                      <NavItem
+                        onClick={() => {
+                          this.handleSelectedSubItem(i);
+                        }}
+                        isSelected={isSelectedSubItem}
+                        isSubItem={true}
+                      >
+                        <div className="navIconFrame">
+                          <div className="navIcon">
+                            <i
+                              className={
+                                !isNodeItem ? item.className : item.altClassName
+                              }
+                            />
+                          </div>
+                        </div>
+                        <div className="navItemText">
+                          {!isNodeItem ? item.navItemText : item.altNavItemText}
+                        </div>
+                      </NavItem>
+                    );
+                  })}
+              </div>
+            );
+          })}
+        </NavItemsFrame>
+        <SelectedMenuFrame
+          openNav={this.props.navIsOpen}
+          hoverNav={this.props.navIsHovered}
+        >
+          <div style={{ width: "180px", height: "100%" }}>
+            {this.selectedMenu()}
+          </div>
+        </SelectedMenuFrame>
+      </NavBar>
+    );
+  }
+
+  addAction = () => {
+    if (this.props.currSelNode) {
+      this.props.selectNode(this.props.currSelNode);
+    }
+    this.props.addAction(this.props.currZoomLevel);
+  };
+}
+
+const SelectedMenuFrame = styled.div`
+  @media (max-width: 768px) {
+    top: 120px;
+    left: 0px;
+    height: 120px;
+    width: 100%;
+  }
+  position: fixed;
+  top: 60px;
+  left: 60px;
+  bottom: 0;
+  padding-top: 15px;
+  transition: all 0.2s ease-in-out;
+  overflow-x: hidden;
+  z-index: 50;
+  width: 0px;
+  background-color: purple;
+  ${({ openNav, hoverNav }) =>
+    (openNav || hoverNav) &&
+    `
+        left: 60px;
+        width: 200px;
+        background-color: #9bccff;
+         box-shadow: inset -4px 0px 2px -2px purple;
+      `}
+`;
+
+const NavBar = styled.div`
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+  position: fixed;
+  top: 60px;
+  left: 0px;
+  bottom: 0;
+  z-index: 100;
+  width: 60px;
+  background-color: #d1e8e3;
+  transition: all 0.2s ease-in-out;
+  padding-top: 15px;
+  ${({ openNav, hoverNav }) =>
+    (openNav || hoverNav) &&
+    `
+        left: 0px;
+        width: 180px;
+        background: #65bbd8;
+      `}
+`;
+
+const NavItemsFrame = styled.div`
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: row;
+  }
+  flex-direction: column;
+`;
+
+const NavItem = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  overflow-x: hidden;
+  height: 30px;
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    background-color: mintcream;
+    cursor: pointer;
+  }
+
+  ${({ disabled }) =>
+    disabled &&
+    `
+        opacity: .4;
+        `}
+
+  ${({ isSelected }) =>
+    isSelected &&
+    `
+        background-color: white;
+        `}
+
+  .navIconFrame {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 60px;
+    position: fixed;
+  }
+  .navIcon {
+    font-size: 22px;
+    transition: all 0.2s ease-in-out;
+  }
+  .navItemText {
+    white-space: nowrap;
+    margin-left: 65px;
+    margin-right: auto;
+    letter-spacing: 0.2px;
+    font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+    font-size: 14px;
+  }
+`;
+
+const mapStateToProps = state => ({
+  ...state,
+  currSelNode: state.document.currentNode,
+  currZoomLevel: state.document.editedFile
+    ? state.document.editedFile.globalSettings.zoom
+    : { x: 0, y: 0 },
+  selectedPage: state.ui.selectedPage,
+  lockedPages: state.ui.lockedPages
+});
+const mapDispatchToProps = (dispatch, props) => ({
+  openDocument: () => dispatch(document(props.channel)),
+  postAction: file => dispatch(postAction(file, props.channel)),
+  addAction: zoomLevel => dispatch(addAction(zoomLevel)),
+  selectNode: node => dispatch(selectNode(node)),
+  deleteAction: nodeId => dispatch(deleteAction(nodeId)),
+  selectPage: (pageName, currentPage) =>
+    dispatch(selectPage(pageName, currentPage))
+});
+export default connect(mapStateToProps, mapDispatchToProps)(Nav);
