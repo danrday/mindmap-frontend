@@ -4,6 +4,7 @@ import Header from "./Header";
 import NavMenu from "./NavMenu";
 import PageOptions from "./PageOptions";
 import styled from "styled-components";
+import SplitPane from "react-split-pane";
 
 class Shell extends Component {
   state = {
@@ -45,7 +46,6 @@ class Shell extends Component {
             channel={this.props.channel}
           />
 
-          {/*this is the actual rendered page*/}
           {this.props.children}
         </MainFrame>
       </StyledPage>

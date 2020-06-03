@@ -68,10 +68,10 @@ const Test = styled.div`
     height: 120px;
     width: 100%;
   }
-
   display: relative;
   height: calc(100vh - 60px);
   overflow-y: scroll;
+  background-color: purple;
 
   ${({ openNav, hoverNav }) =>
     (openNav || hoverNav) &&
@@ -86,6 +86,8 @@ const SelectedMenuFrame = styled.div`
   }
   display: absolute;
   top: 0;
+  left: 0;
+  right: 0;
   bottom: 0;
 
   text-align: center;
@@ -93,7 +95,6 @@ const SelectedMenuFrame = styled.div`
   transition: all 0.2s ease-in-out;
 
   z-index: 50;
-  width: 0px;
   background-color: purple;
   ${({ openNav, hoverNav }) =>
     (openNav || hoverNav) &&
