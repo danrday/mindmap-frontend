@@ -84,6 +84,7 @@ const SelectedMenuFrame = styled.div`
   @media (max-width: 768px) {
     width: 100%;
   }
+  width: 0px;
   display: absolute;
   top: 0;
   left: 0;
