@@ -223,6 +223,7 @@ class Graph extends React.Component {
     );
     const dist = this.props.globalSettings.linkDistance;
     window.force
+      .nodes(this.props.data.nodes) //if a node is updated, we need it to point to the new object
       .force("charge", d3.forceManyBody().strength(charge || -60))
       .force(
         "link",
@@ -709,13 +710,13 @@ const enterNode = displayAttr => {
 ////////
 
 const mapStateToProps = (state, props) => ({
-  file: state.document.editedFile,
-  currentNode: state.document.currentNode,
+  file: state.document.present.editedFile,
+  currentNode: state.document.present.currentNode,
   lockedNodes: state.liveNodeEdit.lockedNodes,
   liveNodeEdit: state.liveNodeEdit,
   categoryEdit: state.categoryEdit,
   globalEdit: state.globalEdit,
-  mouse: state.document.mouse
+  mouse: state.document.present.mouse
 });
 
 const mapDispatchToProps = dispatch => ({

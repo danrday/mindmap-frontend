@@ -22,8 +22,8 @@ class PageOptions extends Component {
           <br />
           <button
             onClick={() => {
-              console.log("document.file", this.props.document.file);
-              this.props.postAction(this.props.document.editedFile);
+              console.log("document.file", this.props.document.present.file);
+              this.props.postAction(this.props.document.present.editedFile);
             }}
           >
             save
@@ -65,7 +65,7 @@ class PageOptions extends Component {
 }
 const Test = styled.div`
   @media (max-width: 768px) {
-    height: calc(30vh);
+    height: calc(25vh);
     width: 100%;
   }
   display: relative;
@@ -108,9 +108,9 @@ const SelectedMenuFrame = styled.div`
 
 const mapStateToProps = state => ({
   ...state,
-  currSelNode: state.document.currentNode,
-  currZoomLevel: state.document.editedFile
-    ? state.document.editedFile.globalSettings.zoom
+  currSelNode: state.document.present.currentNode,
+  currZoomLevel: state.document.present.editedFile
+    ? state.document.present.editedFile.globalSettings.zoom
     : { x: 0, y: 0 },
   selectedPage: state.ui.selectedPage
 });

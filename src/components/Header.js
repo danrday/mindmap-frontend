@@ -4,6 +4,8 @@ import styled from "styled-components";
 import { connect } from "react-redux";
 import { document } from "../redux/actions/document";
 
+import { ActionCreators } from "redux-undo";
+
 class Header extends Component {
   componentDidMount() {
     this.props.openDocument();
@@ -17,6 +19,8 @@ class Header extends Component {
             <i className="close icon ion-close" />
           </div>
         </div>
+
+        <div onClick={this.props.undo}>UNDO</div>
 
         <div className="projectTitle">
           <h4 style={{ color: "#d1e8e3" }}>Plan Atlas</h4>
@@ -106,6 +110,7 @@ const mapStateToProps = state => ({
   ...state
 });
 const mapDispatchToProps = (dispatch, props) => ({
-  openDocument: () => dispatch(document(props.channel))
+  openDocument: () => dispatch(document(props.channel)),
+  undo: () => dispatch(ActionCreators.undo())
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

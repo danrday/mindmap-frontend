@@ -98,6 +98,8 @@ export default (state = initialState, action) => {
       const { liveNodeEdit, customAttrs, globalEdit } = action.payload;
       const changes = customAttrs;
       const edited = Object.assign({}, state.editedFile);
+      edited.nodes = Object.assign([], state.editedFile.nodes);
+      edited.links = Object.assign([], state.editedFile.links);
       let currSelNodeIndex = edited.nodes.findIndex(e => {
         return e.id === liveNodeEdit.selNodeId;
       });
@@ -106,6 +108,11 @@ export default (state = initialState, action) => {
         edited.nodes[currSelNodeIndex].name
       );
       console.log("liveNodeEdit.name", liveNodeEdit.name);
+
+      const node = edited.nodes[currSelNodeIndex];
+
+      edited.nodes[currSelNodeIndex] = Object.assign({}, node);
+
       edited.nodes[currSelNodeIndex].name = liveNodeEdit.name;
       edited.nodes[currSelNodeIndex].customAttrs = {};
       if (changes.includes("newCategoryName")) {
@@ -130,6 +137,18 @@ export default (state = initialState, action) => {
       }
 
       edited.globalSettings = globalEdit;
+
+      edited.links.forEach((link, i) => {
+        if (link.source.id === edited.nodes[currSelNodeIndex].id) {
+          console.log("FUCK YOU", link);
+          link = Object.assign({}, link);
+          edited.links[i].source = edited.nodes[currSelNodeIndex];
+        } else if (link.target.id === edited.nodes[currSelNodeIndex].id) {
+          console.log("FUCK YOU", link);
+          link = Object.assign({}, link);
+          edited.links[i].target = edited.nodes[currSelNodeIndex];
+        }
+      });
 
       return {
         ...state,
@@ -168,6 +187,8 @@ export default (state = initialState, action) => {
 
     case "ADD_NODE_AT_COORDS": {
       const editedFile = Object.assign({}, state.editedFile);
+      editedFile.nodes = Object.assign([], state.editedFile.nodes);
+
       const length = state.editedFile.nodes.length;
       const coords = action.payload.coords;
 

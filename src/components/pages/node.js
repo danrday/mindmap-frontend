@@ -196,7 +196,7 @@ class Node extends Component {
 const mapStateToProps = state => ({
   liveNodeEdit: state.liveNodeEdit,
   selNodeId: state.liveNodeEdit.selNodeId,
-  categories: state.document.editedFile.categories,
+  categories: state.document.present.editedFile.categories,
   globalEdit: state.globalEdit
 });
 

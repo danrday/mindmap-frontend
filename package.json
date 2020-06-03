@@ -9,6 +9,7 @@
     "axios": "^0.19.1",
     "d3": "^5.15.0",
     "d3-save-pdf": "0.0.3",
+    "immutable": "^4.0.0-rc.12",
     "lodash.clonedeep": "^4.5.0",
     "phoenix": "^1.4.15",
     "prettier": "^1.19.1",
@@ -26,6 +27,8 @@
     "redux-devtools-extension": "^2.13.8",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
+    "redux-undo": "^1.0.1",
+    "redux-undo-immutable": "^0.2.0",
     "styled-components": "^4.4.1",
     "uuid": "^3.4.0"
   },
