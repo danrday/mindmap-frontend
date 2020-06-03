@@ -13,7 +13,7 @@ import {
 
 import { selectPage } from "../redux/actions/ui";
 
-class NavItems extends Component {
+class NavMenu extends Component {
   handleSelected(i) {
     this.props.selectPage(i, this.props.selectedPage);
   }
@@ -111,7 +111,9 @@ const NavItemsFrame = styled.div`
   @media (max-width: 768px) {
     display: flex;
     flex-direction: row;
+    align-items: center;
     width: 100%;
+    padding-bottom: 15px;
   }
   flex-direction: column;
   top: 60px;
@@ -192,7 +194,7 @@ const mapDispatchToProps = (dispatch, props) => ({
   selectPage: (pageName, currentPage) =>
     dispatch(selectPage(pageName, currentPage))
 });
-export default connect(mapStateToProps, mapDispatchToProps)(NavItems);
+export default connect(mapStateToProps, mapDispatchToProps)(NavMenu);
 
 // {isSelected &&
 // subItems &&
