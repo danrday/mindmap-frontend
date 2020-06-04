@@ -15,6 +15,13 @@ export const hideAlertMessage = () => {
   };
 };
 
+export const handleMouseMove = coords => dispatch => {
+  dispatch({
+    type: "HANDLE_MOUSE_MOVE",
+    payload: coords
+  });
+};
+
 export const selectPage = (pageName, prevPage) => dispatch => {
   console.log("SELECT PAGEe", pageName, prevPage);
 

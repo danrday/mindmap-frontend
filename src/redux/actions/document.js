@@ -119,12 +119,12 @@ export const selectNode = node => dispatch => {
   });
 };
 
-export const handleMouseMove = coords => dispatch => {
-  dispatch({
-    type: "HANDLE_MOUSE_MOVE",
-    payload: coords
-  });
-};
+// export const handleMouseMove = coords => dispatch => {
+//   dispatch({
+//     type: "HANDLE_MOUSE_MOVE",
+//     payload: coords
+//   });
+// };
 
 export const linkNode = node => dispatch => {
   dispatch({

@@ -18,12 +18,11 @@ import {
   selectNode,
   linkNode,
   handleZoom,
-  handleMouseMove,
   dragNode,
   addNodeAtCoords
 } from "../../redux/actions/document";
 import { populateCurrentNodeValues } from "../../redux/actions/liveNodeEdit";
-import { selectPage } from "../../redux/actions/ui";
+import { selectPage, handleMouseMove } from "../../redux/actions/ui";
 
 const color = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -216,6 +215,7 @@ class Graph extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
+    console.log("LNK", this.props.data.links[0]);
     const charge = returnGlobalSetting(
       "chargeStrength",
       "general",
@@ -225,23 +225,14 @@ class Graph extends React.Component {
     window.force
       .nodes(this.props.data.nodes) //if a node is updated, we need it to point to the new object
       .force("charge", d3.forceManyBody().strength(charge || -60))
-      .force(
-        "link",
-        d3
-          .forceLink(this.props.data.links)
-          .id(function(d) {
-            return d.id;
-          })
-          .distance(function(d) {
-            return dist || 900;
-          })
-      )
+      .force("link", d3.forceLink(this.props.data.links))
       .alphaTarget(0.5)
       .velocityDecay(0.7)
       .restart();
-    setTimeout(function() {
-      window.force.alphaTarget(0);
-    }, 3000);
+
+    // setTimeout(function() {
+    //   window.force.alphaTarget(0);
+    // }, 3000);
 
     const lastClicked = this.props.lastClickedNode;
     if (lastClicked) {
@@ -716,7 +707,7 @@ const mapStateToProps = (state, props) => ({
   liveNodeEdit: state.liveNodeEdit,
   categoryEdit: state.categoryEdit,
   globalEdit: state.globalEdit,
-  mouse: state.document.present.mouse
+  mouse: state.ui.mouse
 });
 
 const mapDispatchToProps = dispatch => ({

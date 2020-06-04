@@ -8,25 +8,6 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case "file/DRAG_NODE":
-      // const draggedNode = state.editedFile.nodes.find(e => {
-      //   return e.id === action.payload.id;
-      // });
-
-      console.log("action.;alo", action.payload);
-
-      const editedd = Object.assign({}, state.editedFile);
-      let currSelNodeIndex = editedd.nodes.findIndex(e => {
-        return e.id === action.payload.id;
-      });
-      editedd.nodes[currSelNodeIndex].fx = action.payload.fx;
-      editedd.nodes[currSelNodeIndex].fy = action.payload.fy;
-
-      return {
-        ...state,
-        editedFile: editedd
-      };
-
     case "file/FETCH_FILE_ERROR":
       return { ...state, error: action.payload, fetching: false };
     case "file/UPDATE_FILE":
@@ -89,11 +70,48 @@ export default (state = initialState, action) => {
         ...state,
         editedFile: { ...state.editedFile, links: action.payload }
       };
-    case "HANDLE_MOUSE_MOVE":
+    // case "HANDLE_MOUSE_MOVE":
+    //   return {
+    //     ...state,
+    //     mouse: { coords: action.payload }
+    //   };
+    case "file/DRAG_NODE": {
+      // const draggedNode = state.editedFile.nodes.find(e => {
+      //   return e.id === action.payload.id;
+      // });
+
+      console.log("action.;alo", action.payload);
+
+      const edited = Object.assign({}, state.editedFile);
+      edited.nodes = Object.assign([], state.editedFile.nodes);
+      edited.links = Object.assign([], state.editedFile.links);
+
+      let currSelNodeIndex = edited.nodes.findIndex(e => {
+        return e.id === action.payload.id;
+      });
+
+      const node = edited.nodes[currSelNodeIndex];
+
+      edited.nodes[currSelNodeIndex] = Object.assign({}, node);
+
+      edited.links.forEach((link, i) => {
+        if (link.source.id === edited.nodes[currSelNodeIndex].id) {
+          edited.links[i] = Object.assign({}, edited.links[i]);
+          edited.links[i].source = edited.nodes[currSelNodeIndex];
+        } else if (link.target.id === edited.nodes[currSelNodeIndex].id) {
+          edited.links[i] = Object.assign({}, edited.links[i]);
+          edited.links[i].target = edited.nodes[currSelNodeIndex];
+        }
+      });
+
+      edited.nodes[currSelNodeIndex].fx = action.payload.fx;
+      edited.nodes[currSelNodeIndex].fy = action.payload.fy;
+
       return {
         ...state,
-        mouse: { coords: action.payload }
+        editedFile: edited
       };
+    }
     case "SAVE_EDIT": {
       const { liveNodeEdit, customAttrs, globalEdit } = action.payload;
       const changes = customAttrs;
@@ -140,12 +158,10 @@ export default (state = initialState, action) => {
 
       edited.links.forEach((link, i) => {
         if (link.source.id === edited.nodes[currSelNodeIndex].id) {
-          console.log("FUCK YOU", link);
-          link = Object.assign({}, link);
+          edited.links[i] = Object.assign({}, edited.links[i]);
           edited.links[i].source = edited.nodes[currSelNodeIndex];
         } else if (link.target.id === edited.nodes[currSelNodeIndex].id) {
-          console.log("FUCK YOU", link);
-          link = Object.assign({}, link);
+          edited.links[i] = Object.assign({}, edited.links[i]);
           edited.links[i].target = edited.nodes[currSelNodeIndex];
         }
       });
