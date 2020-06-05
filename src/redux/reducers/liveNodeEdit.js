@@ -25,7 +25,7 @@ export default (state = initialState, action) => {
       };
     case "liveNodeEdit/POPULATE_CURRENT_NODE_VALUES": {
       console.log("populateCurrentNodeValues", action.payload);
-      const { id, name, customAttrs, category } = action.payload;
+      const { id, customAttrs, category } = action.payload;
       let custom = customAttrs;
       if (!customAttrs) {
         custom = {};
@@ -34,7 +34,7 @@ export default (state = initialState, action) => {
       if (category) checkedAttrs.push("category");
       return {
         ...state,
-        name: custom.name || name,
+        name: custom.name || null,
         selNodeId: id,
         radius: custom.radius || null,
         fontSize: custom.fontSize || null,
