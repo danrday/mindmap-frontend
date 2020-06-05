@@ -86,7 +86,7 @@ class App extends React.Component {
 
         if (lockedNodes[node.id]) {
           let modNode = lockedNodes[node.id];
-          node.name = modNode.name;
+          // node.name = modNode.name;
           if (modNode.checkedAttrs.includes("category")) {
             node.category = modNode.category;
           }
@@ -107,7 +107,7 @@ class App extends React.Component {
         // if the node hasn't been deleted'
         if (node !== -1) {
           // TODO: Should be reset to previous name, restructure this
-          modData.nodes[node].name = liveNodeEdit.name;
+          // modData.nodes[node].name = liveNodeEdit.name;
           if (liveNodeEdit.checkedAttrs.includes("category")) {
             modData.nodes[node].category = liveNodeEdit.category;
           }
@@ -253,7 +253,7 @@ class Graph extends React.Component {
     } else {
       d3.selectAll("circle")
         .style("fill", function(d) {
-          return color(d.name);
+          return color(d.id);
         })
         .style("stroke-width", function(d) {
           return "1";
@@ -419,6 +419,7 @@ class Graph extends React.Component {
   }
 
   displayAttr(d, value) {
+    console.log("DISPLAY ATTR", d);
     const {
       tempCustomAttrs,
       customAttrs,
@@ -602,7 +603,7 @@ class Node extends React.Component {
         />
         <g>
           <rect />
-          <text>{this.props.data.name}</text>
+          <text />
         </g>
       </g>
     );
@@ -675,6 +676,7 @@ const enterNode = displayAttr => {
 
     selection
       .select("text")
+      .text(d => displayAttr(d, "name"))
       .style("font-size", function(d) {
         return displayAttr(d, "fontSize", "px");
       })

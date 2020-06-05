@@ -3,7 +3,7 @@ const initialState = {
   name: null,
   radius: null,
   fontSize: null,
-  checkedAttrs: [],
+  checkedAttrs: ["name"],
   newCategoryName: null,
   category: null,
   lockedNodes: {}
@@ -34,7 +34,7 @@ export default (state = initialState, action) => {
       if (category) checkedAttrs.push("category");
       return {
         ...state,
-        name: name,
+        name: custom.name || name,
         selNodeId: id,
         radius: custom.radius || null,
         fontSize: custom.fontSize || null,
@@ -118,6 +118,17 @@ export default (state = initialState, action) => {
         alert("no node found in lockedNodes to edit radius");
       }
       selNode.radius = action.payload;
+      const newLockedNodes = Object.assign({}, state.lockedNodes);
+      newLockedNodes[action.addnl_payload] = selNode;
+      return { ...state, lockedNodes: newLockedNodes };
+    }
+    case "liveNodeEdit/LOCKED_NODE_NAME": {
+      const selNode = state.lockedNodes[action.addnl_payload];
+      if (!selNode) {
+        console.log("NO NODE", action);
+        alert("no node found in lockedNodes to edit radius");
+      }
+      selNode.name = action.payload;
       const newLockedNodes = Object.assign({}, state.lockedNodes);
       newLockedNodes[action.addnl_payload] = selNode;
       return { ...state, lockedNodes: newLockedNodes };

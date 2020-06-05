@@ -69,14 +69,15 @@ export const addNodeAtCoords = coords => dispatch => {
     type: "ADD_NODE_AT_COORDS",
     payload: { id, coords }
   });
-  dispatch({
-    type: "SELECT_NODE",
-    payload: id,
-    broadcast: "LOCK_NODE"
-  });
+  // dispatch({
+  //   type: "SELECT_NODE",
+  //   payload: id,
+  //   broadcast: "LOCK_NODE"
+  // });
   dispatch({
     type: "liveNodeEdit/POPULATE_CURRENT_NODE_VALUES",
-    payload: { id: id, name: "New", customAttrs: null, category: null }
+    payload: { id: id, name: "New", customAttrs: null, category: null },
+    broadcast: "LOCK_NODE"
   });
   dispatch({
     type: "UI_SELECT_PAGE",
@@ -110,21 +111,6 @@ export const saveNameChangeAction = text => dispatch => {
     payload: text
   });
 };
-
-// export const selectNode = node => dispatch => {
-//   dispatch({
-//     type: "SELECT_NODE",
-//     payload: node,
-//     broadcast: "LOCK_NODE"
-//   });
-// };
-
-// export const handleMouseMove = coords => dispatch => {
-//   dispatch({
-//     type: "HANDLE_MOUSE_MOVE",
-//     payload: coords
-//   });
-// };
 
 export const linkNode = node => dispatch => {
   dispatch({

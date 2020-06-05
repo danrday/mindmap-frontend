@@ -90,7 +90,9 @@ class Node extends Component {
         <input
           type="text"
           value={this.props.liveNodeEdit.name || ""}
-          onChange={event => this.props.editName(event.target.value)}
+          onChange={event =>
+            this.props.editName(event.target.value, this.props.selNodeId)
+          }
         />
         <br /> <br />
         <hr />
@@ -202,7 +204,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   // handleGlobalAttrCheckbox: checked => dispatch(handleGlobalAttrCheckbox(checked)),
-  editName: name => dispatch(editName(name)),
+  editName: (name, selNodeId) => dispatch(editName(name, selNodeId)),
   editRadius: (r, selNodeId) => dispatch(editRadius(r, selNodeId)),
   editFontSize: f => dispatch(editFontSize(f)),
   saveEdits: edits => dispatch(saveEdits(edits)),
