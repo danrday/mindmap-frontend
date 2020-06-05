@@ -11,6 +11,18 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case "SELECT_NODE":
+      let value = null;
+      if (action.payload === state.selNodeId) {
+        value = null;
+      } else {
+        value = action.payload;
+      }
+
+      return {
+        ...state,
+        selNodeId: value
+      };
     case "liveNodeEdit/POPULATE_CURRENT_NODE_VALUES": {
       console.log("populateCurrentNodeValues", action.payload);
       const { id, name, customAttrs, category } = action.payload;

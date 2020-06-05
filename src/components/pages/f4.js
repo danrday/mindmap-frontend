@@ -15,13 +15,15 @@ import "react-contexify/dist/ReactContexify.min.css";
 
 import {
   saveAction,
-  selectNode,
   linkNode,
   handleZoom,
   dragNode,
   addNodeAtCoords
 } from "../../redux/actions/document";
-import { populateCurrentNodeValues } from "../../redux/actions/liveNodeEdit";
+import {
+  populateCurrentNodeValues,
+  selectNode
+} from "../../redux/actions/liveNodeEdit";
 import { selectPage, handleMouseMove } from "../../redux/actions/ui";
 
 const color = d3.scaleOrdinal(d3.schemeCategory10);
@@ -702,7 +704,7 @@ const enterNode = displayAttr => {
 
 const mapStateToProps = (state, props) => ({
   file: state.document.present.editedFile,
-  currentNode: state.document.present.currentNode,
+  currentNode: state.liveNodeEdit.selNodeId,
   lockedNodes: state.liveNodeEdit.lockedNodes,
   liveNodeEdit: state.liveNodeEdit,
   categoryEdit: state.categoryEdit,

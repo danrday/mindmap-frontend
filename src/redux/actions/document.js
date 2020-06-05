@@ -111,13 +111,13 @@ export const saveNameChangeAction = text => dispatch => {
   });
 };
 
-export const selectNode = node => dispatch => {
-  dispatch({
-    type: "SELECT_NODE",
-    payload: node,
-    broadcast: "LOCK_NODE"
-  });
-};
+// export const selectNode = node => dispatch => {
+//   dispatch({
+//     type: "SELECT_NODE",
+//     payload: node,
+//     broadcast: "LOCK_NODE"
+//   });
+// };
 
 // export const handleMouseMove = coords => dispatch => {
 //   dispatch({

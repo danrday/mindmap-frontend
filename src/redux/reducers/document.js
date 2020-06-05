@@ -1,6 +1,5 @@
 const initialState = {
   file: null,
-  currentNode: null,
   fetching: false,
   error: null,
   editedFile: null
@@ -246,18 +245,18 @@ export default (state = initialState, action) => {
         ...state,
         editedFile: editedFile
       };
-    case "SELECT_NODE":
-      let value = null;
-      if (action.payload === state.currentNode) {
-        value = null;
-      } else {
-        value = action.payload;
-      }
-
-      return {
-        ...state,
-        currentNode: value
-      };
+    // case "SELECT_NODE":
+    //   let value = null;
+    //   if (action.payload === state.currentNode) {
+    //     value = null;
+    //   } else {
+    //     value = action.payload;
+    //   }
+    //
+    //   return {
+    //     ...state,
+    //     currentNode: value
+    //   };
     // case "LOCK_NODE":
     //   const newLockedNodes = Object.assign({}, state.lockedNodes);
     //   const lockedNode = Object.keys(newLockedNodes).findIndex(

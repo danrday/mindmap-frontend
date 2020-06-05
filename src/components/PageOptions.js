@@ -7,9 +7,9 @@ import {
   document,
   postAction,
   addAction,
-  deleteAction,
-  selectNode
+  deleteAction
 } from "../redux/actions/document";
+import { selectNode } from "../redux/actions/liveNodeEdit";
 
 class PageOptions extends Component {
   selectedMenu() {
