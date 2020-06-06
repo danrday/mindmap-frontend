@@ -99,14 +99,17 @@ export default (state = initialState, action) => {
     case "LOCK_NODE":
       const newLockedNodes = Object.assign({}, state.lockedNodes);
       const lockedNode = Object.keys(newLockedNodes).findIndex(
-        n => n === action.payload
+        n => n === action.addnl_payload
       );
       if (lockedNode === -1) {
-        newLockedNodes[action.payload] = { checkedAttrs: [] };
+        newLockedNodes[action.addnl_payload] = {
+          checkedAttrs: ["name"],
+          name: "Hello"
+        };
       } else {
-        delete newLockedNodes[action.payload];
+        delete newLockedNodes[action.addnl_payload];
       }
-      console.log("WTF", action.payload);
+      console.log("WTF", action.addnl_payload);
       return {
         ...state,
         lockedNodes: newLockedNodes

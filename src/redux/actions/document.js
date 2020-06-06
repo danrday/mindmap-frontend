@@ -50,7 +50,8 @@ export const addAction = zoomLevel => dispatch => {
   dispatch({
     type: "SELECT_NODE",
     payload: id,
-    broadcast: "LOCK_NODE"
+    broadcast: "LOCK_NODE",
+    addnl_payload: id
   });
   dispatch({
     type: "liveNodeEdit/POPULATE_CURRENT_NODE_VALUES",
@@ -87,7 +88,8 @@ export const addNodeAtCoords = coords => dispatch => {
       customAttrs: { name: "NEW" },
       category: null
     },
-    broadcast: "LOCK_NODE"
+    broadcast: "LOCK_NODE",
+    addnl_payload: id
   });
   dispatch({
     type: "UI_SELECT_PAGE",
@@ -107,7 +109,8 @@ export const deleteAction = nodeId => dispatch => {
   dispatch({
     type: "SELECT_NODE",
     payload: nodeId,
-    broadcast: "LOCK_NODE"
+    broadcast: "LOCK_NODE",
+    addnl_payload: nodeId
   });
   dispatch({
     type: "DELETE_ACTION",

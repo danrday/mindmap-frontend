@@ -67,7 +67,8 @@ export const selectNode = node => dispatch => {
   dispatch({
     type: "SELECT_NODE",
     payload: node,
-    broadcast: "LOCK_NODE"
+    broadcast: "LOCK_NODE",
+    addnl_payload: node
   });
 };
 
