@@ -12,8 +12,16 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case "HANDLE_MOUSE_MOVE":
       return {
+        ...state
+        // mouse: { coords: action.payload }
+      };
+    case "BROADCAST_MOUSE_MOVE":
+      return {
         ...state,
-        mouse: { coords: action.payload }
+        mouse: {
+          coords: action.payload.coords,
+          username: action.payload.username
+        }
       };
     case "SHOW_ALERT_MESSAGE":
       return {

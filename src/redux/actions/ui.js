@@ -18,7 +18,8 @@ export const hideAlertMessage = () => {
 export const handleMouseMove = coords => dispatch => {
   dispatch({
     type: "HANDLE_MOUSE_MOVE",
-    payload: coords
+    payload: coords,
+    broadcast: "BROADCAST_MOUSE_MOVE"
   });
 };
 

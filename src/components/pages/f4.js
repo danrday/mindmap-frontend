@@ -147,6 +147,7 @@ class App extends React.Component {
               selectNode={this.props.selectNode}
               addNodeAtCoords={this.props.addNodeAtCoords}
               mouse={this.props.mouse || { coords: { x: 0, y: 0 } }}
+              user={this.props.user}
             />
           </div>
           <ContextMenu />
@@ -352,27 +353,24 @@ class Graph extends React.Component {
       `translate(${this.props.initialZoom.x}, ${this.props.initialZoom.y})scale(${this.props.initialZoom.k})`
     );
 
-    // d3.select(".frameForZoom").on("mousemove", () => {
-    //
-    //
-    //   this.props.handleMouseMove({x: d3.event.pageX, y: d3.event.pageY})
-    // });
-
-    // after initial render, this sets up d3 to do its thing outside of react
-
     // React doesn't know much about d3's event system firing off. We can add custom dispatch methods onto d3 events.
     // otherwise, we aren't aware of updates being performed by d3.
-    // Now I'm curious about displaying a  node's coordinates through react to see how it updates
 
     const domNode = ReactDOM.findDOMNode(this);
     this.d3Graph = d3.select(domNode).on("mousemove", e => {
       const transform = d3.zoomTransform(d3.select(".frameForZoom").node());
       const xy = d3.mouse(domNode);
       const xyTransform = transform.invert(xy); // relative to zoom
+
+      console.log("username", this.props.user);
+
       this.props.handleMouseMove({
-        x: xyTransform[0],
-        y: xyTransform[1],
-        k: transform.k
+        coords: {
+          x: xyTransform[0],
+          y: xyTransform[1],
+          k: transform.k
+        },
+        username: this.props.user.username
       });
     });
 
@@ -493,7 +491,6 @@ class Graph extends React.Component {
     const links = this.props.data.links.map((link, i) => (
       <Link key={i} data={link} />
     ));
-
     const mice = (
       <text
         x={this.props.mouse.coords.x}
@@ -502,7 +499,7 @@ class Graph extends React.Component {
           this.props.mouse.coords.k ? 16 / this.props.mouse.coords.k : 16
         }
       >
-        {this.props.mouse.coords.x} + ', ' + {this.props.mouse.coords.y}
+        🖌 {this.props.mouse.username}
       </text>
     );
 
@@ -724,7 +721,8 @@ const mapStateToProps = (state, props) => ({
   liveNodeEdit: state.liveNodeEdit,
   categoryEdit: state.categoryEdit,
   globalEdit: state.globalEdit,
-  mouse: state.ui.mouse
+  mouse: state.ui.mouse,
+  user: state.user.user
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -734,7 +732,8 @@ const mapDispatchToProps = dispatch => ({
   linkNode: node => dispatch(linkNode(node)),
   populateCurrentNodeValues: node => dispatch(populateCurrentNodeValues(node)),
   handleZoom: zoomAttrs => dispatch(handleZoom(zoomAttrs)),
-  handleMouseMove: coords => dispatch(handleMouseMove(coords)),
+  handleMouseMove: (coords, username) =>
+    dispatch(handleMouseMove(coords, username)),
   selectPage: i => dispatch(selectPage(i)),
   dragNode: (id, fx, fy, sticky) => dispatch(dragNode({ id, fx, fy, sticky }))
 });
