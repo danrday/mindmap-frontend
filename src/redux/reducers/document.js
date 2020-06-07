@@ -105,6 +105,7 @@ export default (state = initialState, action) => {
 
       edited.nodes[currSelNodeIndex].fx = action.payload.fx;
       edited.nodes[currSelNodeIndex].fy = action.payload.fy;
+      edited.nodes[currSelNodeIndex].sticky = action.payload.sticky;
 
       return {
         ...state,

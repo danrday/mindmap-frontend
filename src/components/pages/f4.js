@@ -295,7 +295,7 @@ class Graph extends React.Component {
         this.props.handleClick(d.id);
         d.sticky = false;
       }
-      this.props.dragNode(d.id, d3.event.x, d3.event.y); //EMIT TO OTHER USERS
+      this.props.dragNode(d.id, d3.event.x, d3.event.y, d.sticky); //EMIT TO OTHER USERS
     };
 
     let dragEnded = d => {
@@ -306,7 +306,7 @@ class Graph extends React.Component {
       } else {
         if (!d.sticky) {
           // console.log(' finish drag a selected sticky node, Unstick', )
-          this.props.dragNode(d.id, null, null); //EMIT TO OTHER USERS
+          this.props.dragNode(d.id, null, null, false); //EMIT TO OTHER USERS
         } else {
           // console.log('finish drag an unselected node', )
         }
@@ -737,7 +737,7 @@ const mapDispatchToProps = dispatch => ({
   handleZoom: zoomAttrs => dispatch(handleZoom(zoomAttrs)),
   handleMouseMove: coords => dispatch(handleMouseMove(coords)),
   selectPage: i => dispatch(selectPage(i)),
-  dragNode: (id, fx, fy) => dispatch(dragNode({ id, fx, fy }))
+  dragNode: (id, fx, fy, sticky) => dispatch(dragNode({ id, fx, fy, sticky }))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
