@@ -226,6 +226,8 @@ export default (state = initialState, action) => {
     }
     case "ADD_ACTION":
       const editedFile = Object.assign({}, state.editedFile);
+      editedFile.nodes = Object.assign([], state.editedFile.nodes);
+
       const length = state.editedFile.nodes.length;
       const zoomLevel = action.payload.zoomLevel;
 

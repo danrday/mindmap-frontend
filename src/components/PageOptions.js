@@ -108,7 +108,7 @@ const SelectedMenuFrame = styled.div`
 
 const mapStateToProps = state => ({
   ...state,
-  currSelNode: state.document.present.currentNode,
+  currSelNode: state.liveNodeEdit.selNodeId,
   currZoomLevel: state.document.present.editedFile
     ? state.document.present.editedFile.globalSettings.zoom
     : { x: 0, y: 0 },

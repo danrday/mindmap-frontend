@@ -89,7 +89,10 @@ class Node extends Component {
         <div>heading</div>
         <input
           type="text"
-          value={this.props.liveNodeEdit.name || ""}
+          value={
+            this.props.liveNodeEdit.name ||
+            this.props.globalEdit.node.name.defaultValue
+          }
           onChange={event =>
             this.props.editName(event.target.value, this.props.selNodeId)
           }

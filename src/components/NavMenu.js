@@ -17,35 +17,6 @@ class NavMenu extends Component {
   handleSelected(i) {
     this.props.selectPage(i, this.props.selectedPage);
   }
-  selectedMenu() {
-    if (this.props.selectedPage) {
-      return navLinks[this.props.selectedPage].component();
-    } else {
-      return (
-        <div>
-          <button onClick={this.props.openDocument}>open</button>
-          <br />
-          <button
-            onClick={() => {
-              console.log("document.file", this.props.document.file);
-              this.props.postAction(this.props.document.editedFile);
-            }}
-          >
-            save
-          </button>
-          <br />
-          <button onClick={this.addAction}>add</button>
-          <br />
-          <button
-            onClick={() => this.props.deleteAction(this.props.currSelNode)}
-          >
-            delete
-          </button>
-        </div>
-      );
-    }
-  }
-
   render() {
     return (
       <NavItemsFrame
@@ -178,7 +149,7 @@ const NavItem = styled.div`
 
 const mapStateToProps = state => ({
   ...state,
-  currSelNode: state.document.currentNode,
+  currSelNode: state.liveNodeEdit.selNodeId,
   currZoomLevel: state.document.editedFile
     ? state.document.editedFile.globalSettings.zoom
     : { x: 0, y: 0 },
