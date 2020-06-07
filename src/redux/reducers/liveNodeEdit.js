@@ -103,8 +103,7 @@ export default (state = initialState, action) => {
       );
       if (lockedNode === -1) {
         newLockedNodes[action.addnl_payload] = {
-          checkedAttrs: ["name"],
-          name: "*"
+          checkedAttrs: ["name"]
         };
       } else {
         delete newLockedNodes[action.addnl_payload];

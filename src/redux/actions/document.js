@@ -80,10 +80,6 @@ export const addNodeAtCoords = coords => dispatch => {
     broadcast: "LOCK_NODE",
     addnl_payload: id
   });
-  dispatch({
-    type: "UI_SELECT_PAGE",
-    payload: 2
-  });
 };
 
 export const saveEdits = edits => dispatch => {

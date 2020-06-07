@@ -193,6 +193,7 @@ const ContextMenu = props => {
             e.props.selectNode(e.props.currSelNode);
           }
           e.props.addNodeAtCoords(e.props.coords);
+          e.props.selectPage(2);
         }}
       >
         <span>🔵</span>
@@ -221,6 +222,7 @@ class Graph extends React.Component {
         coords: this.props.mouse.coords,
         currSelNode: this.props.lastClickedNode,
         selectNode: this.props.selectNode,
+        selectPage: this.props.selectPage,
         addNodeAtCoords: this.props.addNodeAtCoords
       }
     });
