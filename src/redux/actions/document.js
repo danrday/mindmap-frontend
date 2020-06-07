@@ -48,13 +48,14 @@ export const addAction = zoomLevel => dispatch => {
     payload: { id, zoomLevel }
   });
   dispatch({
-    type: "SELECT_NODE",
-    payload: id,
-    broadcast: "LOCK_NODE"
-  });
-  dispatch({
     type: "liveNodeEdit/POPULATE_CURRENT_NODE_VALUES",
-    payload: { id: id, name: "New", customAttrs: null, category: null }
+    payload: {
+      id: id,
+      customAttrs: { name: "NEW" },
+      category: null
+    },
+    broadcast: "LOCK_NODE",
+    addnl_payload: id
   });
   dispatch({
     type: "UI_SELECT_PAGE",
@@ -70,17 +71,14 @@ export const addNodeAtCoords = coords => dispatch => {
     payload: { id, coords }
   });
   dispatch({
-    type: "SELECT_NODE",
-    payload: id,
-    broadcast: "LOCK_NODE"
-  });
-  dispatch({
     type: "liveNodeEdit/POPULATE_CURRENT_NODE_VALUES",
-    payload: { id: id, name: "New", customAttrs: null, category: null }
-  });
-  dispatch({
-    type: "UI_SELECT_PAGE",
-    payload: 2
+    payload: {
+      id: id,
+      customAttrs: { name: null },
+      category: null
+    },
+    broadcast: "LOCK_NODE",
+    addnl_payload: id
   });
 };
 
@@ -96,7 +94,8 @@ export const deleteAction = nodeId => dispatch => {
   dispatch({
     type: "SELECT_NODE",
     payload: nodeId,
-    broadcast: "LOCK_NODE"
+    broadcast: "LOCK_NODE",
+    addnl_payload: nodeId
   });
   dispatch({
     type: "DELETE_ACTION",
@@ -108,21 +107,6 @@ export const saveNameChangeAction = text => dispatch => {
   dispatch({
     type: "SAVE_NAME_CHANGE_ACTION",
     payload: text
-  });
-};
-
-export const selectNode = node => dispatch => {
-  dispatch({
-    type: "SELECT_NODE",
-    payload: node,
-    broadcast: "LOCK_NODE"
-  });
-};
-
-export const handleMouseMove = coords => dispatch => {
-  dispatch({
-    type: "HANDLE_MOUSE_MOVE",
-    payload: coords
   });
 };
 

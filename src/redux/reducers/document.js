@@ -1,6 +1,5 @@
 const initialState = {
   file: null,
-  currentNode: null,
   fetching: false,
   error: null,
   editedFile: null
@@ -8,25 +7,6 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case "file/DRAG_NODE":
-      // const draggedNode = state.editedFile.nodes.find(e => {
-      //   return e.id === action.payload.id;
-      // });
-
-      console.log("action.;alo", action.payload);
-
-      const editedd = Object.assign({}, state.editedFile);
-      let currSelNodeIndex = editedd.nodes.findIndex(e => {
-        return e.id === action.payload.id;
-      });
-      editedd.nodes[currSelNodeIndex].fx = action.payload.fx;
-      editedd.nodes[currSelNodeIndex].fy = action.payload.fy;
-
-      return {
-        ...state,
-        editedFile: editedd
-      };
-
     case "file/FETCH_FILE_ERROR":
       return { ...state, error: action.payload, fetching: false };
     case "file/UPDATE_FILE":
@@ -42,7 +22,7 @@ export default (state = initialState, action) => {
 
       /*      THIS IS DONE IN A MUTABLE STYLE HERE BECAUSE
       D3 FORCE KEEPS TRACK OF THE NODES OBJECT REFERENCE*/
-      const filteredNodes = state.editedFile.nodes;
+      const filteredNodes = Object.assign([], state.editedFile.nodes);
       filteredNodes.forEach((node, i) => {
         if (node.id === action.payload) {
           filteredNodes.splice(i, 1);
@@ -89,15 +69,54 @@ export default (state = initialState, action) => {
         ...state,
         editedFile: { ...state.editedFile, links: action.payload }
       };
-    case "HANDLE_MOUSE_MOVE":
+    // case "HANDLE_MOUSE_MOVE":
+    //   return {
+    //     ...state,
+    //     mouse: { coords: action.payload }
+    //   };
+    case "file/DRAG_NODE": {
+      // const draggedNode = state.editedFile.nodes.find(e => {
+      //   return e.id === action.payload.id;
+      // });
+
+      console.log("action.;alo", action.payload);
+
+      const edited = Object.assign({}, state.editedFile);
+      edited.nodes = Object.assign([], state.editedFile.nodes);
+      edited.links = Object.assign([], state.editedFile.links);
+
+      let currSelNodeIndex = edited.nodes.findIndex(e => {
+        return e.id === action.payload.id;
+      });
+
+      const node = edited.nodes[currSelNodeIndex];
+
+      edited.nodes[currSelNodeIndex] = Object.assign({}, node);
+
+      edited.links.forEach((link, i) => {
+        if (link.source.id === edited.nodes[currSelNodeIndex].id) {
+          edited.links[i] = Object.assign({}, edited.links[i]);
+          edited.links[i].source = edited.nodes[currSelNodeIndex];
+        } else if (link.target.id === edited.nodes[currSelNodeIndex].id) {
+          edited.links[i] = Object.assign({}, edited.links[i]);
+          edited.links[i].target = edited.nodes[currSelNodeIndex];
+        }
+      });
+
+      edited.nodes[currSelNodeIndex].fx = action.payload.fx;
+      edited.nodes[currSelNodeIndex].fy = action.payload.fy;
+
       return {
         ...state,
-        mouse: { coords: action.payload }
+        editedFile: edited
       };
+    }
     case "SAVE_EDIT": {
       const { liveNodeEdit, customAttrs, globalEdit } = action.payload;
       const changes = customAttrs;
       const edited = Object.assign({}, state.editedFile);
+      edited.nodes = Object.assign([], state.editedFile.nodes);
+      edited.links = Object.assign([], state.editedFile.links);
       let currSelNodeIndex = edited.nodes.findIndex(e => {
         return e.id === liveNodeEdit.selNodeId;
       });
@@ -106,6 +125,11 @@ export default (state = initialState, action) => {
         edited.nodes[currSelNodeIndex].name
       );
       console.log("liveNodeEdit.name", liveNodeEdit.name);
+
+      const node = edited.nodes[currSelNodeIndex];
+
+      edited.nodes[currSelNodeIndex] = Object.assign({}, node);
+
       edited.nodes[currSelNodeIndex].name = liveNodeEdit.name;
       edited.nodes[currSelNodeIndex].customAttrs = {};
       if (changes.includes("newCategoryName")) {
@@ -130,6 +154,16 @@ export default (state = initialState, action) => {
       }
 
       edited.globalSettings = globalEdit;
+
+      edited.links.forEach((link, i) => {
+        if (link.source.id === edited.nodes[currSelNodeIndex].id) {
+          edited.links[i] = Object.assign({}, edited.links[i]);
+          edited.links[i].source = edited.nodes[currSelNodeIndex];
+        } else if (link.target.id === edited.nodes[currSelNodeIndex].id) {
+          edited.links[i] = Object.assign({}, edited.links[i]);
+          edited.links[i].target = edited.nodes[currSelNodeIndex];
+        }
+      });
 
       return {
         ...state,
@@ -168,6 +202,8 @@ export default (state = initialState, action) => {
 
     case "ADD_NODE_AT_COORDS": {
       const editedFile = Object.assign({}, state.editedFile);
+      editedFile.nodes = Object.assign([], state.editedFile.nodes);
+
       const length = state.editedFile.nodes.length;
       const coords = action.payload.coords;
 
@@ -190,6 +226,8 @@ export default (state = initialState, action) => {
     }
     case "ADD_ACTION":
       const editedFile = Object.assign({}, state.editedFile);
+      editedFile.nodes = Object.assign([], state.editedFile.nodes);
+
       const length = state.editedFile.nodes.length;
       const zoomLevel = action.payload.zoomLevel;
 
@@ -209,18 +247,18 @@ export default (state = initialState, action) => {
         ...state,
         editedFile: editedFile
       };
-    case "SELECT_NODE":
-      let value = null;
-      if (action.payload === state.currentNode) {
-        value = null;
-      } else {
-        value = action.payload;
-      }
-
-      return {
-        ...state,
-        currentNode: value
-      };
+    // case "SELECT_NODE":
+    //   let value = null;
+    //   if (action.payload === state.currentNode) {
+    //     value = null;
+    //   } else {
+    //     value = action.payload;
+    //   }
+    //
+    //   return {
+    //     ...state,
+    //     currentNode: value
+    //   };
     // case "LOCK_NODE":
     //   const newLockedNodes = Object.assign({}, state.lockedNodes);
     //   const lockedNode = Object.keys(newLockedNodes).findIndex(

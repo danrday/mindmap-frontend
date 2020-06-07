@@ -110,7 +110,7 @@ class GlobalSettings extends Component {
 
 const mapStateToProps = state => ({
   globalEdit: state.globalEdit,
-  globalSettings: state.document.editedFile.globalSettings
+  globalSettings: state.document.present.editedFile.globalSettings
 });
 
 const mapDispatchToProps = dispatch => ({

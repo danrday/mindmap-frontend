@@ -3,7 +3,7 @@ const initialState = {
   name: null,
   radius: null,
   fontSize: null,
-  checkedAttrs: [],
+  checkedAttrs: ["name"],
   newCategoryName: null,
   category: null,
   lockedNodes: {}
@@ -11,9 +11,21 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case "SELECT_NODE":
+      let value = null;
+      if (action.payload === state.selNodeId) {
+        value = null;
+      } else {
+        value = action.payload;
+      }
+
+      return {
+        ...state,
+        selNodeId: value
+      };
     case "liveNodeEdit/POPULATE_CURRENT_NODE_VALUES": {
       console.log("populateCurrentNodeValues", action.payload);
-      const { id, name, customAttrs, category } = action.payload;
+      const { id, customAttrs, category } = action.payload;
       let custom = customAttrs;
       if (!customAttrs) {
         custom = {};
@@ -22,7 +34,7 @@ export default (state = initialState, action) => {
       if (category) checkedAttrs.push("category");
       return {
         ...state,
-        name: name,
+        name: custom.name || null,
         selNodeId: id,
         radius: custom.radius || null,
         fontSize: custom.fontSize || null,
@@ -87,14 +99,16 @@ export default (state = initialState, action) => {
     case "LOCK_NODE":
       const newLockedNodes = Object.assign({}, state.lockedNodes);
       const lockedNode = Object.keys(newLockedNodes).findIndex(
-        n => n === action.payload
+        n => n === action.addnl_payload
       );
       if (lockedNode === -1) {
-        newLockedNodes[action.payload] = { checkedAttrs: [] };
+        newLockedNodes[action.addnl_payload] = {
+          checkedAttrs: ["name"]
+        };
       } else {
-        delete newLockedNodes[action.payload];
+        delete newLockedNodes[action.addnl_payload];
       }
-      console.log("WTF", action.payload);
+      console.log("WTF", action.addnl_payload);
       return {
         ...state,
         lockedNodes: newLockedNodes
@@ -106,6 +120,17 @@ export default (state = initialState, action) => {
         alert("no node found in lockedNodes to edit radius");
       }
       selNode.radius = action.payload;
+      const newLockedNodes = Object.assign({}, state.lockedNodes);
+      newLockedNodes[action.addnl_payload] = selNode;
+      return { ...state, lockedNodes: newLockedNodes };
+    }
+    case "liveNodeEdit/LOCKED_NODE_NAME": {
+      const selNode = state.lockedNodes[action.addnl_payload];
+      if (!selNode) {
+        console.log("NO NODE", action);
+        alert("no node found in lockedNodes to edit radius");
+      }
+      selNode.name = action.payload;
       const newLockedNodes = Object.assign({}, state.lockedNodes);
       newLockedNodes[action.addnl_payload] = selNode;
       return { ...state, lockedNodes: newLockedNodes };

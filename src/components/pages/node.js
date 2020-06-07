@@ -72,7 +72,7 @@ class Node extends Component {
     return (
       <div>
         <div>
-          {this.props.liveNodeEdit.selNodeId ? "Edit Node" : "Add new node"}
+          {/*{this.props.liveNodeEdit.selNodeId ? "Edit Node" : "Add new node"}*/}
         </div>
         <button onClick={this.save.bind(this)}>save</button>
         <button onClick={this.save.bind(this)}>save and unselect</button>
@@ -89,8 +89,13 @@ class Node extends Component {
         <div>heading</div>
         <input
           type="text"
-          value={this.props.liveNodeEdit.name || ""}
-          onChange={event => this.props.editName(event.target.value)}
+          value={
+            this.props.liveNodeEdit.name ||
+            this.props.globalEdit.node.name.defaultValue
+          }
+          onChange={event =>
+            this.props.editName(event.target.value, this.props.selNodeId)
+          }
         />
         <br /> <br />
         <hr />
@@ -196,13 +201,13 @@ class Node extends Component {
 const mapStateToProps = state => ({
   liveNodeEdit: state.liveNodeEdit,
   selNodeId: state.liveNodeEdit.selNodeId,
-  categories: state.document.editedFile.categories,
+  categories: state.document.present.editedFile.categories,
   globalEdit: state.globalEdit
 });
 
 const mapDispatchToProps = dispatch => ({
   // handleGlobalAttrCheckbox: checked => dispatch(handleGlobalAttrCheckbox(checked)),
-  editName: name => dispatch(editName(name)),
+  editName: (name, selNodeId) => dispatch(editName(name, selNodeId)),
   editRadius: (r, selNodeId) => dispatch(editRadius(r, selNodeId)),
   editFontSize: f => dispatch(editFontSize(f)),
   saveEdits: edits => dispatch(saveEdits(edits)),

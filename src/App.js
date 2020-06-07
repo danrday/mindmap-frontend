@@ -4,7 +4,7 @@ import "./App.css";
 import { hideAlertMessage } from "./redux/actions/ui";
 import { dispatchMsg } from "./redux/actions/channel";
 import { getUser } from "./redux/actions/user";
-import Page from "./components/Page";
+import Shell from "./components/Shell";
 import F4 from "./components/pages/f4";
 import { withAlert } from "react-alert";
 
@@ -30,11 +30,9 @@ class App extends Component {
   }
   render() {
     return (
-      <div className="App">
-        <Page channel={this.props.channel}>
-          <F4 />
-        </Page>
-      </div>
+      <Shell channel={this.props.channel}>
+        <F4 />
+      </Shell>
     );
   }
 }

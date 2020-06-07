@@ -6,11 +6,12 @@ export const populateCurrentNodeValues = vals => dispatch => {
   });
 };
 
-export const editName = name => dispatch => {
+export const editName = (name, selNodeId) => dispatch => {
   dispatch({
     type: "liveNodeEdit/EDIT_NAME",
     payload: name,
-    local_msg: true
+    addnl_payload: selNodeId,
+    broadcast: "liveNodeEdit/LOCKED_NODE_NAME"
   });
 };
 export const clearTempCustomAttrs = () => dispatch => {
@@ -59,6 +60,15 @@ export const editRadius = (r, selNodeId) => dispatch => {
     payload: r,
     addnl_payload: selNodeId,
     broadcast: "liveNodeEdit/LOCKED_NODE_RADIUS"
+  });
+};
+
+export const selectNode = node => dispatch => {
+  dispatch({
+    type: "SELECT_NODE",
+    payload: node,
+    broadcast: "LOCK_NODE",
+    addnl_payload: node
   });
 };
 

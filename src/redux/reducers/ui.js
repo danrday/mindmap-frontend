@@ -10,6 +10,11 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case "HANDLE_MOUSE_MOVE":
+      return {
+        ...state,
+        mouse: { coords: action.payload }
+      };
     case "SHOW_ALERT_MESSAGE":
       return {
         ...state,

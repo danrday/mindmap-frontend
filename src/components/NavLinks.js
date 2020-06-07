@@ -28,7 +28,7 @@ const navLinks = [
     className: "icon ion-android-add-circle",
     altClassName: "icon ion-android-create",
     navItemText: "",
-    altNavItemText: "Edit Node",
+    altNavItemText: "",
     component: props => {
       const customProps = props;
       return <Node {...customProps} />;

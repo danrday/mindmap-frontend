@@ -42,13 +42,6 @@ screen.
 ####TO DO:
 
 ##need to haves
-+ ~~Automatically go to edit screen when clicking on a node~~
-+ ~~auto select the new node~~
-+ ~~Make slider component~~
-+ ~~Add delete button onto edit node screen~~
-+ ~~BUG: have link distances auto load saved values~~
-+ ~~REFACTOR~~
-
 In Progress:
 
 + Print out a pdf
@@ -60,20 +53,14 @@ In Progress:
 
 To Do:
 + Write undo history with timestamps
-+ If no node selected, only show add node, no edit options
 + Create up to five documents
 + Click on a node, then option to create connected node on next click
 + Unlock all as an option
 + Lock all as an option
 + Color picker for node/category
 
-+ BUG:  f4 App render  function        // TODO: Should be reset to previous name, restructure this
-
-
 No Rush:
 + ‘Friction’ setting
-
-
 
 ##nice to haves
 + Download the JSON file?
@@ -99,16 +86,12 @@ No Rush:
 + Views or frames (prezzi style)
 
 ## mvp user account
-+ User registration
 + Encrypt the user data
 
 ##mvp file sharing
 
-+ post mvp - Connect to other user, create an online space (Elixir stuff)
 + Post mvp: ability to change nodes to squares, change dimensions
 + Make private or public (user gets 1 private 4 public files)
-+ Multi-user-mode - fire local actions but log as user2
-+ Can’t select not another user has selected.
 + Emit your image
 + Image merge  if 2 people work on it and save different versions- resolve or combine options
 

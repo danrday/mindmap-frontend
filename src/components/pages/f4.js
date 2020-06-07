@@ -15,15 +15,16 @@ import "react-contexify/dist/ReactContexify.min.css";
 
 import {
   saveAction,
-  selectNode,
   linkNode,
   handleZoom,
-  handleMouseMove,
   dragNode,
   addNodeAtCoords
 } from "../../redux/actions/document";
-import { populateCurrentNodeValues } from "../../redux/actions/liveNodeEdit";
-import { selectPage } from "../../redux/actions/ui";
+import {
+  populateCurrentNodeValues,
+  selectNode
+} from "../../redux/actions/liveNodeEdit";
+import { selectPage, handleMouseMove } from "../../redux/actions/ui";
 
 const color = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -85,7 +86,7 @@ class App extends React.Component {
 
         if (lockedNodes[node.id]) {
           let modNode = lockedNodes[node.id];
-          node.name = modNode.name;
+          // node.name = modNode.name;
           if (modNode.checkedAttrs.includes("category")) {
             node.category = modNode.category;
           }
@@ -106,7 +107,7 @@ class App extends React.Component {
         // if the node hasn't been deleted'
         if (node !== -1) {
           // TODO: Should be reset to previous name, restructure this
-          modData.nodes[node].name = liveNodeEdit.name;
+          // modData.nodes[node].name = liveNodeEdit.name;
           if (liveNodeEdit.checkedAttrs.includes("category")) {
             modData.nodes[node].category = liveNodeEdit.category;
           }
@@ -143,6 +144,7 @@ class App extends React.Component {
               initialZoom={this.props.file.globalSettings.zoom || null}
               handleMouseMove={this.props.handleMouseMove}
               dragNode={this.props.dragNode}
+              selectNode={this.props.selectNode}
               addNodeAtCoords={this.props.addNodeAtCoords}
               mouse={this.props.mouse || { coords: { x: 0, y: 0 } }}
             />
@@ -185,7 +187,15 @@ function returnGlobalSetting(setting, section, globalSettings) {
 const ContextMenu = props => {
   return (
     <Menu id="contextMenu" style={{ zIndex: "99999" }}>
-      <Item onClick={e => e.props.addNodeAtCoords(e.props.coords)}>
+      <Item
+        onClick={e => {
+          if (e.props.currSelNode) {
+            e.props.selectNode(e.props.currSelNode);
+          }
+          e.props.addNodeAtCoords(e.props.coords);
+          e.props.selectPage(2);
+        }}
+      >
         <span>🔵</span>
         Add new node
       </Item>
@@ -210,12 +220,16 @@ class Graph extends React.Component {
       event: e,
       props: {
         coords: this.props.mouse.coords,
+        currSelNode: this.props.lastClickedNode,
+        selectNode: this.props.selectNode,
+        selectPage: this.props.selectPage,
         addNodeAtCoords: this.props.addNodeAtCoords
       }
     });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
+    console.log("LNK", this.props.data.links[0]);
     const charge = returnGlobalSetting(
       "chargeStrength",
       "general",
@@ -223,24 +237,29 @@ class Graph extends React.Component {
     );
     const dist = this.props.globalSettings.linkDistance;
     window.force
+      .nodes(this.props.data.nodes) //if a node is updated, we need it to point to the new object
       .force("charge", d3.forceManyBody().strength(charge || -60))
-      .force(
-        "link",
-        d3
-          .forceLink(this.props.data.links)
-          .id(function(d) {
-            return d.id;
-          })
-          .distance(function(d) {
-            return dist || 900;
-          })
-      )
+      .force("link", d3.forceLink(this.props.data.links))
       .alphaTarget(0.5)
       .velocityDecay(0.7)
       .restart();
-    setTimeout(function() {
-      window.force.alphaTarget(0);
-    }, 3000);
+
+    // setTimeout(function() {
+    //   window.force.alphaTarget(0);
+    // }, 3000);
+
+    /*put this first since it will repaint prev selected node
+    if you click 'new node' more than once*/
+    d3.selectAll("circle")
+      .style("fill", function(d) {
+        return color(d.id);
+      })
+      .style("stroke-width", function(d) {
+        return "1";
+      })
+      .style("stroke-dasharray", function(d) {
+        return "0,0";
+      });
 
     const lastClicked = this.props.lastClickedNode;
     if (lastClicked) {
@@ -255,17 +274,6 @@ class Graph extends React.Component {
         })
         .style("stroke", function(d) {
           return "red";
-        });
-    } else {
-      d3.selectAll("circle")
-        .style("fill", function(d) {
-          return color(d.name);
-        })
-        .style("stroke-width", function(d) {
-          return "1";
-        })
-        .style("stroke-dasharray", function(d) {
-          return "0,0";
         });
     }
 
@@ -425,6 +433,7 @@ class Graph extends React.Component {
   }
 
   displayAttr(d, value) {
+    console.log("DISPLAY ATTR", d);
     const {
       tempCustomAttrs,
       customAttrs,
@@ -608,7 +617,7 @@ class Node extends React.Component {
         />
         <g>
           <rect />
-          <text>{this.props.data.name}</text>
+          <text />
         </g>
       </g>
     );
@@ -681,6 +690,7 @@ const enterNode = displayAttr => {
 
     selection
       .select("text")
+      .text(d => displayAttr(d, "name"))
       .style("font-size", function(d) {
         return displayAttr(d, "fontSize", "px");
       })
@@ -709,13 +719,13 @@ const enterNode = displayAttr => {
 ////////
 
 const mapStateToProps = (state, props) => ({
-  file: state.document.editedFile,
-  currentNode: state.document.currentNode,
+  file: state.document.present.editedFile,
+  currentNode: state.liveNodeEdit.selNodeId,
   lockedNodes: state.liveNodeEdit.lockedNodes,
   liveNodeEdit: state.liveNodeEdit,
   categoryEdit: state.categoryEdit,
   globalEdit: state.globalEdit,
-  mouse: state.document.mouse
+  mouse: state.ui.mouse
 });
 
 const mapDispatchToProps = dispatch => ({
