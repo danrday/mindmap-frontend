@@ -22,7 +22,7 @@ export default (state = initialState, action) => {
 
       /*      THIS IS DONE IN A MUTABLE STYLE HERE BECAUSE
       D3 FORCE KEEPS TRACK OF THE NODES OBJECT REFERENCE*/
-      const filteredNodes = state.editedFile.nodes;
+      const filteredNodes = Object.assign([], state.editedFile.nodes);
       filteredNodes.forEach((node, i) => {
         if (node.id === action.payload) {
           filteredNodes.splice(i, 1);

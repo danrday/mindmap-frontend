@@ -144,6 +144,7 @@ class App extends React.Component {
               initialZoom={this.props.file.globalSettings.zoom || null}
               handleMouseMove={this.props.handleMouseMove}
               dragNode={this.props.dragNode}
+              selectNode={this.props.selectNode}
               addNodeAtCoords={this.props.addNodeAtCoords}
               mouse={this.props.mouse || { coords: { x: 0, y: 0 } }}
             />
@@ -186,7 +187,14 @@ function returnGlobalSetting(setting, section, globalSettings) {
 const ContextMenu = props => {
   return (
     <Menu id="contextMenu" style={{ zIndex: "99999" }}>
-      <Item onClick={e => e.props.addNodeAtCoords(e.props.coords)}>
+      <Item
+        onClick={e => {
+          if (e.props.currSelNode) {
+            e.props.selectNode(e.props.currSelNode);
+          }
+          e.props.addNodeAtCoords(e.props.coords);
+        }}
+      >
         <span>🔵</span>
         Add new node
       </Item>
@@ -211,6 +219,8 @@ class Graph extends React.Component {
       event: e,
       props: {
         coords: this.props.mouse.coords,
+        currSelNode: this.props.lastClickedNode,
+        selectNode: this.props.selectNode,
         addNodeAtCoords: this.props.addNodeAtCoords
       }
     });
@@ -236,6 +246,19 @@ class Graph extends React.Component {
     //   window.force.alphaTarget(0);
     // }, 3000);
 
+    /*put this first since it will repaint prev selected node
+    if you click 'new node' more than once*/
+    d3.selectAll("circle")
+      .style("fill", function(d) {
+        return color(d.id);
+      })
+      .style("stroke-width", function(d) {
+        return "1";
+      })
+      .style("stroke-dasharray", function(d) {
+        return "0,0";
+      });
+
     const lastClicked = this.props.lastClickedNode;
     if (lastClicked) {
       let self = this;
@@ -249,17 +272,6 @@ class Graph extends React.Component {
         })
         .style("stroke", function(d) {
           return "red";
-        });
-    } else {
-      d3.selectAll("circle")
-        .style("fill", function(d) {
-          return color(d.id);
-        })
-        .style("stroke-width", function(d) {
-          return "1";
-        })
-        .style("stroke-dasharray", function(d) {
-          return "0,0";
         });
     }
 
