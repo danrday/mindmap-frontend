@@ -89,6 +89,7 @@ class Node extends Component {
         <br />
         <div>heading</div>
         <input
+          className="input"
           type="text"
           value={
             this.props.liveNodeEdit.name ||
@@ -110,6 +111,7 @@ class Node extends Component {
         />
         <div>radius</div>
         <input
+          className="input"
           disabled={!this.props.liveNodeEdit.checkedAttrs.includes("radius")}
           type="number"
           value={this.props.liveNodeEdit.radius || ""}
@@ -144,6 +146,7 @@ class Node extends Component {
         />
         <div>font size</div>
         <input
+          className="input"
           disabled={!this.props.liveNodeEdit.checkedAttrs.includes("fontSize")}
           type="number"
           value={this.props.liveNodeEdit.fontSize || ""}
@@ -185,6 +188,7 @@ class Node extends Component {
         />
         <div>save custom attrs as new category</div>
         <input
+          className="input"
           disabled={
             !this.props.liveNodeEdit.checkedAttrs.includes("newCategoryName")
           }
