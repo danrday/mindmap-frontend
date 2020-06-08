@@ -3,9 +3,8 @@ import cloneDeep from "lodash.clonedeep";
 
 export const dragNode = msg => dispatch => {
   dispatch({
-    type: "asdf",
-    payload: msg,
-    broadcast: "file/DRAG_NODE"
+    type: "file/DRAG_NODE",
+    payload: msg
   });
 };
 

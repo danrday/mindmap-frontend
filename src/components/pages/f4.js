@@ -151,6 +151,7 @@ class App extends React.Component {
               selectNode={this.props.selectNode}
               addNodeAtCoords={this.props.addNodeAtCoords}
               mouse={this.props.mouse || { coords: { x: 0, y: 0 } }}
+              mouseCoords={this.props.mouseCoords}
               user={this.props.user}
               showAlertMessage={this.props.showAlertMessage}
             />
@@ -225,7 +226,7 @@ class Graph extends React.Component {
       id: "contextMenu",
       event: e,
       props: {
-        coords: this.props.mouse.coords,
+        coords: this.props.mouseCoords.self.coords,
         currSelNode: this.props.lastClickedNode,
         selectNode: this.props.selectNode,
         selectPage: this.props.selectPage,
@@ -299,12 +300,14 @@ class Graph extends React.Component {
 
     let dragging = (d, self) => {
       console.log("self", self);
-      d3.select(self)
-        .attr("cx", (d.x = d3.event.x))
-        .attr("cy", (d.y = d3.event.y));
 
-      d.fx = d.x;
-      d.fy = d.y;
+      // if (mobile_phone or  single_user?) {
+      //   d3.select(self)
+      //       .attr("cx", (d.x = d3.event.x))
+      //       .attr("cy", (d.y = d3.event.y));
+      //   d.fx = d.x;
+      //   d.fy = d.y;
+      // } else
 
       if (d.sticky && this.props.lastClickedNode === d.id) {
         // console.log('select Sticky node, then start to drag it: Unstick and Unselect node.', )
@@ -315,12 +318,6 @@ class Graph extends React.Component {
     };
 
     let dragEnded = (d, self) => {
-      console.log("dragging", d);
-
-      d.color = color(d);
-      d.name = "blah";
-      // this.props.showAlertMessage("dragging...", "info");
-
       // (fires on any mouseup)
       if (!d3.event.active) force.alphaTarget(0);
       if (this.props.lastClickedNode && this.props.lastClickedNode === d.id) {
@@ -334,6 +331,14 @@ class Graph extends React.Component {
         }
       }
     };
+
+    // d3.selectAll("g.node").call(
+    //   d3
+    //     .drag()
+    //     .on("start", dragStarted)
+    //     .on("drag", dragging)
+    //     .on("end", dragEnded)
+    // );
 
     d3.selectAll("g.node").each(function(d) {
       d3.select(this).call(
@@ -751,6 +756,7 @@ const mapStateToProps = (state, props) => ({
   categoryEdit: state.categoryEdit,
   globalEdit: state.globalEdit,
   mouse: state.ui.mouse,
+  mouseCoords: state.ui.mouseCoords,
   user: state.user.user
 });
 

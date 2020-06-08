@@ -209,7 +209,7 @@ export default (state = initialState, action) => {
       const coords = action.payload.coords;
 
       editedFile.nodes.push({
-        name: "new",
+        customAttrs: { name: null },
         id: action.payload.id,
         index: length,
         x: coords.x,
@@ -233,7 +233,7 @@ export default (state = initialState, action) => {
       const zoomLevel = action.payload.zoomLevel;
 
       editedFile.nodes.push({
-        name: "new",
+        customAttrs: { name: null },
         id: action.payload.id,
         index: length,
         x: (50 - zoomLevel.x) / zoomLevel.k,
