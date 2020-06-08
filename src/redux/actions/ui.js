@@ -1,12 +1,12 @@
-export const showAlertMessage = (msg, type = "info") => {
-  return {
+export const showAlertMessage = (msg, type = "info") => dispatch => {
+  dispatch({
     type: "SHOW_ALERT_MESSAGE",
     payload: {
       show: true,
       msg,
       type
     }
-  };
+  });
 };
 
 export const hideAlertMessage = () => {

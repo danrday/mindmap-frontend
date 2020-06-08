@@ -24,7 +24,11 @@ import {
   populateCurrentNodeValues,
   selectNode
 } from "../../redux/actions/liveNodeEdit";
-import { selectPage, handleMouseMove } from "../../redux/actions/ui";
+import {
+  selectPage,
+  handleMouseMove,
+  showAlertMessage
+} from "../../redux/actions/ui";
 
 const color = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -148,6 +152,7 @@ class App extends React.Component {
               addNodeAtCoords={this.props.addNodeAtCoords}
               mouse={this.props.mouse || { coords: { x: 0, y: 0 } }}
               user={this.props.user}
+              showAlertMessage={this.props.showAlertMessage}
             />
           </div>
           <ContextMenu />
@@ -253,6 +258,7 @@ class Graph extends React.Component {
     if you click 'new node' more than once*/
     d3.selectAll("circle")
       .style("fill", function(d) {
+        console.log("d", d);
         return color(d.id);
       })
       .style("stroke-width", function(d) {
@@ -282,7 +288,8 @@ class Graph extends React.Component {
 
     let force = window.force;
 
-    let dragStarted = d => {
+    let dragStarted = (d, self) => {
+      console.log("self", self);
       // (fires on any mousedown)
       if (!d3.event.active) force.alphaTarget(0.3).restart();
       if (d.fx) {
@@ -290,7 +297,15 @@ class Graph extends React.Component {
       }
     };
 
-    let dragging = d => {
+    let dragging = (d, self) => {
+      console.log("self", self);
+      d3.select(self)
+        .attr("cx", (d.x = d3.event.x))
+        .attr("cy", (d.y = d3.event.y));
+
+      d.fx = d.x;
+      d.fy = d.y;
+
       if (d.sticky && this.props.lastClickedNode === d.id) {
         // console.log('select Sticky node, then start to drag it: Unstick and Unselect node.', )
         this.props.handleClick(d.id);
@@ -299,7 +314,13 @@ class Graph extends React.Component {
       this.props.dragNode(d.id, d3.event.x, d3.event.y, d.sticky); //EMIT TO OTHER USERS
     };
 
-    let dragEnded = d => {
+    let dragEnded = (d, self) => {
+      console.log("dragging", d);
+
+      d.color = color(d);
+      d.name = "blah";
+      // this.props.showAlertMessage("dragging...", "info");
+
       // (fires on any mouseup)
       if (!d3.event.active) force.alphaTarget(0);
       if (this.props.lastClickedNode && this.props.lastClickedNode === d.id) {
@@ -314,13 +335,21 @@ class Graph extends React.Component {
       }
     };
 
-    d3.selectAll("g.node").call(
-      d3
-        .drag()
-        .on("start", dragStarted)
-        .on("drag", dragging)
-        .on("end", dragEnded)
-    );
+    d3.selectAll("g.node").each(function(d) {
+      d3.select(this).call(
+        d3
+          .drag()
+          .on("start", function(d) {
+            dragStarted(d, this);
+          })
+          .on("drag", function(d) {
+            dragging(d, this);
+          })
+          .on("end", function(d) {
+            dragEnded(d, this);
+          })
+      );
+    });
 
     let canvas = d3.select("svg").node();
     let config = { filename: "testing" };
@@ -735,7 +764,8 @@ const mapDispatchToProps = dispatch => ({
   handleMouseMove: (coords, username) =>
     dispatch(handleMouseMove(coords, username)),
   selectPage: i => dispatch(selectPage(i)),
-  dragNode: (id, fx, fy, sticky) => dispatch(dragNode({ id, fx, fy, sticky }))
+  dragNode: (id, fx, fy, sticky) => dispatch(dragNode({ id, fx, fy, sticky })),
+  showAlertMessage: (msg, type) => dispatch(showAlertMessage(msg, type))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
