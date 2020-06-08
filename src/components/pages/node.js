@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import ReactSlider from "react-slider";
 import Slider from "../reusable/slider";
 import Button from "../reusable/button";
+import Switch from "../reusable/switch";
 import "../styles/slider.css";
 
 import {
@@ -71,7 +72,7 @@ class Node extends Component {
 
   render() {
     return (
-      <div>
+      <div className="column is-vcentered">
         <div>
           {/*{this.props.liveNodeEdit.selNodeId ? "Edit Node" : "Add new node"}*/}
         </div>
@@ -103,9 +104,8 @@ class Node extends Component {
         <hr />
         <div>custom attributes</div>
         <br />
-        <input
+        <Switch
           name="radius"
-          type="checkbox"
           checked={this.props.liveNodeEdit.checkedAttrs.includes("radius")}
           onChange={this.handleCheckboxChange.bind(this)}
         />
@@ -138,9 +138,8 @@ class Node extends Component {
           disabled={!this.props.liveNodeEdit.checkedAttrs.includes("radius")}
         />
         <br />
-        <input
+        <Switch
           name="fontSize"
-          type="checkbox"
           checked={this.props.liveNodeEdit.checkedAttrs.includes("fontSize")}
           onChange={this.handleCheckboxChange.bind(this)}
         />
@@ -155,9 +154,8 @@ class Node extends Component {
         <hr />
         <br />
         <div>category</div>
-        <input
+        <Switch
           name="category"
-          type="checkbox"
           checked={this.props.liveNodeEdit.checkedAttrs.includes("category")}
           onChange={this.handleCheckboxChange.bind(this)}
         />
@@ -178,9 +176,8 @@ class Node extends Component {
         </select>
         <br />
         <br />
-        <input
+        <Switch
           name="newCategoryName"
-          type="checkbox"
           checked={this.props.liveNodeEdit.checkedAttrs.includes(
             "newCategoryName"
           )}

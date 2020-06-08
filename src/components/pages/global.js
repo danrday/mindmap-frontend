@@ -6,7 +6,8 @@ import {
   populateInitialValues
 } from "../../redux/actions/globalEdit";
 import { saveDefaultsEdit } from "../../redux/actions/document";
-import Button from "../../components/reusable/button.js";
+import Button from "../reusable/button.js";
+import Switch from "../reusable/switch";
 
 class GlobalSettings extends Component {
   componentDidMount() {
@@ -38,18 +39,13 @@ class GlobalSettings extends Component {
         <Button click={this.save.bind(this)}>Apply changes</Button>
         <br />
         <br />
-        <label className="switch">
-          <input
-            name="chargeStrength"
-            type="checkbox"
-            checked={this.props.globalEdit.checkedAttrs.includes(
-              "chargeStrength"
-            )}
-            onChange={this.handleCheckboxChange.bind(this)}
-          />
-          <span className="slider round"></span>
-        </label>
-
+        <Switch
+          name="chargeStrength"
+          checked={this.props.globalEdit.checkedAttrs.includes(
+            "chargeStrength"
+          )}
+          onChange={this.handleCheckboxChange.bind(this)}
+        />
         <div>charge strength</div>
         <input
           disabled={
@@ -72,17 +68,11 @@ class GlobalSettings extends Component {
         />
         <br />
         <br />
-        <label className="switch">
-          <input
-            name="linkDistance"
-            type="checkbox"
-            checked={this.props.globalEdit.checkedAttrs.includes(
-              "linkDistance"
-            )}
-            onChange={this.handleCheckboxChange.bind(this)}
-          />
-          <span className="slider round"></span>
-        </label>
+        <Switch
+          name="linkDistance"
+          checked={this.props.globalEdit.checkedAttrs.includes("linkDistance")}
+          onChange={this.handleCheckboxChange.bind(this)}
+        />
         <div>link distance</div>
         <input
           disabled={
