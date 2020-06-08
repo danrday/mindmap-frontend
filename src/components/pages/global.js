@@ -6,6 +6,7 @@ import {
   populateInitialValues
 } from "../../redux/actions/globalEdit";
 import { saveDefaultsEdit } from "../../redux/actions/document";
+import Button from "../../components/reusable/button.js";
 
 class GlobalSettings extends Component {
   componentDidMount() {
@@ -34,12 +35,7 @@ class GlobalSettings extends Component {
   render() {
     return (
       <div className="column is-vcentered">
-        <button
-          className="button is-success is-rounded is-light"
-          onClick={this.save.bind(this)}
-        >
-          save
-        </button>
+        <Button click={this.save.bind(this)}>Apply changes</Button>
         <br />
         <br />
         <label className="switch">

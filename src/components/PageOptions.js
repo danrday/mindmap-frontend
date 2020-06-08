@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import navLinks from "./NavLinks";
+import Button from "./reusable/button.js";
 
 import { connect } from "react-redux";
 import {
@@ -18,24 +19,24 @@ class PageOptions extends Component {
     } else {
       return (
         <div>
-          <button onClick={this.props.openDocument}>open</button>
+          <Button click={this.props.openDocument}>Open</Button>
           <br />
-          <button
-            onClick={() => {
-              console.log("document.file", this.props.document.present.file);
-              this.props.postAction(this.props.document.present.editedFile);
-            }}
+          <br />
+          <Button
+            click={() =>
+              this.props.postAction(this.props.document.present.editedFile)
+            }
           >
-            save
-          </button>
+            Save
+          </Button>
           <br />
-          <button onClick={this.addAction}>add</button>
           <br />
-          <button
-            onClick={() => this.props.deleteAction(this.props.currSelNode)}
-          >
-            delete
-          </button>
+          <Button click={this.addAction}>Add Node</Button>
+          <br />
+          <br />
+          <Button click={() => this.props.deleteAction(this.props.currSelNode)}>
+            Delete Node
+          </Button>
         </div>
       );
     }

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import ReactSlider from "react-slider";
 import Slider from "../reusable/slider";
+import Button from "../reusable/button";
 import "../styles/slider.css";
 
 import {
@@ -74,12 +75,12 @@ class Node extends Component {
         <div>
           {/*{this.props.liveNodeEdit.selNodeId ? "Edit Node" : "Add new node"}*/}
         </div>
-        <button onClick={this.save.bind(this)}>save</button>
-        <button onClick={this.save.bind(this)}>save and unselect</button>
-        <button onClick={this.cancel.bind(this)}>cancel</button>
-        <button onClick={() => this.props.deleteAction(this.props.selNodeId)}>
-          delete
-        </button>
+        <Button click={this.save.bind(this)}>Apply</Button>
+        {/*<Button click={this.save.bind(this)}>save and unselect</Button>*/}
+        <Button click={this.cancel.bind(this)}>Cancel</Button>
+        <Button click={() => this.props.deleteAction(this.props.selNodeId)}>
+          Delete Node
+        </Button>
         <div className="navIconFrame">
           <div className="navIcon">
             <i className="icon ion-android-add-circle" />
