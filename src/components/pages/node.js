@@ -83,7 +83,7 @@ class Node extends Component {
         <Button click={() => this.props.deleteAction(this.props.selNodeId)}>
           Delete Node
         </Button>
-        <br />
+        <hr />
         <div>heading</div>
         <input
           className="input"
@@ -155,21 +155,7 @@ class Node extends Component {
           checked={this.props.liveNodeEdit.checkedAttrs.includes("category")}
           onChange={this.handleCheckboxChange.bind(this)}
         />
-        {/*<select*/}
-        {/*  onChange={e => this.props.changeSelectedCategory(e.target.value)}*/}
-        {/*  value={this.props.liveNodeEdit.category || "none"}*/}
-        {/*>*/}
-        {/*  <option key="-1" default value="none">*/}
-        {/*    (None)*/}
-        {/*  </option>*/}
-        {/*  {Object.keys(this.props.categories).map((cat, i) => {*/}
-        {/*    return (*/}
-        {/*      <option key={i} value={cat}>*/}
-        {/*        {cat}*/}
-        {/*      </option>*/}
-        {/*    );*/}
-        {/*  })}*/}
-        {/*</select>*/}
+        <br />
         <Dropdown
           onChange={cat => this.props.changeSelectedCategory(cat)}
           value={this.props.liveNodeEdit.category || "none"}

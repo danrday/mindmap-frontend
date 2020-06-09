@@ -26,10 +26,7 @@ class PageOptions extends Component {
           >
             Save
           </Button>
-          <br />
-          <br />
           <Button click={this.addAction}>Add Node</Button>
-          <br />
         </div>
       );
     }

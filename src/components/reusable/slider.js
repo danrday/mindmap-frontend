@@ -36,6 +36,7 @@ class Slider extends Component {
   render() {
     return (
       <Shell
+        style={{ margin: "10px" }}
         disabled={this.props.disabled}
         onPointerOut={this.pointerUp.bind(this)}
         onPointerUp={this.pointerUp.bind(this)}

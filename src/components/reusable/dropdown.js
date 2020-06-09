@@ -8,6 +8,7 @@ class Dropdown extends Component {
   render() {
     return (
       <div
+        style={{ margin: "10px" }}
         onClick={() => this.setState({ open: !this.state.open })}
         className={`dropdown ${this.state.open ? "is-active" : ""}`}
       >
