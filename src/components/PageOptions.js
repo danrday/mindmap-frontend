@@ -19,9 +19,6 @@ class PageOptions extends Component {
     } else {
       return (
         <div>
-          <Button click={this.props.openDocument}>Open</Button>
-          <br />
-          <br />
           <Button
             click={() =>
               this.props.postAction(this.props.document.present.editedFile)
@@ -33,10 +30,6 @@ class PageOptions extends Component {
           <br />
           <Button click={this.addAction}>Add Node</Button>
           <br />
-          <br />
-          <Button click={() => this.props.deleteAction(this.props.currSelNode)}>
-            Delete Node
-          </Button>
         </div>
       );
     }
@@ -116,10 +109,10 @@ const mapStateToProps = state => ({
   selectedPage: state.ui.selectedPage
 });
 const mapDispatchToProps = (dispatch, props) => ({
-  openDocument: () => dispatch(document(props.channel)),
+  // openDocument: () => dispatch(document(props.channel)),
   postAction: file => dispatch(postAction(file, props.channel)),
   addAction: zoomLevel => dispatch(addAction(zoomLevel)),
-  selectNode: node => dispatch(selectNode(node)),
-  deleteAction: nodeId => dispatch(deleteAction(nodeId))
+  selectNode: node => dispatch(selectNode(node))
+  // deleteAction: nodeId => dispatch(deleteAction(nodeId))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(PageOptions);

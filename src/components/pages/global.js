@@ -8,6 +8,7 @@ import {
 import { saveDefaultsEdit } from "../../redux/actions/document";
 import Button from "../reusable/button.js";
 import Switch from "../reusable/switch";
+import Dropdown from "../reusable/dropdown";
 
 class GlobalSettings extends Component {
   componentDidMount() {
@@ -89,6 +90,10 @@ class GlobalSettings extends Component {
             })
           }
         />
+
+        <br />
+        <br />
+        <Dropdown />
       </div>
     );
   }

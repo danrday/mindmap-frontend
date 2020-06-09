@@ -5,6 +5,7 @@ import Slider from "../reusable/slider";
 import Button from "../reusable/button";
 import Switch from "../reusable/switch";
 import "../styles/slider.css";
+import Dropdown from "../reusable/dropdown";
 
 import {
   editName,
@@ -82,11 +83,6 @@ class Node extends Component {
         <Button click={() => this.props.deleteAction(this.props.selNodeId)}>
           Delete Node
         </Button>
-        <div className="navIconFrame">
-          <div className="navIcon">
-            <i className="icon ion-android-add-circle" />
-          </div>
-        </div>
         <br />
         <div>heading</div>
         <input
@@ -159,21 +155,26 @@ class Node extends Component {
           checked={this.props.liveNodeEdit.checkedAttrs.includes("category")}
           onChange={this.handleCheckboxChange.bind(this)}
         />
-        <select
-          onChange={e => this.props.changeSelectedCategory(e.target.value)}
+        {/*<select*/}
+        {/*  onChange={e => this.props.changeSelectedCategory(e.target.value)}*/}
+        {/*  value={this.props.liveNodeEdit.category || "none"}*/}
+        {/*>*/}
+        {/*  <option key="-1" default value="none">*/}
+        {/*    (None)*/}
+        {/*  </option>*/}
+        {/*  {Object.keys(this.props.categories).map((cat, i) => {*/}
+        {/*    return (*/}
+        {/*      <option key={i} value={cat}>*/}
+        {/*        {cat}*/}
+        {/*      </option>*/}
+        {/*    );*/}
+        {/*  })}*/}
+        {/*</select>*/}
+        <Dropdown
+          onChange={cat => this.props.changeSelectedCategory(cat)}
           value={this.props.liveNodeEdit.category || "none"}
-        >
-          <option key="-1" default value="none">
-            (None)
-          </option>
-          {Object.keys(this.props.categories).map((cat, i) => {
-            return (
-              <option key={i} value={cat}>
-                {cat}
-              </option>
-            );
-          })}
-        </select>
+          categories={this.props.categories}
+        />
         <br />
         <br />
         <Switch

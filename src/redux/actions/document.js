@@ -59,7 +59,7 @@ export const addAction = zoomLevel => dispatch => {
   });
   dispatch({
     type: "UI_SELECT_PAGE",
-    payload: 2
+    payload: 1
   });
 };
 

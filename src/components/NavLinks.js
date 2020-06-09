@@ -14,15 +14,15 @@ const navLinks = [
       return <div {...customProps} />;
     }
   },
-  {
-    link: "/save",
-    className: "icon ion-android-archive",
-    navItemText: "",
-    component: props => {
-      const customProps = props;
-      return <div {...customProps} />;
-    }
-  },
+  // {
+  //   link: "/save",
+  //   className: "icon ion-android-archive",
+  //   navItemText: "",
+  //   component: props => {
+  //     const customProps = props;
+  //     return <div {...customProps} />;
+  //   }
+  // },
   {
     link: "/node",
     className: "icon ion-android-add-circle",
@@ -34,32 +34,32 @@ const navLinks = [
       return <Node {...customProps} />;
     }
   },
-  {
-    link: "/categories",
-    className: "icon ion-ios-albums-outline",
-    navItemText: "",
-    component: props => {
-      const customProps = props;
-      return <Categories {...customProps} />;
-    },
-    subItems: [
-      {
-        link: "/test/force1",
-        className: "icon ion-ios-home-outline",
-        navItemText: "Force 1"
-      },
-      {
-        link: "/test/force2",
-        className: "icon ion-ios-home-outline",
-        navItemText: "Force 2"
-      },
-      {
-        link: "/test/heirarchy",
-        className: "icon ion-ios-home-outline",
-        navItemText: "Hierarchy"
-      }
-    ]
-  },
+  // {
+  //   link: "/categories",
+  //   className: "icon ion-ios-albums-outline",
+  //   navItemText: "",
+  //   component: props => {
+  //     const customProps = props;
+  //     return <Categories {...customProps} />;
+  //   },
+  //   subItems: [
+  //     {
+  //       link: "/test/force1",
+  //       className: "icon ion-ios-home-outline",
+  //       navItemText: "Force 1"
+  //     },
+  //     {
+  //       link: "/test/force2",
+  //       className: "icon ion-ios-home-outline",
+  //       navItemText: "Force 2"
+  //     },
+  //     {
+  //       link: "/test/heirarchy",
+  //       className: "icon ion-ios-home-outline",
+  //       navItemText: "Hierarchy"
+  //     }
+  //   ]
+  // },
   {
     link: "/settings",
     className: "icon ion-android-globe",

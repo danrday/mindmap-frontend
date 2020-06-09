@@ -200,7 +200,7 @@ const ContextMenu = props => {
             e.props.selectNode(e.props.currSelNode);
           }
           e.props.addNodeAtCoords(e.props.coords);
-          e.props.selectPage(2);
+          e.props.selectPage(1);
         }}
       >
         <span>🔵</span>
@@ -641,7 +641,7 @@ class Node extends React.Component {
               d3.event.preventDefault();
             } else {
               this.props.handleClick(this.props.data.id);
-              this.props.selectPage(2);
+              this.props.selectPage(1);
             }
           }}
         />
