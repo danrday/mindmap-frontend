@@ -34,6 +34,7 @@ class Slider extends Component {
   }
 
   render() {
+    console.log("SLIDER PROPS", this.props);
     return (
       <Shell
         style={{ margin: "10px" }}

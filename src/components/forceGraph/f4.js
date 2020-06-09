@@ -4,7 +4,6 @@ import Graph from "./graph";
 import { Menu, Item } from "react-contexify";
 import "react-contexify/dist/ReactContexify.min.css";
 import {
-  saveAction,
   linkNode,
   handleZoom,
   dragNode,
@@ -26,9 +25,8 @@ class App extends React.Component {
    On each render we write all the tempCustomAttrs(selected live node edits)
    and also tempCategoryAttrs(selected category edits temporarily apply to all members of a category)*/
 
+    // (if file is loaded AND globalEdit populated (populateInitialValues))
     if (this.props.file && Object.keys(this.props.globalEdit).length > 0) {
-      // if file is loaded AND globalEdit populated (populateInitialValues)
-
       const liveNodeEdit = this.props.liveNodeEdit;
       let modData = this.props.file;
       const categoryEdit = this.props.categoryEdit;
@@ -52,16 +50,15 @@ class App extends React.Component {
           });
         }
 
-        if (lockedNodes[node.id]) {
-          let modNode = lockedNodes[node.id];
-          // node.name = modNode.name;
-          if (modNode.checkedAttrs.includes("category")) {
-            node.category = modNode.category;
+        let lockedNode = lockedNodes[node.id];
+        if (lockedNode) {
+          if (lockedNode.checkedAttrs.includes("category")) {
+            node.category = lockedNode.category;
           }
           // populate the temporary custom attributes being edited live
           node.tempCustomAttrs = node.tempCustomAttrs || {};
-          modNode.checkedAttrs.forEach(attr => {
-            node.tempCustomAttrs[attr] = modNode[attr];
+          lockedNode.checkedAttrs.forEach(attr => {
+            node.tempCustomAttrs[attr] = lockedNode[attr];
           });
         }
       });
@@ -72,14 +69,11 @@ class App extends React.Component {
           return n.id === liveNodeEdit.selNodeId;
         });
 
-        // if the node hasn't been deleted'
+        // if the node hasn't been deleted
         if (node !== -1) {
-          // TODO: Should be reset to previous name, restructure this
-          // modData.nodes[node].name = liveNodeEdit.name;
           if (liveNodeEdit.checkedAttrs.includes("category")) {
             modData.nodes[node].category = liveNodeEdit.category;
           }
-
           // populate the temporary custom attributes being edited live
           modData.nodes[node].tempCustomAttrs =
             modData.nodes[node].tempCustomAttrs || {};
@@ -172,7 +166,7 @@ const ContextMenu = props => {
   );
 };
 
-const mapStateToProps = (state, props) => ({
+const mapStateToProps = state => ({
   file: state.document.present.editedFile,
   currentNode: state.liveNodeEdit.selNodeId,
   lockedNodes: state.liveNodeEdit.lockedNodes,
@@ -186,7 +180,6 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = dispatch => ({
   addNodeAtCoords: coords => dispatch(addNodeAtCoords(coords)),
-  saveAction: file => dispatch(saveAction(file)),
   selectNode: node => dispatch(selectNode(node)),
   linkNode: node => dispatch(linkNode(node)),
   populateCurrentNodeValues: node => dispatch(populateCurrentNodeValues(node)),

@@ -8,6 +8,7 @@ import {
 import { saveDefaultsEdit } from "../../redux/actions/document";
 import Button from "../reusable/button.js";
 import Switch from "../reusable/switch";
+import Slider from "../reusable/slider";
 import Dropdown from "../reusable/dropdown";
 
 class GlobalSettings extends Component {
@@ -34,7 +35,24 @@ class GlobalSettings extends Component {
     this.props.saveDefaultsEdit(edits);
   }
 
+  editValue(section, key) {
+    return value => {
+      console.log("skv", { section, key, value });
+      this.props.editValue({
+        section: section,
+        key: key,
+        value: value
+      });
+    };
+  }
+
   render() {
+    let chargeStrength = this.props.globalEdit.checkedAttrs.includes(
+      "chargeStrength"
+    )
+      ? this.props.globalEdit.general.chargeStrength.customValue
+      : this.props.globalEdit.general.chargeStrength.defaultValue;
+
     return (
       <div className="column is-vcentered">
         <Button click={this.save.bind(this)}>Apply changes</Button>
@@ -54,17 +72,33 @@ class GlobalSettings extends Component {
           }
           type="number"
           className="input"
-          value={
-            this.props.globalEdit.checkedAttrs.includes("chargeStrength")
-              ? this.props.globalEdit.general.chargeStrength.customValue
-              : this.props.globalEdit.general.chargeStrength.defaultValue
-          }
+          value={chargeStrength}
           onChange={event =>
             this.props.editValue({
               section: "general",
               key: "chargeStrength",
               value: event.target.value
             })
+          }
+        />
+        <Slider
+          sliderVal={chargeStrength}
+          sliderMin={-9000000}
+          sliderMax={
+            this.props.globalEdit.controls.chargeStrengthRangeMax.customValue ||
+            this.props.globalEdit.controls.chargeStrengthRangeMax.defaultValue
+          }
+          selNodeId={null}
+          editRadius={this.editValue("general", "chargeStrength")}
+          updateSliderRangeMax={v =>
+            this.props.editValue({
+              section: "general",
+              key: "chargeStrengthRangeMax",
+              value: v
+            })
+          }
+          disabled={
+            !this.props.globalEdit.checkedAttrs.includes("chargeStrength")
           }
         />
         <br />
@@ -101,7 +135,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  editValue: keyAndValue => dispatch(editValue(keyAndValue)),
+  editValue: sectionKeyAndValue => dispatch(editValue(sectionKeyAndValue)),
   handleCheckboxChange: checkedAttrs =>
     dispatch(handleCheckboxChange(checkedAttrs)),
   populateInitialValues: defaults => dispatch(populateInitialValues(defaults)),
