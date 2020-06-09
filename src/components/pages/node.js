@@ -79,7 +79,7 @@ class Node extends Component {
         </div>
         <Button click={this.save.bind(this)}>Apply</Button>
         {/*<Button click={this.save.bind(this)}>save and unselect</Button>*/}
-        <Button click={this.cancel.bind(this)}>Cancel</Button>
+        {/*<Button click={this.cancel.bind(this)}>Cancel</Button>*/}
         <Button click={() => this.props.deleteAction(this.props.selNodeId)}>
           Delete Node
         </Button>
@@ -161,7 +161,7 @@ class Node extends Component {
           value={this.props.liveNodeEdit.category || "none"}
           categories={this.props.categories}
         />
-        <br />
+        <br />`
         <br />
         <Switch
           name="newCategoryName"
