@@ -90,10 +90,6 @@ class GlobalSettings extends Component {
             })
           }
         />
-
-        <br />
-        <br />
-        <Dropdown />
       </div>
     );
   }
