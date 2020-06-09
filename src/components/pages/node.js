@@ -147,6 +147,24 @@ class Node extends Component {
           value={this.props.liveNodeEdit.fontSize || ""}
           onChange={event => this.props.editFontSize(event.target.value)}
         />
+        <Slider
+          sliderVal={this.props.liveNodeEdit.fontSize}
+          sliderMin={0}
+          sliderMax={
+            this.props.globalEdit.controls.fontSizeRangeMax.customValue ||
+            this.props.globalEdit.controls.fontSizeRangeMax.defaultValue
+          }
+          selNodeId={this.props.selNodeId}
+          editRadius={this.props.editFontSize}
+          updateSliderRangeMax={v =>
+            this.props.editValue({
+              section: "controls",
+              key: "fontSizeRangeMax",
+              value: v
+            })
+          }
+          disabled={!this.props.liveNodeEdit.checkedAttrs.includes("fontSize")}
+        />
         <hr />
         <br />
         <div>category</div>

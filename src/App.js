@@ -5,7 +5,7 @@ import { hideAlertMessage } from "./redux/actions/ui";
 import { dispatchMsg } from "./redux/actions/channel";
 import { getUser } from "./redux/actions/user";
 import Shell from "./components/Shell";
-import F4 from "./components/pages/f4";
+import F4 from "./components/forceGraph/f4";
 import { withAlert } from "react-alert";
 
 class App extends Component {
