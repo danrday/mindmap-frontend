@@ -85,17 +85,26 @@ class GlobalSettings extends Component {
           updateMinRange={true}
           updateMaxRange={true}
           sliderVal={chargeStrength}
-          sliderMin={-9000000}
+          sliderMin={
+            this.props.globalEdit.controls.chargeStrengthRangeMin.customValue ||
+            this.props.globalEdit.controls.chargeStrengthRangeMin.defaultValue
+          }
           sliderMax={
             this.props.globalEdit.controls.chargeStrengthRangeMax.customValue ||
             this.props.globalEdit.controls.chargeStrengthRangeMax.defaultValue
           }
-          selNodeId={null}
-          editRadius={this.editValue("general", "chargeStrength")}
+          editValue={this.editValue("general", "chargeStrength")}
           updateSliderRangeMax={v =>
             this.props.editValue({
               section: "controls",
               key: "chargeStrengthRangeMax",
+              value: v
+            })
+          }
+          updateSliderRangeMin={v =>
+            this.props.editValue({
+              section: "controls",
+              key: "chargeStrengthRangeMin",
               value: v
             })
           }
