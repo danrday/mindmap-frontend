@@ -3,6 +3,25 @@ import ReactSlider from "react-slider";
 import "../styles/slider.css";
 import styled from "styled-components";
 
+const Test = props => {
+  if (props.open) {
+    return (
+      <div>
+        Update {props.valueType}
+        <input
+          disabled={false}
+          type="number"
+          className="input"
+          value={4}
+          onChange={() => {}}
+        />
+      </div>
+    );
+  } else {
+    return <div style={{ display: "none" }} />;
+  }
+};
+
 class Slider extends Component {
   state = {
     sliderVal: 20,
@@ -15,7 +34,7 @@ class Slider extends Component {
     const sliderMax = this.props.sliderMax;
     const sliderVal = this.props.sliderVal;
 
-    if (sliderMax === sliderVal) {
+    if (sliderMax === sliderVal && this.props.updateMaxRange) {
       this.props.editRadius(sliderVal + 1);
       this.props.updateSliderRangeMax(sliderMax + 1);
     }
@@ -53,6 +72,10 @@ class Slider extends Component {
           value={this.props.sliderVal}
           min={this.props.sliderMin}
           max={this.props.sliderMax}
+        />
+        <Test
+          open={this.props.sliderMax <= this.props.sliderVal + 2}
+          valueType={"range max"}
         />
       </Shell>
     );

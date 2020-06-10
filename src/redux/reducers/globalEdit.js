@@ -6,7 +6,7 @@ export default (state = initialState, action) => {
       const defaults = action.payload;
 
       const controls = {
-        chargeStrengthRangeMax: { customValue: null, defaultValue: 5000 }
+        // chargeStrengthRangeMax: { customValue: null, defaultValue: 5000 }
       };
 
       defaults.controls = Object.assign(controls, defaults.controls);

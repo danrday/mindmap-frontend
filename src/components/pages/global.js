@@ -82,6 +82,8 @@ class GlobalSettings extends Component {
           }
         />
         <Slider
+          updateMinRange={true}
+          updateMaxRange={true}
           sliderVal={chargeStrength}
           sliderMin={-9000000}
           sliderMax={
@@ -92,7 +94,7 @@ class GlobalSettings extends Component {
           editRadius={this.editValue("general", "chargeStrength")}
           updateSliderRangeMax={v =>
             this.props.editValue({
-              section: "general",
+              section: "controls",
               key: "chargeStrengthRangeMax",
               value: v
             })
