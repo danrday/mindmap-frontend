@@ -7,8 +7,8 @@ import Link from "./link";
 
 function returnGlobalSetting(setting, section, globalSettings) {
   return globalSettings.checkedAttrs.includes(setting)
-    ? globalSettings[section].chargeStrength.customValue
-    : globalSettings[section].chargeStrength.defaultValue;
+    ? globalSettings[section][setting].customValue
+    : globalSettings[section][setting].defaultValue;
 }
 const color = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -38,11 +38,18 @@ class Graph extends React.Component {
       "general",
       this.props.globalSettings
     );
-    const dist = this.props.globalSettings.linkDistance;
+    const dist = returnGlobalSetting(
+      "linkDistance",
+      "general",
+      this.props.globalSettings
+    );
+
+    console.log("DIST", dist);
+
     window.force
       .nodes(this.props.data.nodes) //if a node is updated, we need it to point to the new object
       .force("charge", d3.forceManyBody().strength(charge || -60))
-      .force("link", d3.forceLink(this.props.data.links))
+      .force("link", d3.forceLink(this.props.data.links).distance(dist))
       .alphaTarget(0.5)
       .velocityDecay(0.7)
       .restart();
