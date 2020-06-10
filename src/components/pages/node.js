@@ -100,13 +100,14 @@ class Node extends Component {
         <hr />
         <div>custom attributes</div>
         <br />
+        <div>radius</div>
         <Switch
           name="radius"
           checked={this.props.liveNodeEdit.checkedAttrs.includes("radius")}
           onChange={this.handleCheckboxChange.bind(this)}
         />
-        <div>radius</div>
         <input
+          style={{ display: "inline-block", width: "50%" }}
           className="input"
           disabled={!this.props.liveNodeEdit.checkedAttrs.includes("radius")}
           type="number"
@@ -134,13 +135,14 @@ class Node extends Component {
           disabled={!this.props.liveNodeEdit.checkedAttrs.includes("radius")}
         />
         <br />
+        <div>font size</div>
         <Switch
           name="fontSize"
           checked={this.props.liveNodeEdit.checkedAttrs.includes("fontSize")}
           onChange={this.handleCheckboxChange.bind(this)}
         />
-        <div>font size</div>
         <input
+          style={{ display: "inline-block", width: "50%" }}
           className="input"
           disabled={!this.props.liveNodeEdit.checkedAttrs.includes("fontSize")}
           type="number"

@@ -53,6 +53,12 @@ class GlobalSettings extends Component {
       ? this.props.globalEdit.general.chargeStrength.customValue
       : this.props.globalEdit.general.chargeStrength.defaultValue;
 
+    let linkDistance = this.props.globalEdit.checkedAttrs.includes(
+      "chargeStrength"
+    )
+      ? this.props.globalEdit.general.linkDistance.customValue
+      : this.props.globalEdit.general.linkDistance.defaultValue;
+
     return (
       <div className="column is-vcentered">
         <Button click={this.save.bind(this)}>Apply changes</Button>
@@ -126,13 +132,33 @@ class GlobalSettings extends Component {
           }
           type="number"
           className="input"
-          value={this.props.globalEdit.linkDistance || ""}
+          value={linkDistance}
           onChange={event =>
             this.props.editValue({
-              section: "general",
+              section: "controls",
               key: "linkDistance",
               value: event.target.value
             })
+          }
+        />
+        <Slider
+          updateMinRange={false}
+          updateMaxRange={true}
+          sliderVal={linkDistance}
+          sliderMax={
+            this.props.globalEdit.controls.linkDistanceRangeMax.customValue ||
+            this.props.globalEdit.controls.linkDistanceRangeMax.defaultValue
+          }
+          editValue={this.editValue("general", "linkDistance")}
+          updateSliderRangeMax={v =>
+            this.props.editValue({
+              section: "controls",
+              key: "linkDistanceRangeMax",
+              value: v
+            })
+          }
+          disabled={
+            !this.props.globalEdit.checkedAttrs.includes("chargeStrength")
           }
         />
       </div>

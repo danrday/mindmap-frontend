@@ -76,41 +76,45 @@ class Slider extends Component {
         onPointerUp={this.pointerUp.bind(this)}
         onPointerDown={this.repeat.bind(this)}
       >
-        <ReactSlider
-          disabled={this.props.disabled}
-          className="horizontal-slider"
-          thumbClassName="example-thumb"
-          trackClassName="example-track"
-          renderThumb={(props, state) => <div {...props}>{state.valueNow}</div>}
-          onChange={val => this.props.editValue(val)}
-          value={this.props.sliderVal}
-          min={this.props.sliderMin}
-          max={this.props.sliderMax}
-        />
-        <UpdateRange
-          setState={() => this.setState({ maxRangeEditOpen: true })}
-          setStateOff={() => this.setState({ maxRangeEditOpen: false })}
-          value={this.props.sliderMax}
-          updateValue={this.props.updateSliderRangeMax}
-          open={
-            this.props.updateMaxRange &&
-            (this.state.maxRangeEditOpen === true ||
-              this.props.sliderMax <= this.props.sliderVal + 2)
-          }
-          valueType={"range max"}
-        />
-        <UpdateRange
-          setState={() => this.setState({ minRangeEditOpen: true })}
-          setStateOff={() => this.setState({ minRangeEditOpen: false })}
-          value={this.props.sliderMin}
-          updateValue={this.props.updateSliderRangeMin}
-          open={
-            this.props.updateMinRange &&
-            (this.state.minRangeEditOpen === true ||
-              this.props.sliderMin >= this.props.sliderVal - 2)
-          }
-          valueType={"range min"}
-        />
+        <div style={{ display: this.props.disabled ? "none" : "block" }}>
+          <ReactSlider
+            disabled={this.props.disabled}
+            className="horizontal-slider"
+            thumbClassName="example-thumb"
+            trackClassName="example-track"
+            renderThumb={(props, state) => (
+              <div {...props}>{state.valueNow}</div>
+            )}
+            onChange={val => this.props.editValue(val)}
+            value={this.props.sliderVal}
+            min={this.props.sliderMin}
+            max={this.props.sliderMax}
+          />
+          <UpdateRange
+            setState={() => this.setState({ maxRangeEditOpen: true })}
+            setStateOff={() => this.setState({ maxRangeEditOpen: false })}
+            value={this.props.sliderMax}
+            updateValue={this.props.updateSliderRangeMax}
+            open={
+              this.props.updateMaxRange &&
+              (this.state.maxRangeEditOpen === true ||
+                this.props.sliderMax <= this.props.sliderVal + 2)
+            }
+            valueType={"range max"}
+          />
+          <UpdateRange
+            setState={() => this.setState({ minRangeEditOpen: true })}
+            setStateOff={() => this.setState({ minRangeEditOpen: false })}
+            value={this.props.sliderMin}
+            updateValue={this.props.updateSliderRangeMin}
+            open={
+              this.props.updateMinRange &&
+              (this.state.minRangeEditOpen === true ||
+                this.props.sliderMin >= this.props.sliderVal - 2)
+            }
+            valueType={"range min"}
+          />
+        </div>
       </Shell>
     );
   }
