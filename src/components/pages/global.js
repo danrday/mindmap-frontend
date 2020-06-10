@@ -54,7 +54,7 @@ class GlobalSettings extends Component {
       : this.props.globalEdit.general.chargeStrength.defaultValue;
 
     let linkDistance = this.props.globalEdit.checkedAttrs.includes(
-      "chargeStrength"
+      "linkDistance"
     )
       ? this.props.globalEdit.general.linkDistance.customValue
       : this.props.globalEdit.general.linkDistance.defaultValue;
@@ -64,6 +64,8 @@ class GlobalSettings extends Component {
         <Button click={this.save.bind(this)}>Apply changes</Button>
         <br />
         <br />
+        <div>charge strength</div>
+
         <Switch
           name="chargeStrength"
           checked={this.props.globalEdit.checkedAttrs.includes(
@@ -71,8 +73,8 @@ class GlobalSettings extends Component {
           )}
           onChange={this.handleCheckboxChange.bind(this)}
         />
-        <div>charge strength</div>
         <input
+          style={{ display: "inline-block", width: "50%" }}
           disabled={
             !this.props.globalEdit.checkedAttrs.includes("chargeStrength")
           }
@@ -120,13 +122,15 @@ class GlobalSettings extends Component {
         />
         <br />
         <br />
+        <div>link distance</div>
+
         <Switch
           name="linkDistance"
           checked={this.props.globalEdit.checkedAttrs.includes("linkDistance")}
           onChange={this.handleCheckboxChange.bind(this)}
         />
-        <div>link distance</div>
         <input
+          style={{ display: "inline-block", width: "50%" }}
           disabled={
             !this.props.globalEdit.checkedAttrs.includes("linkDistance")
           }
@@ -135,7 +139,7 @@ class GlobalSettings extends Component {
           value={linkDistance}
           onChange={event =>
             this.props.editValue({
-              section: "controls",
+              section: "general",
               key: "linkDistance",
               value: event.target.value
             })
@@ -158,7 +162,7 @@ class GlobalSettings extends Component {
             })
           }
           disabled={
-            !this.props.globalEdit.checkedAttrs.includes("chargeStrength")
+            !this.props.globalEdit.checkedAttrs.includes("linkDistance")
           }
         />
       </div>
