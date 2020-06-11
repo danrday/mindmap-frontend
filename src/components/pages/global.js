@@ -74,7 +74,7 @@ class GlobalSettings extends Component {
           onChange={this.handleCheckboxChange.bind(this)}
         />
         <input
-          style={{ display: "inline-block", width: "50%" }}
+          style={{ display: "inline-block", width: "60%" }}
           disabled={
             !this.props.globalEdit.checkedAttrs.includes("chargeStrength")
           }
@@ -130,7 +130,7 @@ class GlobalSettings extends Component {
           onChange={this.handleCheckboxChange.bind(this)}
         />
         <input
-          style={{ display: "inline-block", width: "50%" }}
+          style={{ display: "inline-block", width: "60%" }}
           disabled={
             !this.props.globalEdit.checkedAttrs.includes("linkDistance")
           }

@@ -1,36 +1,59 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import {
-  editValue,
-  handleCheckboxChange,
-  populateInitialValues
-} from "../../redux/actions/globalEdit";
-import { saveDefaultsEdit } from "../../redux/actions/document";
 import ReactQuill from "react-quill";
-import styled from "styled-components"; // ES6
+import styled from "styled-components";
+import Button from "../reusable/button"; // ES6
+import { saveTextFile } from "../../redux/actions/document";
 
 class RichText extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { text: "" }; // You can also pass a Quill Delta here
-    this.handleChange = this.handleChange.bind(this);
-  }
+  state = {
+    text: ""
+  };
 
   handleChange(value) {
     this.setState({ text: value });
   }
 
+  componentDidMount() {
+    console.log("MOUNTED RICH TEXT", this.props);
+    const currId = this.props.selNodeId ? this.props.selNodeId : "main";
+    const currText = this.props.texts[currId] ? this.props.texts[currId] : "";
+
+    this.setState({ text: currText });
+  }
+
+  save() {
+    let text = this.state.text;
+    let selNodeId = this.props.selNodeId;
+    console.log("HMMM", this.props);
+
+    let payload = { text, selNodeId };
+
+    this.props.saveTextFile(payload);
+  }
+
   render() {
-    return <ReactQuill value={this.state.text} onChange={this.handleChange} />;
+    return (
+      <div>
+        <Button click={this.save.bind(this)}>Apply changes</Button>
+        <ReactQuill
+          value={this.state.text}
+          onChange={this.handleChange.bind(this)}
+        />
+      </div>
+    );
   }
 }
 
 const mapStateToProps = state => ({
+  selNodeId: state.liveNodeEdit.selNodeId,
+  texts: state.document.present.editedFile.text
   // globalEdit: state.globalEdit,
   // globalSettings: state.document.editedFile.globalSettings
 });
 
 const mapDispatchToProps = dispatch => ({
+  saveTextFile: textAndNodeId => dispatch(saveTextFile(textAndNodeId))
   // editValue: keyAndValue => dispatch(editValue(keyAndValue)),
   // handleCheckboxChange: checkedAttrs => dispatch(handleCheckboxChange(checkedAttrs)),
   // populateInitialValues: (defaults) => dispatch(populateInitialValues(defaults)),

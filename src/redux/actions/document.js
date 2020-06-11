@@ -8,14 +8,17 @@ export const dragNode = msg => dispatch => {
   });
 };
 
+export const saveTextFile = ({ text, selNodeId }) => dispatch => {
+  dispatch({
+    type: "document/SAVE_TEXT_FILE",
+    payload: { text, selNodeId }
+  });
+};
+
 export const document = channel => dispatch => {
   channel
     .push("get_file")
     .receive("ok", msg => {
-      dispatch({
-        type: "file/UPDATE_FILE",
-        payload: msg.file
-      });
       dispatch({
         type: "file/FETCH_FILE_RECEIVED",
         payload: msg.file

@@ -1,5 +1,4 @@
 const initialState = {
-  file: null,
   fetching: false,
   error: null,
   editedFile: null
@@ -37,9 +36,11 @@ export default (state = initialState, action) => {
       return { ...state, editedFile: updatedFile };
     }
     case "file/FETCH_FILE_RECEIVED":
+      action.payload.text = {};
+
       return {
         ...state,
-        file: action.payload,
+        // file: action.payload,
         editedFile: action.payload,
         fetching: false
       };
@@ -325,6 +326,14 @@ export default (state = initialState, action) => {
       };
     case "file/POST_FILE_ERROR":
       return { ...state, error: action.payload, fetching: false };
+    case "document/SAVE_TEXT_FILE":
+      console.log("ACTION PAYLOAD", action.payload);
+      const nodeId = action.payload.selNodeId
+        ? action.payload.selNodeId
+        : "main";
+      const newText = Object.assign({}, state.editedFile.text);
+      newText[nodeId] = action.payload.text;
+      return { ...state, editedFile: { ...state.editedFile, text: newText } };
     default:
       return state;
   }
