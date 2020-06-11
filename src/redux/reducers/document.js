@@ -35,15 +35,19 @@ export default (state = initialState, action) => {
 
       return { ...state, editedFile: updatedFile };
     }
-    case "file/FETCH_FILE_RECEIVED":
-      action.payload.text = {};
+    case "file/FETCH_FILE_RECEIVED": {
+      let defaults = {
+        text: {}
+      };
+
+      let edited = Object.assign(defaults, action.payload);
 
       return {
         ...state,
-        // file: action.payload,
-        editedFile: action.payload,
+        editedFile: edited,
         fetching: false
       };
+    }
     case "HANDLE_ZOOM":
       let gSettings = state.editedFile.globalSettings || {};
 

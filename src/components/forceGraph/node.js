@@ -31,7 +31,7 @@ class Node extends React.Component {
               d3.event.preventDefault();
             } else {
               this.props.handleClick(this.props.data.id);
-              this.props.selectPage(1);
+              this.props.selectPage(3);
             }
           }}
         />
