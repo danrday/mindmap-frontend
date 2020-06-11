@@ -31,6 +31,9 @@ class Header extends Component {
 }
 
 const StyledHeader = styled.div`
+  @media (max-width: 768px) {
+    display: none;
+  }
   height: 60px;
   width: 100%;
   top: 0;

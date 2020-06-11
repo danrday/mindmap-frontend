@@ -56,7 +56,7 @@ class PageOptions extends Component {
 }
 const Test = styled.div`
   @media (max-width: 768px) {
-    height: calc(25vh);
+    height: calc(35vh);
     width: 100%;
   }
   display: relative;
