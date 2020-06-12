@@ -77,6 +77,24 @@ const navLinks = [
       const customProps = props;
       return <RichText {...customProps} />;
     }
+  },
+  {
+    link: "/save",
+    className: "icon ion-disc",
+    navItemText: "",
+    component: props => {
+      const customProps = props;
+      return <div {...customProps} />;
+    }
+  },
+  {
+    link: "/share",
+    className: "icon ion-android-share-alt",
+    navItemText: "",
+    component: props => {
+      const customProps = props;
+      return <div {...customProps} />;
+    }
   }
   // {
   //   link: "/settings",
