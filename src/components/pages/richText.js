@@ -21,9 +21,13 @@ class RichText extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    const currId = this.props.selNodeId ? this.props.selNodeId : "main";
+    const currText = this.props.texts[currId] ? this.props.texts[currId] : "";
+
     if (prevProps.selNodeId !== this.props.selNodeId) {
-      const currId = this.props.selNodeId ? this.props.selNodeId : "main";
-      const currText = this.props.texts[currId] ? this.props.texts[currId] : "";
+      this.setState({ text: currText });
+    } else if (prevProps.texts[currId] !== this.props.texts[currId]) {
+      // this is for the case of undo action
       this.setState({ text: currText });
     }
   }
