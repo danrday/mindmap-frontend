@@ -14,6 +14,15 @@ const navLinks = [
       return <div {...customProps} />;
     }
   },
+  {
+    link: "/save",
+    className: "icon ion-disc",
+    navItemText: "",
+    component: props => {
+      const customProps = props;
+      return <div {...customProps} />;
+    }
+  },
   // {
   //   link: "/save",
   //   className: "icon ion-android-archive",
@@ -61,15 +70,6 @@ const navLinks = [
   //   ]
   // },
   {
-    link: "/settings",
-    className: "icon ion-android-globe",
-    navItemText: "",
-    component: props => {
-      const customProps = props;
-      return <GlobalSettings {...customProps} />;
-    }
-  },
-  {
     link: "/richText",
     className: "icon ion-ios-book-outline",
     navItemText: "",
@@ -79,12 +79,12 @@ const navLinks = [
     }
   },
   {
-    link: "/save",
-    className: "icon ion-disc",
+    link: "/settings",
+    className: "icon ion-android-globe",
     navItemText: "",
     component: props => {
       const customProps = props;
-      return <div {...customProps} />;
+      return <GlobalSettings {...customProps} />;
     }
   },
   {

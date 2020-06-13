@@ -84,20 +84,20 @@ class Node extends Component {
           Delete Node
         </Button>
         <hr />
-        <div>heading</div>
-        <input
-          className="input"
-          type="text"
-          value={
-            this.props.liveNodeEdit.name ||
-            this.props.globalEdit.node.name.defaultValue
-          }
-          onChange={event =>
-            this.props.editName(event.target.value, this.props.selNodeId)
-          }
-        />
-        <br /> <br />
-        <hr />
+        {/*<div>heading</div>*/}
+        {/*<input*/}
+        {/*  className="input"*/}
+        {/*  type="text"*/}
+        {/*  value={*/}
+        {/*    this.props.liveNodeEdit.name ||*/}
+        {/*    this.props.globalEdit.node.name.defaultValue*/}
+        {/*  }*/}
+        {/*  onChange={event =>*/}
+        {/*    this.props.editName(event.target.value, this.props.selNodeId)*/}
+        {/*  }*/}
+        {/*/>*/}
+        {/*<br /> <br />*/}
+        {/*<hr />*/}
         <div>custom attributes</div>
         <br />
         <div>radius</div>

@@ -1,15 +1,16 @@
 const initialState = {
   fetching: false,
   error: null,
-  editedFile: null
+  editedFile: null,
+  loaded: false
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case "file/FETCH_FILE_ERROR":
       return { ...state, error: action.payload, fetching: false };
-    case "file/UPDATE_FILE":
-      return { ...state, file: action.payload };
+    // case "file/UPDATE_FILE":
+    //   return { ...state, file: action.payload };
     case "file/FETCH_FILE":
       return { ...state, fetching: true };
     case "DELETE_ACTION": {
@@ -45,7 +46,8 @@ export default (state = initialState, action) => {
       return {
         ...state,
         editedFile: edited,
-        fetching: false
+        fetching: false,
+        loaded: true
       };
     }
     case "HANDLE_ZOOM":
@@ -253,33 +255,6 @@ export default (state = initialState, action) => {
         ...state,
         editedFile: editedFile
       };
-    // case "SELECT_NODE":
-    //   let value = null;
-    //   if (action.payload === state.currentNode) {
-    //     value = null;
-    //   } else {
-    //     value = action.payload;
-    //   }
-    //
-    //   return {
-    //     ...state,
-    //     currentNode: value
-    //   };
-    // case "LOCK_NODE":
-    //   const newLockedNodes = Object.assign({}, state.lockedNodes);
-    //   const lockedNode = Object.keys(newLockedNodes).findIndex(
-    //     n => n === action.payload
-    //   );
-    //   if (lockedNode === -1) {
-    //     newLockedNodes[action.payload] = {};
-    //   } else {
-    //     delete newLockedNodes[action.payload];
-    //   }
-    //   console.log("WTF", action.payload);
-    //   return {
-    //     ...state,
-    //     lockedNodes: newLockedNodes
-    //   };
     case "SELECT_AND_LINK_NODE":
       // get full node object by id
       const lastNode = state.editedFile.nodes.find(e => {

@@ -1,17 +1,18 @@
-const initialState = {};
+const initialState = {
+  controls: {
+    chargeStrengthRangeMax: { customValue: null, defaultValue: 5000 },
+    chargeStrengthRangeMin: { customValue: null, defaultValue: -5000 },
+    linkDistanceRangeMax: { customValue: null, defaultValue: 5000 }
+  },
+  loaded: false
+};
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case "globalEdit/POPULATE_INITIAL_VALUES": {
       const defaults = action.payload;
-
-      const controls = {
-        chargeStrengthRangeMax: { customValue: null, defaultValue: 5000 },
-        chargeStrengthRangeMin: { customValue: null, defaultValue: -5000 },
-        linkDistanceRangeMax: { customValue: null, defaultValue: 5000 }
-      };
-
-      defaults.controls = Object.assign(controls, defaults.controls);
+      defaults.controls = Object.assign(state.controls, defaults.controls);
+      defaults.loaded = true;
 
       return { ...state, ...defaults };
     }

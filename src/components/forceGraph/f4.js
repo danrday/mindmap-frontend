@@ -26,7 +26,7 @@ class App extends React.Component {
    and also tempCategoryAttrs(selected category edits temporarily apply to all members of a category)*/
 
     // (if file is loaded AND globalEdit populated (populateInitialValues))
-    if (this.props.file && Object.keys(this.props.globalEdit).length > 0) {
+    if (this.props.loaded && this.props.globalEdit.loaded) {
       const liveNodeEdit = this.props.liveNodeEdit;
       let modData = this.props.file;
       const categoryEdit = this.props.categoryEdit;
@@ -152,7 +152,7 @@ const ContextMenu = props => {
             e.props.selectNode(e.props.currSelNode);
           }
           e.props.addNodeAtCoords(e.props.coords);
-          e.props.selectPage(1);
+          e.props.selectPage(3);
         }}
       >
         <span>🔵</span>
@@ -167,6 +167,7 @@ const ContextMenu = props => {
 };
 
 const mapStateToProps = state => ({
+  loaded: state.document.present.loaded,
   file: state.document.present.editedFile,
   currentNode: state.liveNodeEdit.selNodeId,
   lockedNodes: state.liveNodeEdit.lockedNodes,
