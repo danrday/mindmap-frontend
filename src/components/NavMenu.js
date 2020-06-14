@@ -40,6 +40,10 @@ class NavMenu extends Component {
                 onClick={() => {
                   if (isLocked) {
                     alert("Another user is editing the global settings.");
+                  } else if (item.link === "/save") {
+                    this.props.postAction(
+                      this.props.document.present.editedFile
+                    );
                   } else {
                     this.handleSelected(i);
                   }

@@ -21,7 +21,8 @@ export default (state = initialState, action) => {
 
       return {
         ...state,
-        selNodeId: value
+        selNodeId: value,
+        checkedAttrs: [] //clear all live edit values, otherwise component updates referencing previous settings
       };
     case "liveNodeEdit/POPULATE_CURRENT_NODE_VALUES": {
       console.log("populateCurrentNodeValues", action.payload);

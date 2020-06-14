@@ -23,7 +23,7 @@ class Header extends Component {
         <div onClick={this.props.undo}>UNDO</div>
 
         <div className="projectTitle">
-          <h4 style={{ color: "#d1e8e3" }}>Plan Atlas</h4>
+          <h4 style={{ color: "#d1e8e3" }}>Loosenote</h4>
         </div>
       </StyledHeader>
     );
@@ -31,6 +31,9 @@ class Header extends Component {
 }
 
 const StyledHeader = styled.div`
+  @media (max-width: 768px) {
+    display: none;
+  }
   height: 60px;
   width: 100%;
   top: 0;

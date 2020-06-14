@@ -1,5 +1,6 @@
 import React from "react";
 import Node from "./pages/node";
+import Link from "./pages/link";
 import Categories from "./pages/categories";
 import GlobalSettings from "./pages/global";
 import RichText from "./pages/richText";
@@ -16,13 +17,22 @@ const navLinks = [
   },
   {
     link: "/save",
-    className: "icon ion-android-archive",
+    className: "icon ion-disc",
     navItemText: "",
     component: props => {
       const customProps = props;
       return <div {...customProps} />;
     }
   },
+  // {
+  //   link: "/save",
+  //   className: "icon ion-android-archive",
+  //   navItemText: "",
+  //   component: props => {
+  //     const customProps = props;
+  //     return <div {...customProps} />;
+  //   }
+  // },
   {
     link: "/node",
     className: "icon ion-android-add-circle",
@@ -34,31 +44,40 @@ const navLinks = [
       return <Node {...customProps} />;
     }
   },
+  // {
+  //   link: "/categories",
+  //   className: "icon ion-ios-albums-outline",
+  //   navItemText: "",
+  //   component: props => {
+  //     const customProps = props;
+  //     return <Categories {...customProps} />;
+  //   },
+  //   subItems: [
+  //     {
+  //       link: "/test/force1",
+  //       className: "icon ion-ios-home-outline",
+  //       navItemText: "Force 1"
+  //     },
+  //     {
+  //       link: "/test/force2",
+  //       className: "icon ion-ios-home-outline",
+  //       navItemText: "Force 2"
+  //     },
+  //     {
+  //       link: "/test/heirarchy",
+  //       className: "icon ion-ios-home-outline",
+  //       navItemText: "Hierarchy"
+  //     }
+  //   ]
+  // },
   {
-    link: "/categories",
-    className: "icon ion-ios-albums-outline",
+    link: "/richText",
+    className: "icon ion-ios-book-outline",
     navItemText: "",
     component: props => {
       const customProps = props;
-      return <Categories {...customProps} />;
-    },
-    subItems: [
-      {
-        link: "/test/force1",
-        className: "icon ion-ios-home-outline",
-        navItemText: "Force 1"
-      },
-      {
-        link: "/test/force2",
-        className: "icon ion-ios-home-outline",
-        navItemText: "Force 2"
-      },
-      {
-        link: "/test/heirarchy",
-        className: "icon ion-ios-home-outline",
-        navItemText: "Hierarchy"
-      }
-    ]
+      return <RichText {...customProps} />;
+    }
   },
   {
     link: "/settings",
@@ -69,13 +88,22 @@ const navLinks = [
       return <GlobalSettings {...customProps} />;
     }
   },
+  // {
+  //   link: "/share",
+  //   className: "icon ion-android-share-alt",
+  //   navItemText: "",
+  //   component: props => {
+  //     const customProps = props;
+  //     return <div {...customProps} />;
+  //   }
+  // },
   {
-    link: "/richText",
-    className: "icon ion-ios-book-outline",
+    link: "/link",
+    className: "icon ion-android-share-alt",
     navItemText: "",
     component: props => {
       const customProps = props;
-      return <RichText {...customProps} />;
+      return <Link {...customProps} />;
     }
   }
   // {

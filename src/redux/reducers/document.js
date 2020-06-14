@@ -1,16 +1,33 @@
+import uuidv4 from "uuid/v4";
+
 const initialState = {
-  file: null,
   fetching: false,
   error: null,
-  editedFile: null
+  editedFile: {
+    globalSettings: {
+      text: {},
+      defaults: {
+        linkThickness: 5,
+        bgColor: "powderblue",
+        fontSize: 30,
+        goToEditNodePageWhenNodeIsClicked: true,
+        linkDistance: 300,
+        nodeColor: "blue",
+        nodeHoverColor: "green",
+        radius: 30,
+        sideMenuOpenOnInit: true
+      }
+    }
+  },
+  loaded: false
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case "file/FETCH_FILE_ERROR":
       return { ...state, error: action.payload, fetching: false };
-    case "file/UPDATE_FILE":
-      return { ...state, file: action.payload };
+    // case "file/UPDATE_FILE":
+    //   return { ...state, file: action.payload };
     case "file/FETCH_FILE":
       return { ...state, fetching: true };
     case "DELETE_ACTION": {
@@ -36,13 +53,26 @@ export default (state = initialState, action) => {
 
       return { ...state, editedFile: updatedFile };
     }
-    case "file/FETCH_FILE_RECEIVED":
+    case "file/FETCH_FILE_RECEIVED": {
+      let payload = action.payload;
+
+      payload.globalSettings.defaults = Object.assign(
+        state.editedFile.globalSettings.defaults,
+        payload.globalSettings.defaults
+      );
+
+      let defaults = {
+        text: {}
+      };
+      let edited = Object.assign(defaults, payload);
+
       return {
         ...state,
-        file: action.payload,
-        editedFile: action.payload,
-        fetching: false
+        editedFile: edited,
+        fetching: false,
+        loaded: true
       };
+    }
     case "HANDLE_ZOOM":
       let gSettings = state.editedFile.globalSettings || {};
 
@@ -105,6 +135,7 @@ export default (state = initialState, action) => {
 
       edited.nodes[currSelNodeIndex].fx = action.payload.fx;
       edited.nodes[currSelNodeIndex].fy = action.payload.fy;
+      edited.nodes[currSelNodeIndex].sticky = action.payload.sticky;
 
       return {
         ...state,
@@ -112,6 +143,55 @@ export default (state = initialState, action) => {
       };
     }
     case "SAVE_EDIT": {
+      const { liveLinkEdit, customAttrs, globalEdit } = action.payload;
+      const changes = customAttrs;
+      const edited = Object.assign({}, state.editedFile);
+      edited.nodes = Object.assign([], state.editedFile.nodes);
+      edited.links = Object.assign([], state.editedFile.links);
+      let currSelLinkIndex = edited.links.findIndex(e => {
+        return e.id === liveLinkEdit.selLinkId;
+      });
+      console.log(
+        "edited.links[currSelLinkIndex].name",
+        edited.links[currSelLinkIndex].name
+      );
+      console.log("liveLinkEdit.name", liveLinkEdit.name);
+
+      const link = edited.links[currSelLinkIndex];
+
+      edited.links[currSelLinkIndex] = Object.assign({}, link);
+
+      edited.links[currSelLinkIndex].name = liveLinkEdit.name;
+      edited.links[currSelLinkIndex].customAttrs = {};
+      if (changes.includes("newCategoryName")) {
+        if (!edited.categories) {
+          edited.categories = {};
+        }
+        edited.categories[liveLinkEdit.newCategoryName] = {};
+        changes.forEach(attr => {
+          edited.categories[liveLinkEdit.newCategoryName][attr] =
+            liveLinkEdit[attr];
+        });
+        edited.categories[liveLinkEdit.newCategoryName].category =
+          liveLinkEdit.newCategoryName;
+        edited.links[currSelLinkIndex].category = liveLinkEdit.newCategoryName;
+      } else {
+        changes.forEach(attr => {
+          if (attr === "category") {
+            edited.links[currSelLinkIndex].category = liveLinkEdit.category;
+          }
+          edited.links[currSelLinkIndex].customAttrs[attr] = liveLinkEdit[attr];
+        });
+      }
+
+      edited.globalSettings = globalEdit;
+
+      return {
+        ...state,
+        editedFile: edited
+      };
+    }
+    case "SAVE_LINK_EDIT": {
       const { liveNodeEdit, customAttrs, globalEdit } = action.payload;
       const changes = customAttrs;
       const edited = Object.assign({}, state.editedFile);
@@ -208,7 +288,7 @@ export default (state = initialState, action) => {
       const coords = action.payload.coords;
 
       editedFile.nodes.push({
-        name: "new",
+        customAttrs: { name: null },
         id: action.payload.id,
         index: length,
         x: coords.x,
@@ -232,7 +312,7 @@ export default (state = initialState, action) => {
       const zoomLevel = action.payload.zoomLevel;
 
       editedFile.nodes.push({
-        name: "new",
+        customAttrs: { name: null },
         id: action.payload.id,
         index: length,
         x: (50 - zoomLevel.x) / zoomLevel.k,
@@ -247,33 +327,6 @@ export default (state = initialState, action) => {
         ...state,
         editedFile: editedFile
       };
-    // case "SELECT_NODE":
-    //   let value = null;
-    //   if (action.payload === state.currentNode) {
-    //     value = null;
-    //   } else {
-    //     value = action.payload;
-    //   }
-    //
-    //   return {
-    //     ...state,
-    //     currentNode: value
-    //   };
-    // case "LOCK_NODE":
-    //   const newLockedNodes = Object.assign({}, state.lockedNodes);
-    //   const lockedNode = Object.keys(newLockedNodes).findIndex(
-    //     n => n === action.payload
-    //   );
-    //   if (lockedNode === -1) {
-    //     newLockedNodes[action.payload] = {};
-    //   } else {
-    //     delete newLockedNodes[action.payload];
-    //   }
-    //   console.log("WTF", action.payload);
-    //   return {
-    //     ...state,
-    //     lockedNodes: newLockedNodes
-    //   };
     case "SELECT_AND_LINK_NODE":
       // get full node object by id
       const lastNode = state.editedFile.nodes.find(e => {
@@ -284,7 +337,9 @@ export default (state = initialState, action) => {
         return e.id === action.payload.currentClickedNodeId;
       });
 
+      const id = uuidv4();
       const newLink = {
+        id: id,
         source: lastNode,
         target: currentNode
       };
@@ -324,6 +379,14 @@ export default (state = initialState, action) => {
       };
     case "file/POST_FILE_ERROR":
       return { ...state, error: action.payload, fetching: false };
+    case "document/SAVE_TEXT_FILE":
+      console.log("ACTION PAYLOAD", action.payload);
+      const nodeId = action.payload.selNodeId
+        ? action.payload.selNodeId
+        : "main";
+      const newText = Object.assign({}, state.editedFile.text);
+      newText[nodeId] = action.payload.text;
+      return { ...state, editedFile: { ...state.editedFile, text: newText } };
     default:
       return state;
   }

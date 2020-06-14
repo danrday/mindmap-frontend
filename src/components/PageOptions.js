@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import navLinks from "./NavLinks";
+import Button from "./reusable/button.js";
 
 import { connect } from "react-redux";
 import {
@@ -18,24 +19,14 @@ class PageOptions extends Component {
     } else {
       return (
         <div>
-          <button onClick={this.props.openDocument}>open</button>
-          <br />
-          <button
-            onClick={() => {
-              console.log("document.file", this.props.document.present.file);
-              this.props.postAction(this.props.document.present.editedFile);
-            }}
+          <Button
+            click={() =>
+              this.props.postAction(this.props.document.present.editedFile)
+            }
           >
-            save
-          </button>
-          <br />
-          <button onClick={this.addAction}>add</button>
-          <br />
-          <button
-            onClick={() => this.props.deleteAction(this.props.currSelNode)}
-          >
-            delete
-          </button>
+            Save
+          </Button>
+          <Button click={this.addAction}>Add Node</Button>
         </div>
       );
     }
@@ -65,7 +56,7 @@ class PageOptions extends Component {
 }
 const Test = styled.div`
   @media (max-width: 768px) {
-    height: calc(25vh);
+    height: calc(35vh);
     width: 100%;
   }
   display: relative;
@@ -115,10 +106,10 @@ const mapStateToProps = state => ({
   selectedPage: state.ui.selectedPage
 });
 const mapDispatchToProps = (dispatch, props) => ({
-  openDocument: () => dispatch(document(props.channel)),
+  // openDocument: () => dispatch(document(props.channel)),
   postAction: file => dispatch(postAction(file, props.channel)),
   addAction: zoomLevel => dispatch(addAction(zoomLevel)),
-  selectNode: node => dispatch(selectNode(node)),
-  deleteAction: nodeId => dispatch(deleteAction(nodeId))
+  selectNode: node => dispatch(selectNode(node))
+  // deleteAction: nodeId => dispatch(deleteAction(nodeId))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(PageOptions);

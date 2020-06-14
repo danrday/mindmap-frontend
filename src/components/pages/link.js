@@ -9,24 +9,25 @@ import Dropdown from "../reusable/dropdown";
 
 import {
   editName,
-  editRadius,
   editFontSize,
+  editStrokeWidth,
   handleCheckboxChange,
   editNewCategoryName,
   clearTempCustomAttrs,
   changeSelectedCategory
-} from "../../redux/actions/liveNodeEdit";
-import { deleteAction, saveEdits } from "../../redux/actions/document";
+} from "../../redux/actions/liveLinkEdit";
 import {
-  editValue,
-  handleCheckboxChange as handleGlobalAttrCheckbox
-} from "../../redux/actions/globalEdit";
+  deleteAction,
+  saveEdits,
+  saveLinkEdits
+} from "../../redux/actions/document";
+import { editValue } from "../../redux/actions/globalEdit";
 
-class Node extends Component {
+class Link extends Component {
   save() {
     this.props.saveEdits({
-      customAttrs: this.props.liveNodeEdit.checkedAttrs,
-      liveNodeEdit: this.props.liveNodeEdit,
+      customAttrs: this.props.liveLinkEdit.checkedAttrs,
+      liveLinkEdit: this.props.liveLinkEdit,
       globalEdit: this.props.globalEdit
     });
     // this.props.clearTempCustomAttrs()
@@ -34,7 +35,7 @@ class Node extends Component {
 
   handleCheckboxChange(event) {
     const target = event.target;
-    let attrs = this.props.liveNodeEdit.checkedAttrs;
+    let attrs = this.props.liveLinkEdit.checkedAttrs;
 
     if (attrs.includes(target.name) && !target.checked) {
       attrs = attrs.filter(e => e !== target.name);
@@ -46,7 +47,7 @@ class Node extends Component {
     //     customAttrs: attrs
     // });
 
-    this.props.handleCheckboxChange(attrs, this.props.selNodeId);
+    this.props.handleCheckboxChange(attrs, this.props.selLinkId);
     // this.props.handleGlobalAttrCheckbox(attrs)
   }
 
@@ -75,13 +76,13 @@ class Node extends Component {
     return (
       <div className="column is-vcentered">
         <div>
-          {/*{this.props.liveNodeEdit.selNodeId ? "Edit Node" : "Add new node"}*/}
+          {/*{this.props.liveLinkEdit.selLinkId ? "Edit Link" : "Add new link"}*/}
         </div>
         <Button click={this.save.bind(this)}>Apply</Button>
         {/*<Button click={this.save.bind(this)}>save and unselect</Button>*/}
         {/*<Button click={this.cancel.bind(this)}>Cancel</Button>*/}
-        <Button click={() => this.props.deleteAction(this.props.selNodeId)}>
-          Delete Node
+        <Button click={() => this.props.deleteAction(this.props.selLinkId)}>
+          Delete Link
         </Button>
         <hr />
         {/*<div>heading</div>*/}
@@ -89,103 +90,73 @@ class Node extends Component {
         {/*  className="input"*/}
         {/*  type="text"*/}
         {/*  value={*/}
-        {/*    this.props.liveNodeEdit.name ||*/}
-        {/*    this.props.globalEdit.node.name.defaultValue*/}
+        {/*    this.props.liveLinkEdit.name ||*/}
+        {/*    this.props.globalEdit.link.name.defaultValue*/}
         {/*  }*/}
         {/*  onChange={event =>*/}
-        {/*    this.props.editName(event.target.value, this.props.selNodeId)*/}
+        {/*    this.props.editName(event.target.value, this.props.selLinkId)*/}
         {/*  }*/}
         {/*/>*/}
         {/*<br /> <br />*/}
         {/*<hr />*/}
         <div>custom attributes</div>
         <br />
-        <div>radius</div>
+        <div>stroke width</div>
         <Switch
-          name="radius"
-          checked={this.props.liveNodeEdit.checkedAttrs.includes("radius")}
+          name="strokeWidth"
+          checked={this.props.liveLinkEdit.checkedAttrs.includes("strokeWidth")}
           onChange={this.handleCheckboxChange.bind(this)}
         />
         <input
           style={{ display: "inline-block", width: "50%" }}
           className="input"
-          disabled={!this.props.liveNodeEdit.checkedAttrs.includes("radius")}
-          type="number"
-          value={this.props.liveNodeEdit.radius || ""}
-          onChange={event =>
-            this.props.editRadius(event.target.value, this.props.selNodeId)
+          disabled={
+            !this.props.liveLinkEdit.checkedAttrs.includes("strokeWidth")
           }
+          type="number"
+          value={this.props.liveLinkEdit.strokeWidth || ""}
+          onChange={event => this.props.editStrokeWidth(event.target.value)}
         />
         <Slider
           updateMaxRange={true}
-          sliderVal={this.props.liveNodeEdit.radius}
+          sliderVal={this.props.liveLinkEdit.strokeWidth}
           sliderMin={0}
           sliderMax={
-            this.props.globalEdit.controls.radiusRangeMax.customValue ||
-            this.props.globalEdit.controls.radiusRangeMax.defaultValue
+            this.props.globalEdit.controls.linkStrokeWidthRangeMax
+              .customValue ||
+            this.props.globalEdit.controls.linkStrokeWidthRangeMax.defaultValue
           }
-          editValue={this.props.editRadius}
+          editValue={this.props.editStrokeWidth}
           updateSliderRangeMax={v =>
             this.props.editValue({
               section: "controls",
-              key: "radiusRangeMax",
+              key: "linkStrokeWidthRangeMax",
               value: v
             })
           }
-          disabled={!this.props.liveNodeEdit.checkedAttrs.includes("radius")}
-        />
-        <br />
-        <div>font size</div>
-        <Switch
-          name="fontSize"
-          checked={this.props.liveNodeEdit.checkedAttrs.includes("fontSize")}
-          onChange={this.handleCheckboxChange.bind(this)}
-        />
-        <input
-          style={{ display: "inline-block", width: "50%" }}
-          className="input"
-          disabled={!this.props.liveNodeEdit.checkedAttrs.includes("fontSize")}
-          type="number"
-          value={this.props.liveNodeEdit.fontSize || ""}
-          onChange={event => this.props.editFontSize(event.target.value)}
-        />
-        <Slider
-          updateMaxRange={true}
-          sliderVal={this.props.liveNodeEdit.fontSize}
-          sliderMin={0}
-          sliderMax={
-            this.props.globalEdit.controls.fontSizeRangeMax.customValue ||
-            this.props.globalEdit.controls.fontSizeRangeMax.defaultValue
+          disabled={
+            !this.props.liveLinkEdit.checkedAttrs.includes("strokeWidth")
           }
-          editValue={this.props.editFontSize}
-          updateSliderRangeMax={v =>
-            this.props.editValue({
-              section: "controls",
-              key: "fontSizeRangeMax",
-              value: v
-            })
-          }
-          disabled={!this.props.liveNodeEdit.checkedAttrs.includes("fontSize")}
         />
         <hr />
         <br />
         <div>category</div>
         <Switch
           name="category"
-          checked={this.props.liveNodeEdit.checkedAttrs.includes("category")}
+          checked={this.props.liveLinkEdit.checkedAttrs.includes("category")}
           onChange={this.handleCheckboxChange.bind(this)}
         />
         <br />
         <Dropdown
           onChange={cat => this.props.changeSelectedCategory(cat)}
-          value={this.props.liveNodeEdit.category || "none"}
+          value={this.props.liveLinkEdit.category || "none"}
           categories={this.props.categories}
         />
         <br />`
         <br />
         <Switch
           name="newCategoryName"
-          checked={this.props.liveNodeEdit.checkedAttrs.includes(
+          checked={this.props.liveLinkEdit.checkedAttrs.includes(
             "newCategoryName"
           )}
           onChange={this.handleCheckboxChange.bind(this)}
@@ -194,10 +165,10 @@ class Node extends Component {
         <input
           className="input"
           disabled={
-            !this.props.liveNodeEdit.checkedAttrs.includes("newCategoryName")
+            !this.props.liveLinkEdit.checkedAttrs.includes("newCategoryName")
           }
           type="string"
-          value={this.props.liveNodeEdit.newCategoryName || ""}
+          value={this.props.liveLinkEdit.newCategoryName || ""}
           onChange={event => this.props.editNewCategoryName(event.target.value)}
         />
         <br />
@@ -208,24 +179,25 @@ class Node extends Component {
 }
 
 const mapStateToProps = state => ({
-  liveNodeEdit: state.liveNodeEdit,
-  selNodeId: state.liveNodeEdit.selNodeId,
+  liveLinkEdit: state.liveLinkEdit,
+  selLinkId: state.liveLinkEdit.selLinkId,
   categories: state.document.present.editedFile.categories,
   globalEdit: state.globalEdit
 });
 
 const mapDispatchToProps = (dispatch, props) => ({
   // handleGlobalAttrCheckbox: checked => dispatch(handleGlobalAttrCheckbox(checked)),
-  editName: (name, selNodeId) => dispatch(editName(name, selNodeId)),
-  editRadius: (r, selNodeId) => dispatch(editRadius(r, selNodeId)),
+  editName: (name, selLinkId) => dispatch(editName(name, selLinkId)),
+  editRadius: r => dispatch(editRadius(r, props.selLinkId)),
+  editStrokeWidth: w => dispatch(editStrokeWidth(w, props.selLinkId)),
   editFontSize: f => dispatch(editFontSize(f)),
   saveEdits: edits => dispatch(saveEdits(edits)),
-  handleCheckboxChange: (checkedAttrs, selNodeId) =>
-    dispatch(handleCheckboxChange(checkedAttrs, selNodeId)),
+  handleCheckboxChange: (checkedAttrs, selLinkId) =>
+    dispatch(handleCheckboxChange(checkedAttrs, selLinkId)),
   editNewCategoryName: name => dispatch(editNewCategoryName(name)),
   clearTempCustomAttrs: () => dispatch(clearTempCustomAttrs()),
   changeSelectedCategory: cat => dispatch(changeSelectedCategory(cat)),
-  deleteAction: nodeId => dispatch(deleteAction(nodeId)),
+  deleteAction: linkId => dispatch(deleteAction(linkId)),
   editValue: keyAndValue => dispatch(editValue(keyAndValue))
 });
-export default connect(mapStateToProps, mapDispatchToProps)(Node);
+export default connect(mapStateToProps, mapDispatchToProps)(Link);

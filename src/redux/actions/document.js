@@ -8,14 +8,17 @@ export const dragNode = msg => dispatch => {
   });
 };
 
+export const saveTextFile = ({ text, selNodeId }) => dispatch => {
+  dispatch({
+    type: "document/SAVE_TEXT_FILE",
+    payload: { text, selNodeId }
+  });
+};
+
 export const document = channel => dispatch => {
   channel
     .push("get_file")
     .receive("ok", msg => {
-      dispatch({
-        type: "file/UPDATE_FILE",
-        payload: msg.file
-      });
       dispatch({
         type: "file/FETCH_FILE_RECEIVED",
         payload: msg.file
@@ -59,7 +62,7 @@ export const addAction = zoomLevel => dispatch => {
   });
   dispatch({
     type: "UI_SELECT_PAGE",
-    payload: 2
+    payload: 1
   });
 };
 
@@ -85,6 +88,13 @@ export const addNodeAtCoords = coords => dispatch => {
 export const saveEdits = edits => dispatch => {
   dispatch({
     type: "SAVE_EDIT",
+    payload: edits
+  });
+};
+
+export const saveLinkEdits = edits => dispatch => {
+  dispatch({
+    type: "SAVE_LINK_EDIT",
     payload: edits
   });
 };

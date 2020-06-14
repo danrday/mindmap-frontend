@@ -5,15 +5,27 @@ const initialState = {
     type: "info"
   },
   selectedPage: null,
-  lockedPages: []
+  lockedPages: [],
+  mouseCoords: {}
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case "HANDLE_MOUSE_MOVE":
+      let mouseCoords = Object.assign({}, state.mouseCoords);
+      mouseCoords.self = action.payload;
+
       return {
         ...state,
-        mouse: { coords: action.payload }
+        mouseCoords: mouseCoords
+      };
+    case "BROADCAST_MOUSE_MOVE":
+      return {
+        ...state,
+        mouse: {
+          coords: action.payload.coords,
+          username: action.payload.username
+        }
       };
     case "SHOW_ALERT_MESSAGE":
       return {

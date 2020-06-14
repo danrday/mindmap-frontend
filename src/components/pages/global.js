@@ -6,6 +6,10 @@ import {
   populateInitialValues
 } from "../../redux/actions/globalEdit";
 import { saveDefaultsEdit } from "../../redux/actions/document";
+import Button from "../reusable/button.js";
+import Switch from "../reusable/switch";
+import Slider from "../reusable/slider";
+import Dropdown from "../reusable/dropdown";
 
 class GlobalSettings extends Component {
   componentDidMount() {
@@ -31,41 +35,52 @@ class GlobalSettings extends Component {
     this.props.saveDefaultsEdit(edits);
   }
 
+  editValue(section, key) {
+    return value => {
+      console.log("skv", { section, key, value });
+      this.props.editValue({
+        section: section,
+        key: key,
+        value: value
+      });
+    };
+  }
+
   render() {
+    let chargeStrength = this.props.globalEdit.checkedAttrs.includes(
+      "chargeStrength"
+    )
+      ? this.props.globalEdit.general.chargeStrength.customValue
+      : this.props.globalEdit.general.chargeStrength.defaultValue;
+
+    let linkDistance = this.props.globalEdit.checkedAttrs.includes(
+      "linkDistance"
+    )
+      ? this.props.globalEdit.general.linkDistance.customValue
+      : this.props.globalEdit.general.linkDistance.defaultValue;
+
     return (
       <div className="column is-vcentered">
-        <button
-          className="button is-success is-rounded is-light"
-          onClick={this.save.bind(this)}
-        >
-          save
-        </button>
+        <Button click={this.save.bind(this)}>Apply changes</Button>
         <br />
         <br />
-        <label className="switch">
-          <input
-            name="chargeStrength"
-            type="checkbox"
-            checked={this.props.globalEdit.checkedAttrs.includes(
-              "chargeStrength"
-            )}
-            onChange={this.handleCheckboxChange.bind(this)}
-          />
-          <span className="slider round"></span>
-        </label>
-
         <div>charge strength</div>
+
+        <Switch
+          name="chargeStrength"
+          checked={this.props.globalEdit.checkedAttrs.includes(
+            "chargeStrength"
+          )}
+          onChange={this.handleCheckboxChange.bind(this)}
+        />
         <input
+          style={{ display: "inline-block", width: "60%" }}
           disabled={
             !this.props.globalEdit.checkedAttrs.includes("chargeStrength")
           }
           type="number"
           className="input"
-          value={
-            this.props.globalEdit.checkedAttrs.includes("chargeStrength")
-              ? this.props.globalEdit.general.chargeStrength.customValue
-              : this.props.globalEdit.general.chargeStrength.defaultValue
-          }
+          value={chargeStrength}
           onChange={event =>
             this.props.editValue({
               section: "general",
@@ -74,33 +89,80 @@ class GlobalSettings extends Component {
             })
           }
         />
+        <Slider
+          updateMinRange={true}
+          updateMaxRange={true}
+          sliderVal={chargeStrength}
+          sliderMin={
+            this.props.globalEdit.controls.chargeStrengthRangeMin.customValue ||
+            this.props.globalEdit.controls.chargeStrengthRangeMin.defaultValue
+          }
+          sliderMax={
+            this.props.globalEdit.controls.chargeStrengthRangeMax.customValue ||
+            this.props.globalEdit.controls.chargeStrengthRangeMax.defaultValue
+          }
+          editValue={this.editValue("general", "chargeStrength")}
+          updateSliderRangeMax={v =>
+            this.props.editValue({
+              section: "controls",
+              key: "chargeStrengthRangeMax",
+              value: v
+            })
+          }
+          updateSliderRangeMin={v =>
+            this.props.editValue({
+              section: "controls",
+              key: "chargeStrengthRangeMin",
+              value: v
+            })
+          }
+          disabled={
+            !this.props.globalEdit.checkedAttrs.includes("chargeStrength")
+          }
+        />
         <br />
         <br />
-        <label className="switch">
-          <input
-            name="linkDistance"
-            type="checkbox"
-            checked={this.props.globalEdit.checkedAttrs.includes(
-              "linkDistance"
-            )}
-            onChange={this.handleCheckboxChange.bind(this)}
-          />
-          <span className="slider round"></span>
-        </label>
         <div>link distance</div>
+
+        <Switch
+          name="linkDistance"
+          checked={this.props.globalEdit.checkedAttrs.includes("linkDistance")}
+          onChange={this.handleCheckboxChange.bind(this)}
+        />
         <input
+          style={{ display: "inline-block", width: "60%" }}
           disabled={
             !this.props.globalEdit.checkedAttrs.includes("linkDistance")
           }
           type="number"
           className="input"
-          value={this.props.globalEdit.linkDistance || ""}
+          value={linkDistance}
           onChange={event =>
             this.props.editValue({
               section: "general",
               key: "linkDistance",
               value: event.target.value
             })
+          }
+        />
+        <Slider
+          updateMinRange={false}
+          updateMaxRange={true}
+          sliderVal={linkDistance}
+          sliderMax={
+            this.props.globalEdit.controls.linkDistanceRangeMax.customValue ||
+            this.props.globalEdit.controls.linkDistanceRangeMax.defaultValue
+          }
+          editValue={this.editValue("general", "linkDistance")}
+          updateSliderRangeMax={v =>
+            this.props.editValue({
+              section: "controls",
+              key: "linkDistanceRangeMax",
+              value: v
+            })
+          }
+          disabled={
+            !this.props.globalEdit.checkedAttrs.includes("linkDistance")
           }
         />
       </div>
@@ -114,7 +176,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  editValue: keyAndValue => dispatch(editValue(keyAndValue)),
+  editValue: sectionKeyAndValue => dispatch(editValue(sectionKeyAndValue)),
   handleCheckboxChange: checkedAttrs =>
     dispatch(handleCheckboxChange(checkedAttrs)),
   populateInitialValues: defaults => dispatch(populateInitialValues(defaults)),
