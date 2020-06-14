@@ -87,6 +87,26 @@ class Graph extends React.Component {
         });
     }
 
+    const lastClickedLink = this.props.lastClickedLink;
+    if (lastClickedLink) {
+      let self = this;
+
+      let hi = d3.selectAll("line");
+
+      console.log("hi", hi);
+      d3.selectAll("line")
+        .filter(function(d, i) {
+          if (d) {
+            return d.id === self.props.lastClickedLink;
+          } else {
+            return false;
+          }
+        })
+        .style("stroke", function(d) {
+          return "red";
+        });
+    }
+
     // d3 force related
 
     let force = window.force;

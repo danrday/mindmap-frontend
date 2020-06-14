@@ -72,7 +72,7 @@ class App extends React.Component {
 
       // overwrite currently selected node with temp editing values to show live update
       if (this.props.currentLink && liveLinkEdit.selLinkId) {
-        let node = modData.nodes.findIndex(l => {
+        let link = modData.links.findIndex(l => {
           return l.id === liveLinkEdit.selLinkId;
         });
 
@@ -163,6 +163,7 @@ class App extends React.Component {
               data={modData}
               globalSettings={this.props.globalEdit}
               lastClickedNode={this.props.currentNode}
+              lastClickedLink={this.props.currentLink}
               lockedNodes={this.props.lockedNodes}
               lockedLinks={this.props.lockedLinks}
               selectLink={this.props.selectLink}
@@ -200,7 +201,7 @@ class App extends React.Component {
         //compare link ids
         this.props.selectLink(currentClickedLinkId);
       } else {
-        this.props.linkLink({ currentClickedLinkId, lastClickedLink });
+        this.props.selectLink({ currentClickedLinkId, lastClickedLink });
         this.props.selectLink(lastClickedLink);
       }
     } else {
@@ -266,7 +267,7 @@ const mapStateToProps = state => ({
   user: state.user.user,
   lockedLinks: state.liveLinkEdit.lockedLinks,
   liveLinkEdit: state.liveLinkEdit,
-  currentLink: state.liveLinkEdit.currentLink
+  currentLink: state.liveLinkEdit.selLinkId
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -22,13 +22,14 @@ class Link extends React.Component {
         className="link"
         cursor={lockedLink ? "not-allowed" : "pointer"}
         onClick={e => {
-          console.log("LINK CLICKED", this.props.data);
+          // prevent context menu from coming up
+          e.stopPropagation();
           if (lockedLink) {
             alert("This node is being edited by another user...");
             d3.event.preventDefault();
           } else {
             this.props.handleClick(this.props.data.id);
-            this.props.selectPage(3);
+            this.props.selectPage(5);
           }
         }}
       />

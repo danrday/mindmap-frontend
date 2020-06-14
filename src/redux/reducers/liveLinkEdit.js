@@ -36,6 +36,7 @@ export default (state = initialState, action) => {
         ...state,
         name: custom.name || null,
         selLinkId: id,
+        strokeWidth: custom.strokeWidth || null,
         fontSize: custom.fontSize || null,
         category: category || null,
         checkedAttrs: checkedAttrs
@@ -84,6 +85,9 @@ export default (state = initialState, action) => {
     }
     case "liveLinkEdit/EDIT_FONT_SIZE": {
       return { ...state, fontSize: action.payload };
+    }
+    case "liveLinkEdit/EDIT_STROKE_WIDTH": {
+      return { ...state, strokeWidth: action.payload };
     }
     case "liveLinkEdit/EDIT_NEW_CATEGORY_NAME": {
       return { ...state, newCategoryName: action.payload };

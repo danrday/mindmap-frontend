@@ -54,6 +54,14 @@ export const editFontSize = fontSize => dispatch => {
   });
 };
 
+export const editStrokeWidth = strokeWidth => dispatch => {
+  dispatch({
+    type: "liveLinkEdit/EDIT_STROKE_WIDTH",
+    payload: strokeWidth,
+    local_msg: true
+  });
+};
+
 export const selectLink = link => dispatch => {
   dispatch({
     type: "SELECT_LINK",

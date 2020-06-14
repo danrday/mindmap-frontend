@@ -1,5 +1,6 @@
 import React from "react";
 import Node from "./pages/node";
+import Link from "./pages/link";
 import Categories from "./pages/categories";
 import GlobalSettings from "./pages/global";
 import RichText from "./pages/richText";
@@ -87,13 +88,22 @@ const navLinks = [
       return <GlobalSettings {...customProps} />;
     }
   },
+  // {
+  //   link: "/share",
+  //   className: "icon ion-android-share-alt",
+  //   navItemText: "",
+  //   component: props => {
+  //     const customProps = props;
+  //     return <div {...customProps} />;
+  //   }
+  // },
   {
-    link: "/share",
+    link: "/link",
     className: "icon ion-android-share-alt",
     navItemText: "",
     component: props => {
       const customProps = props;
-      return <div {...customProps} />;
+      return <Link {...customProps} />;
     }
   }
   // {

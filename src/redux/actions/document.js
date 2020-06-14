@@ -92,6 +92,13 @@ export const saveEdits = edits => dispatch => {
   });
 };
 
+export const saveLinkEdits = edits => dispatch => {
+  dispatch({
+    type: "SAVE_LINK_EDIT",
+    payload: edits
+  });
+};
+
 export const deleteAction = nodeId => dispatch => {
   console.log("NODE ID", nodeId);
   dispatch({
