@@ -325,7 +325,16 @@ class Graph extends React.Component {
       );
     });
     const links = this.props.data.links.map((link, i) => (
-      <Link key={i} data={link} displayAttr={this.displayAttr} />
+      <Link
+        key={i}
+        data={link}
+        displayAttr={this.displayAttr}
+        lockedLinks={this.props.lockedLinks}
+        handleClick={this.props.handleLinkClick}
+        selectPage={
+          this.props.selectPage
+        } /*when link is clicked, auto select edit links page*/
+      />
     ));
     const mice = (
       <text

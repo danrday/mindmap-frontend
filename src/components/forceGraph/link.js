@@ -16,7 +16,23 @@ class Link extends React.Component {
       .call(enterLink(this.props.displayAttr));
   }
   render() {
-    return <line className="link" />;
+    let lockedLink = this.props.lockedLinks[this.props.data.id];
+    return (
+      <line
+        className="link"
+        cursor={lockedLink ? "not-allowed" : "pointer"}
+        onClick={e => {
+          console.log("LINK CLICKED", this.props.data);
+          if (lockedLink) {
+            alert("This node is being edited by another user...");
+            d3.event.preventDefault();
+          } else {
+            this.props.handleClick(this.props.data.id);
+            this.props.selectPage(3);
+          }
+        }}
+      />
+    );
   }
 }
 const enterLink = displayAttr => {

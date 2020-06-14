@@ -164,7 +164,10 @@ class App extends React.Component {
               globalSettings={this.props.globalEdit}
               lastClickedNode={this.props.currentNode}
               lockedNodes={this.props.lockedNodes}
+              lockedLinks={this.props.lockedLinks}
+              selectLink={this.props.selectLink}
               handleClick={this.handleClick}
+              handleLinkClick={this.handleLinkClick}
               handleZoom={this.props.handleZoom}
               selectPage={this.props.selectPage}
               initialZoom={this.props.file.globalSettings.zoom || null}
@@ -185,6 +188,26 @@ class App extends React.Component {
       return <div></div>;
     }
   }
+
+  handleLinkClick = currentClickedLinkId => {
+    const lastClickedLink = this.props.currentLink;
+    const currentLink = this.props.file.links.find(e => {
+      return e.id === currentClickedLinkId;
+    });
+
+    if (lastClickedLink) {
+      if (lastClickedLink === currentClickedLinkId) {
+        //compare link ids
+        this.props.selectLink(currentClickedLinkId);
+      } else {
+        this.props.linkLink({ currentClickedLinkId, lastClickedLink });
+        this.props.selectLink(lastClickedLink);
+      }
+    } else {
+      this.props.selectLink(currentClickedLinkId);
+      this.props.populateCurrentLinkValues(currentLink);
+    }
+  };
 
   handleClick = currentClickedNodeId => {
     const lastClickedNode = this.props.currentNode;

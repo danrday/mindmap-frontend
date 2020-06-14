@@ -1,3 +1,5 @@
+import uuidv4 from "uuid/v4";
+
 const initialState = {
   fetching: false,
   error: null,
@@ -286,7 +288,9 @@ export default (state = initialState, action) => {
         return e.id === action.payload.currentClickedNodeId;
       });
 
+      const id = uuidv4();
       const newLink = {
+        id: id,
         source: lastNode,
         target: currentNode
       };
