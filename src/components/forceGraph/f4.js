@@ -14,6 +14,10 @@ import {
   selectNode
 } from "../../redux/actions/liveNodeEdit";
 import {
+  populateCurrentLinkValues,
+  selectLink
+} from "../../redux/actions/liveLinkEdit";
+import {
   selectPage,
   handleMouseMove,
   showAlertMessage
@@ -27,9 +31,69 @@ class App extends React.Component {
 
     // (if file is loaded AND globalEdit populated (populateInitialValues))
     if (this.props.loaded && this.props.globalEdit.loaded) {
-      const liveNodeEdit = this.props.liveNodeEdit;
+      const liveLinkEdit = this.props.liveLinkEdit;
+      const lockedLinks = this.props.lockedLinks;
+
       let modData = this.props.file;
       const categoryEdit = this.props.categoryEdit;
+
+      // begin link stuff
+
+      modData.links.forEach(link => {
+        //remove temp attrs on each redraw to remove outdated ones.
+        delete link.tempCategoryAttrs;
+        delete link.tempCustomAttrs;
+        delete link.globalSettings;
+
+        // add global settings for default values
+        link.globalSettings = this.props.globalEdit.link;
+
+        // /*if you are currently editing a categories' properties,
+        // apply those temp changes onto member link's tempCategoryAttrs*/
+        // if (link.category === categoryEdit.category) {
+        //   link.tempCategoryAttrs = {};
+        //   categoryEdit.checkedAttrs.forEach(attr => {
+        //     node.tempCategoryAttrs[attr] = categoryEdit[attr];
+        //   });
+        // }
+
+        let lockedLink = lockedLinks[link.id];
+        if (lockedLink) {
+          if (lockedLink.checkedAttrs.includes("category")) {
+            link.category = lockedLink.category;
+          }
+          // populate the temporary custom attributes being edited live
+          link.tempCustomAttrs = link.tempCustomAttrs || {};
+          lockedLink.checkedAttrs.forEach(attr => {
+            link.tempCustomAttrs[attr] = lockedLink[attr];
+          });
+        }
+      });
+
+      // overwrite currently selected node with temp editing values to show live update
+      if (this.props.currentLink && liveLinkEdit.selLinkId) {
+        let node = modData.nodes.findIndex(l => {
+          return l.id === liveLinkEdit.selLinkId;
+        });
+
+        // if the node hasn't been deleted
+        if (link !== -1) {
+          if (liveLinkEdit.checkedAttrs.includes("category")) {
+            modData.links[link].category = liveLinkEdit.category;
+          }
+          // populate the temporary custom attributes being edited live
+          modData.links[link].tempCustomAttrs =
+            modData.links[link].tempCustomAttrs || {};
+          liveLinkEdit.checkedAttrs.forEach(attr => {
+            modData.links[link].tempCustomAttrs[attr] = liveLinkEdit[attr];
+          });
+        }
+      }
+
+      // end link stuff//////
+
+      const liveNodeEdit = this.props.liveNodeEdit;
+
       const lockedNodes = this.props.lockedNodes;
 
       modData.nodes.forEach(node => {
@@ -176,7 +240,10 @@ const mapStateToProps = state => ({
   globalEdit: state.globalEdit,
   mouse: state.ui.mouse,
   mouseCoords: state.ui.mouseCoords,
-  user: state.user.user
+  user: state.user.user,
+  lockedLinks: state.liveLinkEdit.lockedLinks,
+  liveLinkEdit: state.liveLinkEdit,
+  currentLink: state.liveLinkEdit.currentLink
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -189,7 +256,9 @@ const mapDispatchToProps = dispatch => ({
     dispatch(handleMouseMove(coords, username)),
   selectPage: i => dispatch(selectPage(i)),
   dragNode: (id, fx, fy, sticky) => dispatch(dragNode({ id, fx, fy, sticky })),
-  showAlertMessage: (msg, type) => dispatch(showAlertMessage(msg, type))
+  showAlertMessage: (msg, type) => dispatch(showAlertMessage(msg, type)),
+  selectLink: link => dispatch(selectLink(link)),
+  populateCurrentLinkValues: link => dispatch(populateCurrentLinkValues(link))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

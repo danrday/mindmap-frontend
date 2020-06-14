@@ -49,7 +49,7 @@ const enterNode = displayAttr => {
     selection
       .select("circle")
       .attr("r", function(d) {
-        return displayAttr(d, "radius", "px");
+        return displayAttr(d, "radius");
       })
       .attr("stroke", function(d) {
         if (d.fx) {
@@ -112,7 +112,7 @@ const enterNode = displayAttr => {
       .select("text")
       .text(d => displayAttr(d, "name"))
       .style("font-size", function(d) {
-        return displayAttr(d, "fontSize", "px");
+        return displayAttr(d, "fontSize");
       })
       .attr("dy", ".95em")
       .call(selection =>

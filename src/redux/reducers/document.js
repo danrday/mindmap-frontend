@@ -1,7 +1,22 @@
 const initialState = {
   fetching: false,
   error: null,
-  editedFile: null,
+  editedFile: {
+    globalSettings: {
+      text: {},
+      defaults: {
+        linkThickness: 5,
+        bgColor: "powderblue",
+        fontSize: 30,
+        goToEditNodePageWhenNodeIsClicked: true,
+        linkDistance: 300,
+        nodeColor: "blue",
+        nodeHoverColor: "green",
+        radius: 30,
+        sideMenuOpenOnInit: true
+      }
+    }
+  },
   loaded: false
 };
 
@@ -37,11 +52,17 @@ export default (state = initialState, action) => {
       return { ...state, editedFile: updatedFile };
     }
     case "file/FETCH_FILE_RECEIVED": {
+      let payload = action.payload;
+
+      payload.globalSettings.defaults = Object.assign(
+        state.editedFile.globalSettings.defaults,
+        payload.globalSettings.defaults
+      );
+
       let defaults = {
         text: {}
       };
-
-      let edited = Object.assign(defaults, action.payload);
+      let edited = Object.assign(defaults, payload);
 
       return {
         ...state,

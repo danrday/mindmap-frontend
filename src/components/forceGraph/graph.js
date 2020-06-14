@@ -32,7 +32,6 @@ class Graph extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    console.log("LNK", this.props.data.links[0]);
     const charge = returnGlobalSetting(
       "chargeStrength",
       "general",
@@ -272,7 +271,7 @@ class Graph extends React.Component {
   }
 
   displayAttr(d, value) {
-    console.log("DISPLAY ATTR", d);
+    console.log("DISPLAY ATTR", d, value);
     const {
       tempCustomAttrs,
       customAttrs,
@@ -326,7 +325,7 @@ class Graph extends React.Component {
       );
     });
     const links = this.props.data.links.map((link, i) => (
-      <Link key={i} data={link} />
+      <Link key={i} data={link} displayAttr={this.displayAttr} />
     ));
     const mice = (
       <text
