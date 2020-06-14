@@ -217,7 +217,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = (dispatch, props) => ({
   // handleGlobalAttrCheckbox: checked => dispatch(handleGlobalAttrCheckbox(checked)),
   editName: (name, selNodeId) => dispatch(editName(name, selNodeId)),
-  editRadius: r => dispatch(editRadius(r, props.selNodeId)),
+  editRadius: (r, selNodeId) => dispatch(editRadius(r, selNodeId)),
   editFontSize: f => dispatch(editFontSize(f)),
   saveEdits: edits => dispatch(saveEdits(edits)),
   handleCheckboxChange: (checkedAttrs, selNodeId) =>
