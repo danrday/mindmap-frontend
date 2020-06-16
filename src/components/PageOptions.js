@@ -8,6 +8,7 @@ import {
   document,
   postAction,
   addAction,
+  postSaveAsAction,
   deleteAction
 } from "../redux/actions/document";
 import { selectNode } from "../redux/actions/liveNodeEdit";
@@ -25,6 +26,15 @@ class PageOptions extends Component {
             }
           >
             Save
+          </Button>
+          <Button
+            click={() =>
+              this.props.postSaveAsAction(
+                this.props.document.present.editedFile
+              )
+            }
+          >
+            Save a copy
           </Button>
           <Button click={this.addAction}>Add Node</Button>
         </div>
@@ -109,7 +119,8 @@ const mapDispatchToProps = (dispatch, props) => ({
   // openDocument: () => dispatch(document(props.channel)),
   postAction: file => dispatch(postAction(file, props.channel)),
   addAction: zoomLevel => dispatch(addAction(zoomLevel)),
-  selectNode: node => dispatch(selectNode(node))
+  selectNode: node => dispatch(selectNode(node)),
+  postSaveAsAction: file => dispatch(postSaveAsAction(file, props.channel))
   // deleteAction: nodeId => dispatch(deleteAction(nodeId))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(PageOptions);

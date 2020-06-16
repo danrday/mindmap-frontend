@@ -25,7 +25,7 @@ import { editValue } from "../../redux/actions/globalEdit";
 
 class Link extends Component {
   save() {
-    this.props.saveEdits({
+    this.props.saveLinkEdits({
       customAttrs: this.props.liveLinkEdit.checkedAttrs,
       liveLinkEdit: this.props.liveLinkEdit,
       globalEdit: this.props.globalEdit
@@ -115,7 +115,9 @@ class Link extends Component {
           }
           type="number"
           value={this.props.liveLinkEdit.strokeWidth || ""}
-          onChange={event => this.props.editStrokeWidth(event.target.value)}
+          onChange={event =>
+            this.props.editStrokeWidth(event.target.value, this.props.selLinkId)
+          }
         />
         <Slider
           updateMaxRange={true}
@@ -126,7 +128,9 @@ class Link extends Component {
               .customValue ||
             this.props.globalEdit.controls.linkStrokeWidthRangeMax.defaultValue
           }
-          editValue={this.props.editStrokeWidth}
+          editValue={val =>
+            this.props.editStrokeWidth(val, this.props.selLinkId)
+          }
           updateSliderRangeMax={v =>
             this.props.editValue({
               section: "controls",
@@ -189,9 +193,10 @@ const mapDispatchToProps = (dispatch, props) => ({
   // handleGlobalAttrCheckbox: checked => dispatch(handleGlobalAttrCheckbox(checked)),
   editName: (name, selLinkId) => dispatch(editName(name, selLinkId)),
   editRadius: r => dispatch(editRadius(r, props.selLinkId)),
-  editStrokeWidth: w => dispatch(editStrokeWidth(w, props.selLinkId)),
+  editStrokeWidth: (w, selLinkId) => dispatch(editStrokeWidth(w, selLinkId)),
   editFontSize: f => dispatch(editFontSize(f)),
   saveEdits: edits => dispatch(saveEdits(edits)),
+  saveLinkEdits: edits => dispatch(saveLinkEdits(edits)),
   handleCheckboxChange: (checkedAttrs, selLinkId) =>
     dispatch(handleCheckboxChange(checkedAttrs, selLinkId)),
   editNewCategoryName: name => dispatch(editNewCategoryName(name)),
