@@ -52,20 +52,6 @@ class Graph extends React.Component {
     //   window.force.alphaTarget(0);
     // }, 3000);
 
-    /*put this first since it will repaint prev selected node
-        if you click 'new node' more than once*/
-    d3.selectAll("circle")
-      .style("fill", function(d) {
-        console.log("d", d);
-        return color(d.id);
-      })
-      .style("stroke-width", function(d) {
-        return "1";
-      })
-      .style("stroke-dasharray", function(d) {
-        return "0,0";
-      });
-
     const lastClicked = this.props.lastClickedNode;
     if (lastClicked) {
       let self = this;
@@ -97,7 +83,7 @@ class Graph extends React.Component {
           }
         })
         .style("stroke", function(d) {
-          return "red";
+          return "purple";
         });
     }
 
@@ -105,7 +91,6 @@ class Graph extends React.Component {
     let force = window.force;
 
     let dragStarted = (d, self) => {
-      console.log("self", self);
       // (fires on any mousedown)
       if (!d3.event.active) force.alphaTarget(0.3).restart();
       if (d.fx) {
@@ -147,6 +132,7 @@ class Graph extends React.Component {
       }
     };
 
+    // original code
     // d3.selectAll("g.node").call(
     //   d3
     //     .drag()
@@ -155,6 +141,7 @@ class Graph extends React.Component {
     //     .on("end", dragEnded)
     // );
 
+    // experiment for fixing phone issue with drag
     d3.selectAll("g.node").each(function(d) {
       d3.select(this).call(
         d3
@@ -317,10 +304,10 @@ class Graph extends React.Component {
   render() {
     const nodes = this.props.data.nodes.map(node => {
       if (node.category) {
-        let cat = this.getCategory(node.category);
-        if (cat) {
+        let category = this.getCategory(node.category);
+        if (category) {
           /*check if it exists*/
-          node.categoryAttrs = cat;
+          node.categoryAttrs = category;
         }
       }
       return (
@@ -339,7 +326,7 @@ class Graph extends React.Component {
     });
     const links = this.props.data.links.map((link, i) => (
       <Link
-        key={i}
+        key={link.id}
         data={link}
         displayAttr={this.displayAttr}
         lockedLinks={this.props.lockedLinks}

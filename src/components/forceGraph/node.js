@@ -51,7 +51,10 @@ const enterNode = displayAttr => {
       .attr("r", function(d) {
         return displayAttr(d, "radius");
       })
-      .attr("stroke", function(d) {
+      .style("stroke-width", function(d) {
+        return "1";
+      })
+      .style("stroke", function(d) {
         if (d.fx) {
           return "black";
         } else {
@@ -60,7 +63,7 @@ const enterNode = displayAttr => {
       })
       .attr("filter", "url(#dropshadowunanchored)")
       .style("fill", function(d) {
-        return color(d.name);
+        return color(d.id);
       });
     // .attr("cursor", function(d) {
     //   if (this.props.lockedNodes.includes(d.id)) {
