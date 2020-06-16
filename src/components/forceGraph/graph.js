@@ -10,7 +10,6 @@ function returnGlobalSetting(setting, section, globalSettings) {
     ? globalSettings[section][setting].customValue
     : globalSettings[section][setting].defaultValue;
 }
-const color = d3.scaleOrdinal(d3.schemeCategory10);
 
 class Graph extends React.Component {
   handleContextMenu(e) {
@@ -29,18 +28,16 @@ class Graph extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
+    let globalSettings = this.props.globalSettings;
     const charge = returnGlobalSetting(
       "chargeStrength",
       "general",
-      this.props.globalSettings
+      globalSettings
     );
-    const dist = returnGlobalSetting(
-      "linkDistance",
-      "general",
-      this.props.globalSettings
-    );
+    const dist = returnGlobalSetting("linkDistance", "general", globalSettings);
 
-    window.force
+    let force = window.force;
+    force
       .nodes(this.props.data.nodes) //if a node is updated, we need it to point to the new object
       .force("charge", d3.forceManyBody().strength(charge || -60))
       .force("link", d3.forceLink(this.props.data.links).distance(dist))
@@ -60,7 +57,6 @@ class Graph extends React.Component {
           return d.id === self.props.lastClickedNode;
         })
         .style("stroke-width", function(d) {
-          console.log("STROKE WIDTH", d);
           // return getAttributeValue(d, attr)
           // TO DO: MAKE THIS GOOD
           let test = 0.05 * d.tempCustomAttrs.radius;
@@ -88,7 +84,6 @@ class Graph extends React.Component {
     }
 
     // d3 force related
-    let force = window.force;
 
     let dragStarted = (d, self) => {
       // (fires on any mousedown)
@@ -158,12 +153,15 @@ class Graph extends React.Component {
       );
     });
 
+    // PDF EXPERIMENT
     let canvas = d3.select("svg").node();
     let config = { filename: "testing" };
     // savePdf.save(canvas, config)
   }
 
   componentDidMount() {
+    let globalSettings = this.props.globalSettings;
+
     const updateGraph = selection => {
       selection.selectAll(".node").call(updateNode);
       selection.selectAll(".link").call(updateLink);
@@ -184,22 +182,18 @@ class Graph extends React.Component {
     };
 
     // set initial zoom frame from saved value
+    let initialZoom = this.props.initialZoom;
     d3.select(".frameForZoom").attr(
       "transform",
-      `translate(${this.props.initialZoom.x}, ${this.props.initialZoom.y})scale(${this.props.initialZoom.k})`
+      `translate(${initialZoom.x}, ${initialZoom.y})scale(${initialZoom.k})`
     );
 
-    // React doesn't know much about d3's event system firing off. We can add custom dispatch methods onto d3 events.
-    // otherwise, we aren't aware of updates being performed by d3.
-
+    // transmit mouse coords to other users
     const domNode = ReactDOM.findDOMNode(this);
     this.d3Graph = d3.select(domNode).on("mousemove", e => {
       const transform = d3.zoomTransform(d3.select(".frameForZoom").node());
       const xy = d3.mouse(domNode);
       const xyTransform = transform.invert(xy); // relative to zoom
-
-      console.log("username", this.props.user);
-
       this.props.handleMouseMove({
         coords: {
           x: xyTransform[0],
@@ -211,13 +205,12 @@ class Graph extends React.Component {
     });
 
     // view / zoom related:
-
     this.d3Graph.call(
       d3.zoom().transform,
       d3.zoomIdentity
         // set 'zoom identity' so d3 knows what zoom level you are at from the initialized value
-        .translate(this.props.initialZoom.x, this.props.initialZoom.y)
-        .scale(this.props.initialZoom.k)
+        .translate(initialZoom.x, initialZoom.y)
+        .scale(initialZoom.k)
     );
 
     this.d3Graph
@@ -227,7 +220,6 @@ class Graph extends React.Component {
       });
 
     function handleZoom(self) {
-      // console.log('Zoom:', {x, y, k})
       let { x, y, k } = d3.event.transform;
       d3.select(".frameForZoom").attr("transform", d3.event.transform);
       self.props.handleZoom(d3.event.transform);
@@ -241,11 +233,7 @@ class Graph extends React.Component {
         d3
           .forceManyBody()
           .strength(
-            returnGlobalSetting(
-              "chargeStrength",
-              "general",
-              this.props.globalSettings
-            )
+            returnGlobalSetting("chargeStrength", "general", globalSettings)
           )
       )
       .force(
@@ -255,7 +243,7 @@ class Graph extends React.Component {
           .id(function(d) {
             /*reference by id, not index */ return d.id;
           })
-          .distance(this.props.globalSettings.linkDistance || 900)
+          .distance(globalSettings.linkDistance || 900)
       )
       .force("collide", d3.forceCollide([65]).iterations([60]))
       .on("tick", () => {
@@ -271,7 +259,6 @@ class Graph extends React.Component {
   }
 
   displayAttr(d, value) {
-    console.log("DISPLAY ATTR", d, value);
     const {
       tempCustomAttrs,
       customAttrs,
@@ -306,7 +293,7 @@ class Graph extends React.Component {
       if (node.category) {
         let category = this.getCategory(node.category);
         if (category) {
-          /*check if it exists*/
+          // check if it exists
           node.categoryAttrs = category;
         }
       }

@@ -23,27 +23,16 @@ import {
 } from "../../redux/actions/ui";
 
 class App extends React.Component {
-  populateTempCustomAttrs(source, target) {
-    if (source) {
-      if (source["checkedAttrs"].includes("category")) {
-        target["category"] = source["category"];
-      }
-      // populate the temporary custom attributes being edited live
-      target["tempCustomAttrs"] = {};
-      source["checkedAttrs"].forEach(attr => {
-        target["tempCustomAttrs"][attr] = source[attr];
-      });
-    }
-  }
   render() {
     /*On each render we write all the tempCustomAttrs(selected live node edits)
     and also tempCategoryAttrs(selected category edits temporarily apply to all members of a category)*/
-
+    let globalEdit = this.props.globalEdit;
     // (if file is loaded AND globalEdit populated (populateInitialValues))
-    if (this.props.loaded && this.props.globalEdit.loaded) {
+    if (this.props.loaded && globalEdit.loaded) {
       const liveLinkEdit = this.props.liveLinkEdit;
       const lockedLinks = this.props.lockedLinks;
-
+      const liveNodeEdit = this.props.liveNodeEdit;
+      const lockedNodes = this.props.lockedNodes;
       let modData = this.props.file;
       const categoryEdit = this.props.categoryEdit;
 
@@ -53,9 +42,8 @@ class App extends React.Component {
         delete link.tempCategoryAttrs;
         delete link.tempCustomAttrs;
         delete link.globalSettings;
-
         // add global settings for default values
-        link.globalSettings = this.props.globalEdit.link;
+        link.globalSettings = globalEdit.link;
         this.populateTempCustomAttrs(lockedLinks[link.id], link);
       });
 
@@ -64,7 +52,6 @@ class App extends React.Component {
         let link = modData.links.findIndex(l => {
           return l.id === this.props.currentLink;
         });
-
         // if the link hasn't been deleted
         if (link !== -1) {
           this.populateTempCustomAttrs(liveLinkEdit, modData.links[link]);
@@ -72,18 +59,13 @@ class App extends React.Component {
       }
 
       // end link stuff, begin node stuff//////
-      const liveNodeEdit = this.props.liveNodeEdit;
-      const lockedNodes = this.props.lockedNodes;
-
       modData.nodes.forEach(node => {
         //remove temp attrs on each redraw to remove outdated ones.
         delete node.tempCategoryAttrs;
         delete node.tempCustomAttrs;
         delete node.globalSettings;
-
         // add global settings for default values
-        node.globalSettings = this.props.globalEdit.node;
-
+        node.globalSettings = globalEdit.node;
         /*if you are currently editing a categories' properties,
         apply those temp changes onto member node's tempCategoryAttrs*/
         if (node.category === categoryEdit.category) {
@@ -92,7 +74,6 @@ class App extends React.Component {
             node.tempCategoryAttrs[attr] = categoryEdit[attr];
           });
         }
-
         this.populateTempCustomAttrs(lockedNodes[node.id], node);
       });
 
@@ -110,6 +91,7 @@ class App extends React.Component {
 
       return (
         <div>
+          <ContextMenu />
           <div
             style={{
               width: "100%",
@@ -126,6 +108,7 @@ class App extends React.Component {
               lockedNodes={this.props.lockedNodes}
               lockedLinks={this.props.lockedLinks}
               selectLink={this.props.selectLink}
+              selectNode={this.props.selectNode}
               handleClick={this.handleNodeClick}
               handleLinkClick={this.handleLinkClick}
               handleZoom={this.props.handleZoom}
@@ -133,7 +116,6 @@ class App extends React.Component {
               initialZoom={this.props.file.globalSettings.zoom || null}
               handleMouseMove={this.props.handleMouseMove}
               dragNode={this.props.dragNode}
-              selectNode={this.props.selectNode}
               addNodeAtCoords={this.props.addNodeAtCoords}
               mouse={this.props.mouse || { coords: { x: 0, y: 0 } }}
               mouseCoords={this.props.mouseCoords}
@@ -141,13 +123,25 @@ class App extends React.Component {
               showAlertMessage={this.props.showAlertMessage}
             />
           </div>
-          <ContextMenu />
         </div>
       );
     } else {
       return <div></div>;
     }
   }
+
+  populateTempCustomAttrs = (source, target) => {
+    if (source) {
+      if (source["checkedAttrs"].includes("category")) {
+        target["category"] = source["category"];
+      }
+      // populate the temporary custom attributes being edited live
+      target["tempCustomAttrs"] = {};
+      source["checkedAttrs"].forEach(attr => {
+        target["tempCustomAttrs"][attr] = source[attr];
+      });
+    }
+  };
 
   handleLinkClick = currentClickedLinkId => {
     const lastClickedLink = this.props.currentLink;
@@ -174,7 +168,6 @@ class App extends React.Component {
     const currentNode = this.props.file.nodes.find(e => {
       return e.id === currentClickedNodeId;
     });
-
     if (lastClickedNode) {
       if (lastClickedNode === currentClickedNodeId) {
         //compare node ids
