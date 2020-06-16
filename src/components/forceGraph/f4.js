@@ -23,6 +23,18 @@ import {
 } from "../../redux/actions/ui";
 
 class App extends React.Component {
+  populateTempCustomAttrs(source, target) {
+    if (source) {
+      if (source["checkedAttrs"].includes("category")) {
+        target["category"] = source["category"];
+      }
+      // populate the temporary custom attributes being edited live
+      target["tempCustomAttrs"] = {};
+      source["checkedAttrs"].forEach(attr => {
+        target["tempCustomAttrs"][attr] = source[attr];
+      });
+    }
+  }
   render() {
     /*On each render we write all the tempCustomAttrs(selected live node edits)
     and also tempCategoryAttrs(selected category edits temporarily apply to all members of a category)*/
@@ -44,37 +56,18 @@ class App extends React.Component {
 
         // add global settings for default values
         link.globalSettings = this.props.globalEdit.link;
-
-        let lockedLink = lockedLinks[link.id];
-        if (lockedLink) {
-          if (lockedLink.checkedAttrs.includes("category")) {
-            link.category = lockedLink.category;
-          }
-          // populate the temporary custom attributes being edited live
-          link.tempCustomAttrs = {};
-          lockedLink.checkedAttrs.forEach(attr => {
-            link.tempCustomAttrs[attr] = lockedLink[attr];
-          });
-        }
+        this.populateTempCustomAttrs(lockedLinks[link.id], link);
       });
 
-      // overwrite currently selected node with temp editing values to show live update
+      // overwrite currently selected link with temp editing values to show live update
       if (this.props.currentLink) {
         let link = modData.links.findIndex(l => {
           return l.id === this.props.currentLink;
         });
 
-        // if the node hasn't been deleted
+        // if the link hasn't been deleted
         if (link !== -1) {
-          if (liveLinkEdit.checkedAttrs.includes("category")) {
-            modData.links[link].category = liveLinkEdit.category;
-          }
-          // populate the temporary custom attributes being edited live
-          modData.links[link].tempCustomAttrs =
-            modData.links[link].tempCustomAttrs || {};
-          liveLinkEdit.checkedAttrs.forEach(attr => {
-            modData.links[link].tempCustomAttrs[attr] = liveLinkEdit[attr];
-          });
+          this.populateTempCustomAttrs(liveLinkEdit, modData.links[link]);
         }
       }
 
@@ -100,17 +93,7 @@ class App extends React.Component {
           });
         }
 
-        let lockedNode = lockedNodes[node.id];
-        if (lockedNode) {
-          if (lockedNode.checkedAttrs.includes("category")) {
-            node.category = lockedNode.category;
-          }
-          // populate the temporary custom attributes being edited live
-          node.tempCustomAttrs = node.tempCustomAttrs || {};
-          lockedNode.checkedAttrs.forEach(attr => {
-            node.tempCustomAttrs[attr] = lockedNode[attr];
-          });
-        }
+        this.populateTempCustomAttrs(lockedNodes[node.id], node);
       });
 
       // overwrite currently selected node with temp editing values to show live update
@@ -121,14 +104,7 @@ class App extends React.Component {
 
         // if the node hasn't been deleted
         if (node !== -1) {
-          if (liveNodeEdit.checkedAttrs.includes("category")) {
-            modData.nodes[node].category = liveNodeEdit.category;
-          }
-          // populate the temporary custom attributes being edited live
-          modData.nodes[node].tempCustomAttrs = {};
-          liveNodeEdit.checkedAttrs.forEach(attr => {
-            modData.nodes[node].tempCustomAttrs[attr] = liveNodeEdit[attr];
-          });
+          this.populateTempCustomAttrs(liveNodeEdit, modData.nodes[node]);
         }
       }
 
