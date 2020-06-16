@@ -125,6 +125,17 @@ export default (state = initialState, action) => {
       newLockedNodes[action.addnl_payload] = selNode;
       return { ...state, lockedNodes: newLockedNodes };
     }
+    case "liveNodeEdit/LOCKED_NODE_FONT_SIZE": {
+      const selNode = state.lockedNodes[action.addnl_payload];
+      if (!selNode) {
+        console.log("NO NODE", action);
+        alert("no node found in lockedNodes to edit radius");
+      }
+      selNode.fontSize = action.payload;
+      const newLockedNodes = Object.assign({}, state.lockedNodes);
+      newLockedNodes[action.addnl_payload] = selNode;
+      return { ...state, lockedNodes: newLockedNodes };
+    }
     case "liveNodeEdit/LOCKED_NODE_NAME": {
       const selNode = state.lockedNodes[action.addnl_payload];
       if (!selNode) {

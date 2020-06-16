@@ -46,11 +46,12 @@ export const editNewCategoryName = name => dispatch => {
   });
 };
 
-export const editFontSize = fontSize => dispatch => {
+export const editFontSize = (fontSize, selNodeId) => dispatch => {
   dispatch({
     type: "liveNodeEdit/EDIT_FONT_SIZE",
     payload: fontSize,
-    local_msg: true
+    addnl_payload: selNodeId,
+    broadcast: "liveNodeEdit/LOCKED_NODE_FONT_SIZE"
   });
 };
 

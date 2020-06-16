@@ -157,6 +157,36 @@ export const postAction = (file, channel) => dispatch => {
     });
 };
 
+export const postSaveAsAction = (file, channel) => dispatch => {
+  let editedFile = cloneDeep(file);
+  console.log("editedFile", editedFile);
+  // let editedLinks = Object.assign([], file.links);
+  // we need to do the following for d3 to correctly re-load the file...
+  // don't fully understand why or if there is another way to do do this
+  editedFile.links.forEach(obj => {
+    obj.source = obj.source.id;
+    obj.target = obj.target.id;
+  });
+  channel
+    .push("save_file_as_copy", editedFile)
+    .receive("ok", msg => {
+      dispatch({
+        type: "SHOW_ALERT_MESSAGE",
+        payload: {
+          show: true,
+          msg: "Saved a copy!",
+          type: "success"
+        }
+      });
+    })
+    .receive("error", e => {
+      dispatch({
+        type: "file/POST_FILE_ERROR",
+        payload: e
+      });
+    });
+};
+
 export const saveCategoryEdit = edits => dispatch => {
   dispatch({
     type: `SAVE_CATEGORY_EDIT`,

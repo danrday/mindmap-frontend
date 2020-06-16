@@ -124,7 +124,9 @@ class Node extends Component {
             this.props.globalEdit.controls.radiusRangeMax.customValue ||
             this.props.globalEdit.controls.radiusRangeMax.defaultValue
           }
-          editValue={this.props.editRadius}
+          editValue={arg => {
+            this.props.editRadius(arg, this.props.selNodeId);
+          }}
           updateSliderRangeMax={v =>
             this.props.editValue({
               section: "controls",
@@ -147,7 +149,9 @@ class Node extends Component {
           disabled={!this.props.liveNodeEdit.checkedAttrs.includes("fontSize")}
           type="number"
           value={this.props.liveNodeEdit.fontSize || ""}
-          onChange={event => this.props.editFontSize(event.target.value)}
+          onChange={event =>
+            this.props.editFontSize(event.target.value, this.props.selNodeId)
+          }
         />
         <Slider
           updateMaxRange={true}
@@ -157,7 +161,7 @@ class Node extends Component {
             this.props.globalEdit.controls.fontSizeRangeMax.customValue ||
             this.props.globalEdit.controls.fontSizeRangeMax.defaultValue
           }
-          editValue={this.props.editFontSize}
+          editValue={arg => this.props.editFontSize(arg, this.props.selNodeId)}
           updateSliderRangeMax={v =>
             this.props.editValue({
               section: "controls",
@@ -218,7 +222,7 @@ const mapDispatchToProps = (dispatch, props) => ({
   // handleGlobalAttrCheckbox: checked => dispatch(handleGlobalAttrCheckbox(checked)),
   editName: (name, selNodeId) => dispatch(editName(name, selNodeId)),
   editRadius: (r, selNodeId) => dispatch(editRadius(r, selNodeId)),
-  editFontSize: f => dispatch(editFontSize(f)),
+  editFontSize: (f, selNodeId) => dispatch(editFontSize(f, selNodeId)),
   saveEdits: edits => dispatch(saveEdits(edits)),
   handleCheckboxChange: (checkedAttrs, selNodeId) =>
     dispatch(handleCheckboxChange(checkedAttrs, selNodeId)),

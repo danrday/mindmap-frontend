@@ -135,6 +135,17 @@ export default (state = initialState, action) => {
       newLockedLinks[action.addnl_payload] = selLink;
       return { ...state, lockedLinks: newLockedLinks };
     }
+    case "liveLinkEdit/LOCKED_LINK_STROKE_WIDTH": {
+      const selLink = state.lockedLinks[action.addnl_payload];
+      if (!selLink) {
+        console.log("NO LINK", action);
+        alert("no link found in lockedLinks to edit radius");
+      }
+      selLink.strokeWidth = action.payload;
+      const newLockedLinks = Object.assign({}, state.lockedLinks);
+      newLockedLinks[action.addnl_payload] = selLink;
+      return { ...state, lockedLinks: newLockedLinks };
+    }
     case "liveLinkEdit/LOCKED_LINK_CHECKBOX_CHANGE": {
       const selLink = state.lockedLinks[action.addnl_payload];
       if (!selLink) {

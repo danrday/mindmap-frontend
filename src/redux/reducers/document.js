@@ -143,55 +143,7 @@ export default (state = initialState, action) => {
       };
     }
     case "SAVE_EDIT": {
-      const { liveLinkEdit, customAttrs, globalEdit } = action.payload;
-      const changes = customAttrs;
-      const edited = Object.assign({}, state.editedFile);
-      edited.nodes = Object.assign([], state.editedFile.nodes);
-      edited.links = Object.assign([], state.editedFile.links);
-      let currSelLinkIndex = edited.links.findIndex(e => {
-        return e.id === liveLinkEdit.selLinkId;
-      });
-      console.log(
-        "edited.links[currSelLinkIndex].name",
-        edited.links[currSelLinkIndex].name
-      );
-      console.log("liveLinkEdit.name", liveLinkEdit.name);
-
-      const link = edited.links[currSelLinkIndex];
-
-      edited.links[currSelLinkIndex] = Object.assign({}, link);
-
-      edited.links[currSelLinkIndex].name = liveLinkEdit.name;
-      edited.links[currSelLinkIndex].customAttrs = {};
-      if (changes.includes("newCategoryName")) {
-        if (!edited.categories) {
-          edited.categories = {};
-        }
-        edited.categories[liveLinkEdit.newCategoryName] = {};
-        changes.forEach(attr => {
-          edited.categories[liveLinkEdit.newCategoryName][attr] =
-            liveLinkEdit[attr];
-        });
-        edited.categories[liveLinkEdit.newCategoryName].category =
-          liveLinkEdit.newCategoryName;
-        edited.links[currSelLinkIndex].category = liveLinkEdit.newCategoryName;
-      } else {
-        changes.forEach(attr => {
-          if (attr === "category") {
-            edited.links[currSelLinkIndex].category = liveLinkEdit.category;
-          }
-          edited.links[currSelLinkIndex].customAttrs[attr] = liveLinkEdit[attr];
-        });
-      }
-
-      edited.globalSettings = globalEdit;
-
-      return {
-        ...state,
-        editedFile: edited
-      };
-    }
-    case "SAVE_LINK_EDIT": {
+      console.log("SAVE EDIT", action.payload);
       const { liveNodeEdit, customAttrs, globalEdit } = action.payload;
       const changes = customAttrs;
       const edited = Object.assign({}, state.editedFile);
@@ -250,15 +202,64 @@ export default (state = initialState, action) => {
         editedFile: edited
       };
     }
+    case "SAVE_LINK_EDIT": {
+      const { liveLinkEdit, customAttrs, globalEdit } = action.payload;
+      const changes = customAttrs;
+      const edited = Object.assign({}, state.editedFile);
+      edited.nodes = Object.assign([], state.editedFile.nodes);
+      edited.links = Object.assign([], state.editedFile.links);
+      let currSelLinkIndex = edited.links.findIndex(e => {
+        return e.id === liveLinkEdit.selLinkId;
+      });
+      console.log(
+        "edited.links[currSelLinkIndex].name",
+        edited.links[currSelLinkIndex].name
+      );
+      console.log("liveLinkEdit.name", liveLinkEdit.name);
+
+      const link = edited.links[currSelLinkIndex];
+
+      edited.links[currSelLinkIndex] = Object.assign({}, link);
+
+      edited.links[currSelLinkIndex].name = liveLinkEdit.name;
+      edited.links[currSelLinkIndex].customAttrs = {};
+      if (changes.includes("newCategoryName")) {
+        if (!edited.categories) {
+          edited.categories = {};
+        }
+        edited.categories[liveLinkEdit.newCategoryName] = {};
+        changes.forEach(attr => {
+          edited.categories[liveLinkEdit.newCategoryName][attr] =
+            liveLinkEdit[attr];
+        });
+        edited.categories[liveLinkEdit.newCategoryName].category =
+          liveLinkEdit.newCategoryName;
+        edited.links[currSelLinkIndex].category = liveLinkEdit.newCategoryName;
+      } else {
+        changes.forEach(attr => {
+          if (attr === "category") {
+            edited.links[currSelLinkIndex].category = liveLinkEdit.category;
+          }
+          edited.links[currSelLinkIndex].customAttrs[attr] = liveLinkEdit[attr];
+        });
+      }
+
+      edited.globalSettings = globalEdit;
+
+      return {
+        ...state,
+        editedFile: edited
+      };
+    }
     case "SAVE_CATEGORY_EDIT": {
       const { currentCats, currCatName, newCatName } = action.payload;
 
       let updated = state.editedFile;
       updated.categories = currentCats;
 
-      updated.nodes.forEach(node => {
-        if (node.category === currCatName) {
-          node.category = newCatName;
+      updated.links.forEach(link => {
+        if (link.category === currCatName) {
+          link.category = newCatName;
         }
       });
 
