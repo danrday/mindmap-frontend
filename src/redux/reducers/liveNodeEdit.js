@@ -84,14 +84,8 @@ export default (state = initialState, action) => {
     case "liveNodeEdit/HANDLE_CHECKBOX_CHANGE": {
       return { ...state, checkedAttrs: action.payload };
     }
-    case "liveNodeEdit/EDIT_FONT_SIZE": {
-      return { ...state, fontSize: action.payload };
-    }
     case "liveNodeEdit/EDIT_NEW_CATEGORY_NAME": {
       return { ...state, newCategoryName: action.payload };
-    }
-    case "liveNodeEdit/EDIT_RADIUS": {
-      return { ...state, radius: action.payload };
     }
     case "liveNodeEdit/SAVE_EDIT": {
       const { id, name } = action.payload;
@@ -114,28 +108,6 @@ export default (state = initialState, action) => {
         ...state,
         lockedNodes: newLockedNodes
       };
-    case "liveNodeEdit/LOCKED_NODE_RADIUS": {
-      const selNode = state.lockedNodes[action.addnl_payload];
-      if (!selNode) {
-        console.log("NO NODE", action);
-        alert("no node found in lockedNodes to edit radius");
-      }
-      selNode.radius = action.payload;
-      const newLockedNodes = Object.assign({}, state.lockedNodes);
-      newLockedNodes[action.addnl_payload] = selNode;
-      return { ...state, lockedNodes: newLockedNodes };
-    }
-    case "liveNodeEdit/LOCKED_NODE_FONT_SIZE": {
-      const selNode = state.lockedNodes[action.addnl_payload];
-      if (!selNode) {
-        console.log("NO NODE", action);
-        alert("no node found in lockedNodes to edit radius");
-      }
-      selNode.fontSize = action.payload;
-      const newLockedNodes = Object.assign({}, state.lockedNodes);
-      newLockedNodes[action.addnl_payload] = selNode;
-      return { ...state, lockedNodes: newLockedNodes };
-    }
     case "liveNodeEdit/LOCKED_NODE_NAME": {
       const selNode = state.lockedNodes[action.addnl_payload];
       if (!selNode) {
@@ -154,6 +126,25 @@ export default (state = initialState, action) => {
         alert("no node found in lockedNodes to edit radius");
       }
       selNode.checkedAttrs = action.payload;
+      const newLockedNodes = Object.assign({}, state.lockedNodes);
+      newLockedNodes[action.addnl_payload] = selNode;
+      return { ...state, lockedNodes: newLockedNodes };
+    }
+
+    case `liveNodeEdit/HANDLE_ATTRIBUTE_VALUE_CHANGE`: {
+      const { key, value } = action.payload;
+      return {
+        ...state,
+        [key]: value
+      };
+    }
+    case `liveNodeEdit/HANDLE_LOCKED_ATTRIBUTE_VALUE_CHANGE`: {
+      const selNode = state.lockedNodes[action.addnl_payload];
+      if (!selNode) {
+        alert("no link found in lockedLinks to edit radius");
+      }
+      const { key, value } = action.payload;
+      selNode[key] = value;
       const newLockedNodes = Object.assign({}, state.lockedNodes);
       newLockedNodes[action.addnl_payload] = selNode;
       return { ...state, lockedNodes: newLockedNodes };

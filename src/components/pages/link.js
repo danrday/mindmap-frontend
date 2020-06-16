@@ -10,11 +10,11 @@ import Dropdown from "../reusable/dropdown";
 import {
   editName,
   editFontSize,
-  editStrokeWidth,
   handleCheckboxChange,
   editNewCategoryName,
   clearTempCustomAttrs,
-  changeSelectedCategory
+  changeSelectedCategory,
+  editLinkValue
 } from "../../redux/actions/liveLinkEdit";
 import {
   deleteAction,
@@ -116,7 +116,10 @@ class Link extends Component {
           type="number"
           value={this.props.liveLinkEdit.strokeWidth || ""}
           onChange={event =>
-            this.props.editStrokeWidth(event.target.value, this.props.selLinkId)
+            this.props.editLinkValue(
+              { key: "strokeWidth", value: event.target.value },
+              this.props.selLinkId
+            )
           }
         />
         <Slider
@@ -129,10 +132,13 @@ class Link extends Component {
             this.props.globalEdit.controls.linkStrokeWidthRangeMax.defaultValue
           }
           editValue={val =>
-            this.props.editStrokeWidth(val, this.props.selLinkId)
+            this.props.editLinkValue(
+              { key: "strokeWidth", value: val },
+              this.props.selLinkId
+            )
           }
           updateSliderRangeMax={v =>
-            this.props.editValue({
+            this.props.editGlobalValue({
               section: "controls",
               key: "linkStrokeWidthRangeMax",
               value: v
@@ -190,10 +196,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, props) => ({
+  editLinkValue: (keyAndValue, selLinkId) =>
+    dispatch(editLinkValue(keyAndValue, selLinkId)),
   // handleGlobalAttrCheckbox: checked => dispatch(handleGlobalAttrCheckbox(checked)),
   editName: (name, selLinkId) => dispatch(editName(name, selLinkId)),
-  editRadius: r => dispatch(editRadius(r, props.selLinkId)),
-  editStrokeWidth: (w, selLinkId) => dispatch(editStrokeWidth(w, selLinkId)),
   editFontSize: f => dispatch(editFontSize(f)),
   saveEdits: edits => dispatch(saveEdits(edits)),
   saveLinkEdits: edits => dispatch(saveLinkEdits(edits)),
@@ -203,6 +209,6 @@ const mapDispatchToProps = (dispatch, props) => ({
   clearTempCustomAttrs: () => dispatch(clearTempCustomAttrs()),
   changeSelectedCategory: cat => dispatch(changeSelectedCategory(cat)),
   deleteAction: linkId => dispatch(deleteAction(linkId)),
-  editValue: keyAndValue => dispatch(editValue(keyAndValue))
+  editGlobalValue: keyAndValue => dispatch(editValue(keyAndValue))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Link);

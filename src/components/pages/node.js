@@ -8,19 +8,18 @@ import "../styles/slider.css";
 import Dropdown from "../reusable/dropdown";
 
 import {
-  editName,
-  editRadius,
-  editFontSize,
   handleCheckboxChange,
   editNewCategoryName,
   clearTempCustomAttrs,
-  changeSelectedCategory
+  changeSelectedCategory,
+  editNodeValue
 } from "../../redux/actions/liveNodeEdit";
 import { deleteAction, saveEdits } from "../../redux/actions/document";
 import {
   editValue,
   handleCheckboxChange as handleGlobalAttrCheckbox
 } from "../../redux/actions/globalEdit";
+import { editLinkValue } from "../../redux/actions/liveLinkEdit";
 
 class Node extends Component {
   save() {
@@ -50,27 +49,6 @@ class Node extends Component {
     // this.props.handleGlobalAttrCheckbox(attrs)
   }
 
-  cancel() {}
-
-  repeat() {
-    console.log("this", this);
-    if (this.state.testMax === this.state.testSliderVal) {
-      this.setState({
-        testMax: this.state.testMax + 1,
-        testSliderVal: this.state.testSliderVal + 1
-      });
-      this.props.editRadius(this.state.testSliderVal + 1);
-    }
-
-    let x = setTimeout(
-      function() {
-        this.repeat();
-      }.bind(this),
-      10
-    );
-    this.setState({ timeout: x });
-  }
-
   render() {
     return (
       <div className="column is-vcentered">
@@ -84,20 +62,6 @@ class Node extends Component {
           Delete Node
         </Button>
         <hr />
-        {/*<div>heading</div>*/}
-        {/*<input*/}
-        {/*  className="input"*/}
-        {/*  type="text"*/}
-        {/*  value={*/}
-        {/*    this.props.liveNodeEdit.name ||*/}
-        {/*    this.props.globalEdit.node.name.defaultValue*/}
-        {/*  }*/}
-        {/*  onChange={event =>*/}
-        {/*    this.props.editName(event.target.value, this.props.selNodeId)*/}
-        {/*  }*/}
-        {/*/>*/}
-        {/*<br /> <br />*/}
-        {/*<hr />*/}
         <div>custom attributes</div>
         <br />
         <div>radius</div>
@@ -113,7 +77,10 @@ class Node extends Component {
           type="number"
           value={this.props.liveNodeEdit.radius || ""}
           onChange={event =>
-            this.props.editRadius(event.target.value, this.props.selNodeId)
+            this.props.editNodeValue(
+              { key: "radius", value: event.target.value },
+              this.props.selNodeId
+            )
           }
         />
         <Slider
@@ -125,7 +92,10 @@ class Node extends Component {
             this.props.globalEdit.controls.radiusRangeMax.defaultValue
           }
           editValue={arg => {
-            this.props.editRadius(arg, this.props.selNodeId);
+            this.props.editNodeValue(
+              { key: "radius", value: arg },
+              this.props.selNodeId
+            );
           }}
           updateSliderRangeMax={v =>
             this.props.editValue({
@@ -150,7 +120,10 @@ class Node extends Component {
           type="number"
           value={this.props.liveNodeEdit.fontSize || ""}
           onChange={event =>
-            this.props.editFontSize(event.target.value, this.props.selNodeId)
+            this.props.editNodeValue(
+              { key: "fontSize", value: event.target.value },
+              this.props.selNodeId
+            )
           }
         />
         <Slider
@@ -161,7 +134,12 @@ class Node extends Component {
             this.props.globalEdit.controls.fontSizeRangeMax.customValue ||
             this.props.globalEdit.controls.fontSizeRangeMax.defaultValue
           }
-          editValue={arg => this.props.editFontSize(arg, this.props.selNodeId)}
+          editValue={arg =>
+            this.props.editNodeValue(
+              { key: "fontSize", value: arg },
+              this.props.selNodeId
+            )
+          }
           updateSliderRangeMax={v =>
             this.props.editValue({
               section: "controls",
@@ -219,10 +197,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, props) => ({
+  editNodeValue: (keyAndValue, selNodeId) =>
+    dispatch(editNodeValue(keyAndValue, selNodeId)),
   // handleGlobalAttrCheckbox: checked => dispatch(handleGlobalAttrCheckbox(checked)),
-  editName: (name, selNodeId) => dispatch(editName(name, selNodeId)),
-  editRadius: (r, selNodeId) => dispatch(editRadius(r, selNodeId)),
-  editFontSize: (f, selNodeId) => dispatch(editFontSize(f, selNodeId)),
   saveEdits: edits => dispatch(saveEdits(edits)),
   handleCheckboxChange: (checkedAttrs, selNodeId) =>
     dispatch(handleCheckboxChange(checkedAttrs, selNodeId)),

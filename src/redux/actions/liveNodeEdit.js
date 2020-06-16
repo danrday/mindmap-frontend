@@ -6,6 +6,15 @@ export const populateCurrentNodeValues = vals => dispatch => {
   });
 };
 
+export const editNodeValue = (key_and_value, addnl_payload) => dispatch => {
+  dispatch({
+    type: `liveNodeEdit/HANDLE_ATTRIBUTE_VALUE_CHANGE`,
+    payload: key_and_value,
+    addnl_payload: addnl_payload,
+    broadcast: `liveNodeEdit/HANDLE_LOCKED_ATTRIBUTE_VALUE_CHANGE`
+  });
+};
+
 export const editName = (name, selNodeId) => dispatch => {
   dispatch({
     type: "liveNodeEdit/EDIT_NAME",
@@ -46,24 +55,6 @@ export const editNewCategoryName = name => dispatch => {
   });
 };
 
-export const editFontSize = (fontSize, selNodeId) => dispatch => {
-  dispatch({
-    type: "liveNodeEdit/EDIT_FONT_SIZE",
-    payload: fontSize,
-    addnl_payload: selNodeId,
-    broadcast: "liveNodeEdit/LOCKED_NODE_FONT_SIZE"
-  });
-};
-
-export const editRadius = (r, selNodeId) => dispatch => {
-  dispatch({
-    type: "liveNodeEdit/EDIT_RADIUS",
-    payload: r,
-    addnl_payload: selNodeId,
-    broadcast: "liveNodeEdit/LOCKED_NODE_RADIUS"
-  });
-};
-
 export const selectNode = node => dispatch => {
   dispatch({
     type: "SELECT_NODE",
@@ -72,10 +63,3 @@ export const selectNode = node => dispatch => {
     addnl_payload: node
   });
 };
-
-// export const saveEdit = values => dispatch => {
-//   dispatch({
-//     type: "liveNodeEdit/SAVE_EDIT",
-//     payload: values
-//   });
-// };

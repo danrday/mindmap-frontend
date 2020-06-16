@@ -6,6 +6,15 @@ export const populateCurrentLinkValues = vals => dispatch => {
   });
 };
 
+export const editLinkValue = (key_and_value, addnl_payload) => dispatch => {
+  dispatch({
+    type: `liveLinkEdit/HANDLE_ATTRIBUTE_VALUE_CHANGE`,
+    payload: key_and_value,
+    addnl_payload: addnl_payload,
+    broadcast: `liveLinkEdit/HANDLE_LOCKED_ATTRIBUTE_VALUE_CHANGE`
+  });
+};
+
 export const editName = (name, selLinkId) => dispatch => {
   dispatch({
     type: "liveLinkEdit/EDIT_NAME",
@@ -53,15 +62,15 @@ export const editFontSize = fontSize => dispatch => {
     local_msg: true
   });
 };
-
-export const editStrokeWidth = (strokeWidth, selNodeId) => dispatch => {
-  dispatch({
-    type: "liveLinkEdit/EDIT_STROKE_WIDTH",
-    payload: strokeWidth,
-    broadcast: "liveLinkEdit/LOCKED_LINK_STROKE_WIDTH",
-    addnl_payload: selNodeId
-  });
-};
+//
+// export const editStrokeWidth = (strokeWidth, selNodeId) => dispatch => {
+//   dispatch({
+//     type: "liveLinkEdit/EDIT_STROKE_WIDTH",
+//     payload: strokeWidth,
+//     broadcast: "liveLinkEdit/LOCKED_LINK_STROKE_WIDTH",
+//     addnl_payload: selNodeId
+//   });
+// };
 
 export const selectLink = link => dispatch => {
   dispatch({
