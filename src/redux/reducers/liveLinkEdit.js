@@ -86,9 +86,6 @@ export default (state = initialState, action) => {
     case "liveLinkEdit/EDIT_FONT_SIZE": {
       return { ...state, fontSize: action.payload };
     }
-    case "liveLinkEdit/EDIT_STROKE_WIDTH": {
-      return { ...state, strokeWidth: action.payload };
-    }
     case "liveLinkEdit/EDIT_NEW_CATEGORY_NAME": {
       return { ...state, newCategoryName: action.payload };
     }
@@ -113,17 +110,6 @@ export default (state = initialState, action) => {
         ...state,
         lockedLinks: newLockedLinks
       };
-    case "liveLinkEdit/LOCKED_LINK_RADIUS": {
-      const selLink = state.lockedLinks[action.addnl_payload];
-      if (!selLink) {
-        console.log("NO LINK", action);
-        alert("no link found in lockedLinks to edit radius");
-      }
-      selLink.radius = action.payload;
-      const newLockedLinks = Object.assign({}, state.lockedLinks);
-      newLockedLinks[action.addnl_payload] = selLink;
-      return { ...state, lockedLinks: newLockedLinks };
-    }
     case "liveLinkEdit/LOCKED_LINK_NAME": {
       const selLink = state.lockedLinks[action.addnl_payload];
       if (!selLink) {
@@ -135,17 +121,6 @@ export default (state = initialState, action) => {
       newLockedLinks[action.addnl_payload] = selLink;
       return { ...state, lockedLinks: newLockedLinks };
     }
-    case "liveLinkEdit/LOCKED_LINK_STROKE_WIDTH": {
-      const selLink = state.lockedLinks[action.addnl_payload];
-      if (!selLink) {
-        console.log("NO LINK", action);
-        alert("no link found in lockedLinks to edit radius");
-      }
-      selLink.strokeWidth = action.payload;
-      const newLockedLinks = Object.assign({}, state.lockedLinks);
-      newLockedLinks[action.addnl_payload] = selLink;
-      return { ...state, lockedLinks: newLockedLinks };
-    }
     case "liveLinkEdit/LOCKED_LINK_CHECKBOX_CHANGE": {
       const selLink = state.lockedLinks[action.addnl_payload];
       if (!selLink) {
@@ -153,6 +128,38 @@ export default (state = initialState, action) => {
         alert("no link found in lockedLinks to edit radius");
       }
       selLink.checkedAttrs = action.payload;
+      const newLockedLinks = Object.assign({}, state.lockedLinks);
+      newLockedLinks[action.addnl_payload] = selLink;
+      return { ...state, lockedLinks: newLockedLinks };
+    }
+    // case "liveLinkEdit/EDIT_STROKE_WIDTH": {
+    //   return { ...state, strokeWidth: action.payload };
+    // }
+    // case "liveLinkEdit/LOCKED_LINK_STROKE_WIDTH": {
+    //   const selLink = state.lockedLinks[action.addnl_payload];
+    //   if (!selLink) {
+    //     console.log("NO LINK", action);
+    //     alert("no link found in lockedLinks to edit radius");
+    //   }
+    //   selLink.strokeWidth = action.payload;
+    //   const newLockedLinks = Object.assign({}, state.lockedLinks);
+    //   newLockedLinks[action.addnl_payload] = selLink;
+    //   return { ...state, lockedLinks: newLockedLinks };
+    // }
+    // case `liveLinkEdit/HANDLE_ATTRIBUTE_VALUE_CHANGE`: {
+    //   const { key, value } = action.payload;
+    //   return {
+    //     ...state,
+    //     [key]: value
+    //   };
+    // }
+    case `liveLinkEdit/HANDLE_LOCKED_ATTRIBUTE_VALUE_CHANGE`: {
+      const selLink = state.lockedLinks[action.addnl_payload];
+      if (!selLink) {
+        alert("no link found in lockedLinks to edit radius");
+      }
+      const { key, value } = action.payload;
+      selLink[key] = value;
       const newLockedLinks = Object.assign({}, state.lockedLinks);
       newLockedLinks[action.addnl_payload] = selLink;
       return { ...state, lockedLinks: newLockedLinks };
