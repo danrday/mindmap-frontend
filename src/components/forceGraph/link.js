@@ -25,7 +25,7 @@ class Link extends React.Component {
           // prevent context menu from coming up
           e.stopPropagation();
           if (lockedLink) {
-            alert("This node is being edited by another user...");
+            alert("This link is being edited by another user...");
             d3.event.preventDefault();
           } else {
             this.props.handleClick(this.props.data.id);

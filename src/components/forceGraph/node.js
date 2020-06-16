@@ -125,7 +125,7 @@ const enterNode = displayAttr => {
       .select("rect")
       .attr("filter", "url(#dropshadowunanchored)")
       .style("fill", function(d) {
-        return "yellow";
+        return "pink";
       })
       .attr("width", function(d) {
         return d.bbox.width;

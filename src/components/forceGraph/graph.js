@@ -14,10 +14,7 @@ const color = d3.scaleOrdinal(d3.schemeCategory10);
 
 class Graph extends React.Component {
   handleContextMenu(e) {
-    // always prevent default behavior
     e.preventDefault();
-
-    // Don't forget to pass the id and the event and voila!
     contextMenu.show({
       id: "contextMenu",
       event: e,
@@ -42,8 +39,6 @@ class Graph extends React.Component {
       "general",
       this.props.globalSettings
     );
-
-    console.log("DIST", dist);
 
     window.force
       .nodes(this.props.data.nodes) //if a node is updated, we need it to point to the new object
@@ -79,8 +74,11 @@ class Graph extends React.Component {
           return d.id === self.props.lastClickedNode;
         })
         .style("stroke-width", function(d) {
+          console.log("STROKE WIDTH", d);
           // return getAttributeValue(d, attr)
-          return "30";
+          // TO DO: MAKE THIS GOOD
+          let test = 0.05 * d.tempCustomAttrs.radius;
+          return test;
         })
         .style("stroke", function(d) {
           return "red";
@@ -90,10 +88,6 @@ class Graph extends React.Component {
     const lastClickedLink = this.props.lastClickedLink;
     if (lastClickedLink) {
       let self = this;
-
-      let hi = d3.selectAll("line");
-
-      console.log("hi", hi);
       d3.selectAll("line")
         .filter(function(d, i) {
           if (d) {
@@ -108,7 +102,6 @@ class Graph extends React.Component {
     }
 
     // d3 force related
-
     let force = window.force;
 
     let dragStarted = (d, self) => {

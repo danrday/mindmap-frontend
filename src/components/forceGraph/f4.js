@@ -1,8 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import Graph from "./graph";
-import { Menu, Item } from "react-contexify";
-import "react-contexify/dist/ReactContexify.min.css";
+import ContextMenu from "./contextMenu";
 import {
   linkNode,
   handleZoom,
@@ -25,9 +24,8 @@ import {
 
 class App extends React.Component {
   render() {
-    /*
-   On each render we write all the tempCustomAttrs(selected live node edits)
-   and also tempCategoryAttrs(selected category edits temporarily apply to all members of a category)*/
+    /*On each render we write all the tempCustomAttrs(selected live node edits)
+    and also tempCategoryAttrs(selected category edits temporarily apply to all members of a category)*/
 
     // (if file is loaded AND globalEdit populated (populateInitialValues))
     if (this.props.loaded && this.props.globalEdit.loaded) {
@@ -38,7 +36,6 @@ class App extends React.Component {
       const categoryEdit = this.props.categoryEdit;
 
       // begin link stuff
-
       modData.links.forEach(link => {
         //remove temp attrs on each redraw to remove outdated ones.
         delete link.tempCategoryAttrs;
@@ -48,22 +45,13 @@ class App extends React.Component {
         // add global settings for default values
         link.globalSettings = this.props.globalEdit.link;
 
-        // /*if you are currently editing a categories' properties,
-        // apply those temp changes onto member link's tempCategoryAttrs*/
-        // if (link.category === categoryEdit.category) {
-        //   link.tempCategoryAttrs = {};
-        //   categoryEdit.checkedAttrs.forEach(attr => {
-        //     node.tempCategoryAttrs[attr] = categoryEdit[attr];
-        //   });
-        // }
-
         let lockedLink = lockedLinks[link.id];
         if (lockedLink) {
           if (lockedLink.checkedAttrs.includes("category")) {
             link.category = lockedLink.category;
           }
           // populate the temporary custom attributes being edited live
-          link.tempCustomAttrs = link.tempCustomAttrs || {};
+          link.tempCustomAttrs = {};
           lockedLink.checkedAttrs.forEach(attr => {
             link.tempCustomAttrs[attr] = lockedLink[attr];
           });
@@ -71,9 +59,9 @@ class App extends React.Component {
       });
 
       // overwrite currently selected node with temp editing values to show live update
-      if (this.props.currentLink && liveLinkEdit.selLinkId) {
+      if (this.props.currentLink) {
         let link = modData.links.findIndex(l => {
-          return l.id === liveLinkEdit.selLinkId;
+          return l.id === this.props.currentLink;
         });
 
         // if the node hasn't been deleted
@@ -90,10 +78,8 @@ class App extends React.Component {
         }
       }
 
-      // end link stuff//////
-
+      // end link stuff, begin node stuff//////
       const liveNodeEdit = this.props.liveNodeEdit;
-
       const lockedNodes = this.props.lockedNodes;
 
       modData.nodes.forEach(node => {
@@ -128,9 +114,9 @@ class App extends React.Component {
       });
 
       // overwrite currently selected node with temp editing values to show live update
-      if (this.props.currentNode && liveNodeEdit.selNodeId) {
+      if (this.props.currentNode) {
         let node = modData.nodes.findIndex(n => {
-          return n.id === liveNodeEdit.selNodeId;
+          return n.id === this.props.currentNode;
         });
 
         // if the node hasn't been deleted
@@ -139,8 +125,7 @@ class App extends React.Component {
             modData.nodes[node].category = liveNodeEdit.category;
           }
           // populate the temporary custom attributes being edited live
-          modData.nodes[node].tempCustomAttrs =
-            modData.nodes[node].tempCustomAttrs || {};
+          modData.nodes[node].tempCustomAttrs = {};
           liveNodeEdit.checkedAttrs.forEach(attr => {
             modData.nodes[node].tempCustomAttrs[attr] = liveNodeEdit[attr];
           });
@@ -150,8 +135,6 @@ class App extends React.Component {
       return (
         <div>
           <div
-            className="graphContainer"
-            // TODO: ADD INLINE STYLES TO A CLASS
             style={{
               width: "100%",
               height: "100%",
@@ -167,7 +150,7 @@ class App extends React.Component {
               lockedNodes={this.props.lockedNodes}
               lockedLinks={this.props.lockedLinks}
               selectLink={this.props.selectLink}
-              handleClick={this.handleClick}
+              handleClick={this.handleNodeClick}
               handleLinkClick={this.handleLinkClick}
               handleZoom={this.props.handleZoom}
               selectPage={this.props.selectPage}
@@ -210,7 +193,7 @@ class App extends React.Component {
     }
   };
 
-  handleClick = currentClickedNodeId => {
+  handleNodeClick = currentClickedNodeId => {
     const lastClickedNode = this.props.currentNode;
     const currentNode = this.props.file.nodes.find(e => {
       return e.id === currentClickedNodeId;
@@ -230,29 +213,6 @@ class App extends React.Component {
     }
   };
 }
-
-const ContextMenu = props => {
-  return (
-    <Menu id="contextMenu" style={{ zIndex: "99999" }}>
-      <Item
-        onClick={e => {
-          if (e.props.currSelNode) {
-            e.props.selectNode(e.props.currSelNode);
-          }
-          e.props.addNodeAtCoords(e.props.coords);
-          e.props.selectPage(3);
-        }}
-      >
-        <span>🔵</span>
-        Add new node
-      </Item>
-      <Item onClick={() => {}}>
-        <span>🚫</span>
-        Cancel/Close
-      </Item>
-    </Menu>
-  );
-};
 
 const mapStateToProps = state => ({
   loaded: state.document.present.loaded,

@@ -71,9 +71,6 @@ export default (state = initialState, action) => {
 
       return { ...state, lockedNodes: newLockedNodes };
     }
-    case "liveNodeEdit/EDIT_NAME": {
-      return { ...state, name: action.payload };
-    }
     case "liveNodeEdit/CHANGE_SELECTED_CATEGORY": {
       console.log("action pay", action.payload);
       return { ...state, category: action.payload };
@@ -108,17 +105,6 @@ export default (state = initialState, action) => {
         ...state,
         lockedNodes: newLockedNodes
       };
-    case "liveNodeEdit/LOCKED_NODE_NAME": {
-      const selNode = state.lockedNodes[action.addnl_payload];
-      if (!selNode) {
-        console.log("NO NODE", action);
-        alert("no node found in lockedNodes to edit radius");
-      }
-      selNode.name = action.payload;
-      const newLockedNodes = Object.assign({}, state.lockedNodes);
-      newLockedNodes[action.addnl_payload] = selNode;
-      return { ...state, lockedNodes: newLockedNodes };
-    }
     case "liveNodeEdit/LOCKED_NODE_CHECKBOX_CHANGE": {
       const selNode = state.lockedNodes[action.addnl_payload];
       if (!selNode) {

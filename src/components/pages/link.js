@@ -199,8 +199,6 @@ const mapDispatchToProps = (dispatch, props) => ({
   editLinkValue: (keyAndValue, selLinkId) =>
     dispatch(editLinkValue(keyAndValue, selLinkId)),
   // handleGlobalAttrCheckbox: checked => dispatch(handleGlobalAttrCheckbox(checked)),
-  editName: (name, selLinkId) => dispatch(editName(name, selLinkId)),
-  editFontSize: f => dispatch(editFontSize(f)),
   saveEdits: edits => dispatch(saveEdits(edits)),
   saveLinkEdits: edits => dispatch(saveLinkEdits(edits)),
   handleCheckboxChange: (checkedAttrs, selLinkId) =>
