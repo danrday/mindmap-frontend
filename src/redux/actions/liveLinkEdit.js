@@ -62,15 +62,15 @@ export const editFontSize = fontSize => dispatch => {
     local_msg: true
   });
 };
-
-export const editStrokeWidth = (strokeWidth, selNodeId) => dispatch => {
-  dispatch({
-    type: "liveLinkEdit/EDIT_STROKE_WIDTH",
-    payload: strokeWidth,
-    broadcast: "liveLinkEdit/LOCKED_LINK_STROKE_WIDTH",
-    addnl_payload: selNodeId
-  });
-};
+//
+// export const editStrokeWidth = (strokeWidth, selNodeId) => dispatch => {
+//   dispatch({
+//     type: "liveLinkEdit/EDIT_STROKE_WIDTH",
+//     payload: strokeWidth,
+//     broadcast: "liveLinkEdit/LOCKED_LINK_STROKE_WIDTH",
+//     addnl_payload: selNodeId
+//   });
+// };
 
 export const selectLink = link => dispatch => {
   dispatch({

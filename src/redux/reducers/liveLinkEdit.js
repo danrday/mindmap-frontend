@@ -146,13 +146,13 @@ export default (state = initialState, action) => {
     //   newLockedLinks[action.addnl_payload] = selLink;
     //   return { ...state, lockedLinks: newLockedLinks };
     // }
-    // case `liveLinkEdit/HANDLE_ATTRIBUTE_VALUE_CHANGE`: {
-    //   const { key, value } = action.payload;
-    //   return {
-    //     ...state,
-    //     [key]: value
-    //   };
-    // }
+    case `liveLinkEdit/HANDLE_ATTRIBUTE_VALUE_CHANGE`: {
+      const { key, value } = action.payload;
+      return {
+        ...state,
+        [key]: value
+      };
+    }
     case `liveLinkEdit/HANDLE_LOCKED_ATTRIBUTE_VALUE_CHANGE`: {
       const selLink = state.lockedLinks[action.addnl_payload];
       if (!selLink) {
