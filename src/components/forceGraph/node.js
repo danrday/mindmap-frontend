@@ -9,7 +9,24 @@ class Node extends React.Component {
       .datum(this.props.data)
       .call(enterNode(this.props.displayAttr));
   }
+  shouldComponentUpdate(nextProps) {
+    // if (this.props.data.id === "2fc4ce12-b49c-4590-a6dc-afc361320e85") {
+    if (nextProps.data != this.props.data) {
+      console.log("WQUA??", { next: nextProps.data, curr: this.props.data });
+      console.log("WQUA??", nextProps.data === this.props.data);
+      return true;
+    } else {
+      return false;
+    }
+    //   return false;
+    // } else {
+    //   return true;
+    // }
+  }
   componentDidUpdate() {
+    if (this.props.data.id === "af0f8b50-dffd-47cf-a936-1b2627628e53") {
+      console.log("node update:", this.props.data);
+    }
     d3.select(ReactDOM.findDOMNode(this))
       // won't update bg if uncommented
       // .selectAll(".node")

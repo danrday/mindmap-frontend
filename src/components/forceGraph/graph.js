@@ -12,6 +12,8 @@ function returnGlobalSetting(setting, section, globalSettings) {
 }
 
 class Graph extends React.Component {
+  state = {};
+
   handleContextMenu(e) {
     e.preventDefault();
     contextMenu.show({
@@ -25,138 +27,6 @@ class Graph extends React.Component {
         addNodeAtCoords: this.props.addNodeAtCoords
       }
     });
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    let globalSettings = this.props.globalSettings;
-    const charge = returnGlobalSetting(
-      "chargeStrength",
-      "general",
-      globalSettings
-    );
-    const dist = returnGlobalSetting("linkDistance", "general", globalSettings);
-
-    let force = window.force;
-    force
-      .nodes(this.props.data.nodes) //if a node is updated, we need it to point to the new object
-      .force("charge", d3.forceManyBody().strength(charge || -60))
-      .force("link", d3.forceLink(this.props.data.links).distance(dist))
-      .alphaTarget(0.5)
-      .velocityDecay(0.7)
-      .restart();
-
-    // setTimeout(function() {
-    //   window.force.alphaTarget(0);
-    // }, 3000);
-
-    const lastClicked = this.props.lastClickedNode;
-    if (lastClicked) {
-      let self = this;
-      d3.selectAll("circle")
-        .filter(function(d, i) {
-          return d.id === self.props.lastClickedNode;
-        })
-        .style("stroke-width", function(d) {
-          // return getAttributeValue(d, attr)
-          // TO DO: MAKE THIS GOOD
-          let test = 0.05 * d.tempCustomAttrs.radius;
-          return test;
-        })
-        .style("stroke", function(d) {
-          return "red";
-        });
-    }
-
-    const lastClickedLink = this.props.lastClickedLink;
-    if (lastClickedLink) {
-      let self = this;
-      d3.selectAll("line")
-        .filter(function(d, i) {
-          if (d) {
-            return d.id === self.props.lastClickedLink;
-          } else {
-            return false;
-          }
-        })
-        .style("stroke", function(d) {
-          return "purple";
-        });
-    }
-
-    // d3 force related
-
-    let dragStarted = (d, self) => {
-      // (fires on any mousedown)
-      if (!d3.event.active) force.alphaTarget(0.3).restart();
-      if (d.fx) {
-        d.sticky = true;
-      }
-    };
-
-    let dragging = (d, self) => {
-      console.log("self", self);
-
-      // if (mobile_phone or  single_user?) {
-      //   d3.select(self)
-      //       .attr("cx", (d.x = d3.event.x))
-      //       .attr("cy", (d.y = d3.event.y));
-      //   d.fx = d.x;
-      //   d.fy = d.y;
-      // } else
-
-      if (d.sticky && this.props.lastClickedNode === d.id) {
-        // console.log('select Sticky node, then start to drag it: Unstick and Unselect node.', )
-        this.props.handleClick(d.id);
-        d.sticky = false;
-      }
-      this.props.dragNode(d.id, d3.event.x, d3.event.y, d.sticky); //EMIT TO OTHER USERS
-    };
-
-    let dragEnded = (d, self) => {
-      // (fires on any mouseup)
-      if (!d3.event.active) force.alphaTarget(0);
-      if (this.props.lastClickedNode && this.props.lastClickedNode === d.id) {
-        // console.log('select an unsticky node and drag it, make it stick there', )
-      } else {
-        if (!d.sticky) {
-          // console.log(' finish drag a selected sticky node, Unstick', )
-          this.props.dragNode(d.id, null, null, false); //EMIT TO OTHER USERS
-        } else {
-          // console.log('finish drag an unselected node', )
-        }
-      }
-    };
-
-    // original code
-    // d3.selectAll("g.node").call(
-    //   d3
-    //     .drag()
-    //     .on("start", dragStarted)
-    //     .on("drag", dragging)
-    //     .on("end", dragEnded)
-    // );
-
-    // experiment for fixing phone issue with drag
-    d3.selectAll("g.node").each(function(d) {
-      d3.select(this).call(
-        d3
-          .drag()
-          .on("start", function(d) {
-            dragStarted(d, this);
-          })
-          .on("drag", function(d) {
-            dragging(d, this);
-          })
-          .on("end", function(d) {
-            dragEnded(d, this);
-          })
-      );
-    });
-
-    // PDF EXPERIMENT
-    let canvas = d3.select("svg").node();
-    let config = { filename: "testing" };
-    // savePdf.save(canvas, config)
   }
 
   componentDidMount() {
@@ -251,7 +121,158 @@ class Graph extends React.Component {
       });
 
     // set force function on window object to easily access it from React's update lifecyle method
-    window.force = force;
+    this.setState({ ...this.state, force: force });
+    // window.force = force;
+
+    let self = this;
+    // experiment for fixing phone issue with drag
+    d3.selectAll("g.node").each(function(d) {
+      d3.select(this).call(
+        d3
+          .drag()
+          .on("start", function(d) {
+            self.dragStarted(d, this);
+          })
+          .on("drag", function(d) {
+            self.dragging(d, this);
+          })
+          .on("end", function(d) {
+            self.dragEnded(d, this);
+          })
+      );
+    });
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    let globalSettings = this.props.globalSettings;
+    const charge = returnGlobalSetting(
+      "chargeStrength",
+      "general",
+      globalSettings
+    );
+    const dist = returnGlobalSetting("linkDistance", "general", globalSettings);
+
+    // let force = window.force;
+    let force = this.state.force;
+    force
+      .nodes(this.props.data.nodes) //if a node is updated, we need it to point to the new object
+      .force("charge", d3.forceManyBody().strength(charge || -60))
+      .force("link", d3.forceLink(this.props.data.links).distance(dist))
+      .alphaTarget(0.5)
+      .velocityDecay(0.7)
+      .restart();
+
+    // setTimeout(function() {
+    //   window.force.alphaTarget(0);
+    // }, 3000);
+
+    const lastClicked = this.props.lastClickedNode;
+    if (lastClicked) {
+      let self = this;
+      d3.selectAll("circle")
+        .filter(function(d, i) {
+          return d.id === self.props.lastClickedNode;
+        })
+        .style("stroke-width", function(d) {
+          // return getAttributeValue(d, attr)
+          // TO DO: MAKE THIS GOOD
+          let test = 0.05 * d.tempCustomAttrs.radius;
+          return test;
+        })
+        .style("stroke", function(d) {
+          return "red";
+        });
+    }
+
+    const lastClickedLink = this.props.lastClickedLink;
+    if (lastClickedLink) {
+      let self = this;
+      d3.selectAll("line")
+        .filter(function(d, i) {
+          if (d) {
+            return d.id === self.props.lastClickedLink;
+          } else {
+            return false;
+          }
+        })
+        .style("stroke", function(d) {
+          return "purple";
+        });
+    }
+
+    // original code
+    // d3.selectAll("g.node").call(
+    //   d3
+    //     .drag()
+    //     .on("start", dragStarted)
+    //     .on("drag", dragging)
+    //     .on("end", dragEnded)
+    // );
+
+    // let self = this;
+    // // experiment for fixing phone issue with drag
+    // d3.selectAll("g.node").each(function(d) {
+    //   d3.select(this).call(
+    //     d3
+    //       .drag()
+    //       .on("start", function(d) {
+    //         self.dragStarted(d, this);
+    //       })
+    //       .on("drag", function(d) {
+    //         self.dragging(d, this);
+    //       })
+    //       .on("end", function(d) {
+    //         self.dragEnded(d, this);
+    //       })
+    //   );
+    // });
+
+    // PDF EXPERIMENT
+    let canvas = d3.select("svg").node();
+    let config = { filename: "testing" };
+    // savePdf.save(canvas, config)
+  }
+
+  dragStarted(d, self) {
+    // (fires on any mousedown)
+    if (!d3.event.active) this.state.force.alphaTarget(0.3).restart();
+    if (d.fx) {
+      d.sticky = true;
+    }
+  }
+
+  dragging(d, self) {
+    console.log("self", self);
+
+    // if (mobile_phone or  single_user?) {
+    //   d3.select(self)
+    //       .attr("cx", (d.x = d3.event.x))
+    //       .attr("cy", (d.y = d3.event.y));
+    //   d.fx = d.x;
+    //   d.fy = d.y;
+    // } else
+
+    if (d.sticky && this.props.lastClickedNode === d.id) {
+      // console.log('select Sticky node, then start to drag it: Unstick and Unselect node.', )
+      this.props.handleClick(d.id);
+      d.sticky = false;
+    }
+    this.props.dragNode(d.id, d3.event.x, d3.event.y, d.sticky); //EMIT TO OTHER USERS
+  }
+
+  dragEnded(d, self) {
+    // (fires on any mouseup)
+    if (!d3.event.active) this.state.force.alphaTarget(0);
+    if (this.props.lastClickedNode && this.props.lastClickedNode === d.id) {
+      // console.log('select an unsticky node and drag it, make it stick there', )
+    } else {
+      if (!d.sticky) {
+        // console.log(' finish drag a selected sticky node, Unstick', )
+        this.props.dragNode(d.id, null, null, false); //EMIT TO OTHER USERS
+      } else {
+        // console.log('finish drag an unselected node', )
+      }
+    }
   }
 
   getCategory(cat) {
