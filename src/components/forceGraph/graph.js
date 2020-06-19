@@ -12,22 +12,9 @@ function returnGlobalSetting(setting, section, globalSettings) {
 }
 
 class Graph extends React.Component {
-  state = {};
-
-  handleContextMenu(e) {
-    e.preventDefault();
-    contextMenu.show({
-      id: "contextMenu",
-      event: e,
-      props: {
-        coords: this.props.mouseCoords.self.coords,
-        currSelNode: this.props.lastClickedNode,
-        selectNode: this.props.selectNode,
-        selectPage: this.props.selectPage,
-        addNodeAtCoords: this.props.addNodeAtCoords
-      }
-    });
-  }
+  state = {
+    force: null
+  };
 
   componentDidMount() {
     let globalSettings = this.props.globalSettings;
@@ -120,9 +107,7 @@ class Graph extends React.Component {
         this.d3Graph.call(updateGraph);
       });
 
-    // set force function on window object to easily access it from React's update lifecyle method
     this.setState({ ...this.state, force: force });
-    // window.force = force;
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -154,10 +139,6 @@ class Graph extends React.Component {
     // savePdf.save(canvas, config)
   }
 
-  getCategory(cat) {
-    return this.props.data.categories[cat];
-  }
-
   displayAttr(d, value) {
     const {
       tempCustomAttrs,
@@ -186,6 +167,10 @@ class Graph extends React.Component {
     else {
       return globalSettings[value].defaultValue;
     }
+  }
+
+  getCategory(cat) {
+    return this.props.data.categories[cat];
   }
 
   render() {
@@ -284,6 +269,21 @@ class Graph extends React.Component {
         </g>
       </svg>
     );
+  }
+
+  handleContextMenu(e) {
+    e.preventDefault();
+    contextMenu.show({
+      id: "contextMenu",
+      event: e,
+      props: {
+        coords: this.props.mouseCoords.self.coords,
+        currSelNode: this.props.lastClickedNode,
+        selectNode: this.props.selectNode,
+        selectPage: this.props.selectPage,
+        addNodeAtCoords: this.props.addNodeAtCoords
+      }
+    });
   }
 }
 

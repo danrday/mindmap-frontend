@@ -4,6 +4,7 @@ import Link from "./pages/link";
 import Categories from "./pages/categories";
 import GlobalSettings from "./pages/global";
 import RichText from "./pages/richText";
+import SubMenuShell from "./pages/subMenuShell";
 
 const navLinks = [
   {
@@ -41,7 +42,7 @@ const navLinks = [
     altNavItemText: "",
     component: props => {
       const customProps = props;
-      return <Node {...customProps} />;
+      return <SubMenuShell {...customProps} />;
     }
   },
   // {
@@ -76,7 +77,7 @@ const navLinks = [
     navItemText: "",
     component: props => {
       const customProps = props;
-      return <RichText {...customProps} />;
+      return <SubMenuShell {...customProps} />;
     }
   },
   {

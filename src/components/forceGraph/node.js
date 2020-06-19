@@ -101,7 +101,7 @@ class Node extends React.Component {
     const unClicked =
       this.props.lastClickedNode === this.props.data.id &&
       nextProps.lastClickedNode !== this.props.lastClickedNode;
-    return freshNode || lastClicked || unClicked || lockedNode;
+    return freshNode || lastClicked || unClicked || lockedNode || false;
   }
   componentDidUpdate() {
     if (this.props.data.id === "af0f8b50-dffd-47cf-a936-1b2627628e53") {

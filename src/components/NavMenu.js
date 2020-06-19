@@ -31,6 +31,8 @@ class NavMenu extends Component {
 
           const isNodeItem = item.link === "/node";
 
+          const isRichText = item.link === "/richText";
+
           const isLocked = this.props.lockedPages.includes(i);
 
           return (
