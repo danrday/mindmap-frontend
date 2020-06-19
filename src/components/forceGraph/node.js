@@ -96,7 +96,7 @@ class Node extends React.Component {
   }
   shouldComponentUpdate(nextProps) {
     console.log("this.props", this.props);
-    const freshNode = nextProps.data != this.props.data;
+    const freshNode = nextProps.data !== this.props.data;
     const lastClicked = nextProps.lastClickedNode === this.props.data.id;
     const unClicked =
       this.props.lastClickedNode === this.props.data.id &&
@@ -148,24 +148,6 @@ class Node extends React.Component {
     );
   }
 }
-
-// const lastClicked = this.props.lastClickedNode;
-// if (lastClicked) {
-//   let self = this;
-//   d3.selectAll("circle")
-//       .filter(function(d, i) {
-//         return d.id === self.props.lastClickedNode;
-//       })
-//       .style("stroke-width", function(d) {
-//         // return getAttributeValue(d, attr)
-//         // TO DO: MAKE THIS GOOD
-//         let test = 0.05 * d.tempCustomAttrs.radius;
-//         return test;
-//       })
-//       .style("stroke", function(d) {
-//         return "red";
-//       });
-// }
 
 const enterNode = (displayAttr, lastClickedNode) => {
   return selection => {

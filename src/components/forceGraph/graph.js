@@ -123,24 +123,6 @@ class Graph extends React.Component {
     // set force function on window object to easily access it from React's update lifecyle method
     this.setState({ ...this.state, force: force });
     // window.force = force;
-
-    let self = this;
-    // experiment for fixing phone issue with drag
-    // d3.selectAll("g.node").each(function(d) {
-    //   d3.select(this).call(
-    //     d3
-    //       .drag()
-    //       .on("start", function(d) {
-    //         self.dragStarted(d, this);
-    //       })
-    //       .on("drag", function(d) {
-    //         self.dragging(d, this);
-    //       })
-    //       .on("end", function(d) {
-    //         self.dragEnded(d, this);
-    //       })
-    //   );
-    // });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -165,40 +147,6 @@ class Graph extends React.Component {
     // setTimeout(function() {
     //   window.force.alphaTarget(0);
     // }, 3000);
-
-    // const lastClicked = this.props.lastClickedNode;
-    // if (lastClicked) {
-    //   let self = this;
-    //   d3.selectAll("circle")
-    //     .filter(function(d, i) {
-    //       return d.id === self.props.lastClickedNode;
-    //     })
-    //     .style("stroke-width", function(d) {
-    //       // return getAttributeValue(d, attr)
-    //       // TO DO: MAKE THIS GOOD
-    //       let test = 0.05 * d.tempCustomAttrs.radius;
-    //       return test;
-    //     })
-    //     .style("stroke", function(d) {
-    //       return "red";
-    //     });
-    // }
-
-    const lastClickedLink = this.props.lastClickedLink;
-    if (lastClickedLink) {
-      let self = this;
-      d3.selectAll("line")
-        .filter(function(d, i) {
-          if (d) {
-            return d.id === self.props.lastClickedLink;
-          } else {
-            return false;
-          }
-        })
-        .style("stroke", function(d) {
-          return "purple";
-        });
-    }
 
     // PDF EXPERIMENT
     let canvas = d3.select("svg").node();
@@ -269,6 +217,7 @@ class Graph extends React.Component {
     const links = this.props.data.links.map((link, i) => (
       <Link
         key={link.id}
+        lastClickedLink={this.props.lastClickedLink}
         data={link}
         displayAttr={this.displayAttr}
         lockedLinks={this.props.lockedLinks}
