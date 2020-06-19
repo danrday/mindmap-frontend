@@ -9,21 +9,16 @@ class Link extends React.Component {
       .call(enterLink(this.props.displayAttr));
   }
   shouldComponentUpdate(nextProps) {
+    const lockedLink = this.props.lockedLinks[this.props.data.id];
     const freshLink = nextProps.data !== this.props.data;
     const lastClicked = nextProps.lastClickedLink === this.props.data.id;
     const unClicked =
       this.props.lastClickedLink === this.props.data.id &&
       nextProps.lastClickedLink !== this.props.lastClickedLink;
-    if (freshLink || lastClicked || unClicked) {
-      return true;
-    } else {
-      return false;
-    }
+    return freshLink || lastClicked || unClicked || lockedLink;
   }
   componentDidUpdate() {
     d3.select(ReactDOM.findDOMNode(this))
-      // won't update bg if uncommented
-      // .selectAll(".node")
       .datum(this.props.data)
       .call(enterLink(this.props.displayAttr, this.props.lastClickedLink));
   }

@@ -95,29 +95,19 @@ class Node extends React.Component {
     );
   }
   shouldComponentUpdate(nextProps) {
-    console.log("this.props", this.props);
+    const lockedNode = this.props.lockedNodes[this.props.data.id]; //think this works because of mutation of lockedNodes
     const freshNode = nextProps.data !== this.props.data;
     const lastClicked = nextProps.lastClickedNode === this.props.data.id;
     const unClicked =
       this.props.lastClickedNode === this.props.data.id &&
       nextProps.lastClickedNode !== this.props.lastClickedNode;
-    if (freshNode || lastClicked || unClicked) {
-      // if (this.props.data.id === "2fc4ce12-b49c-4590-a6dc-afc361320e85") {
-      //   console.log("WQUA??", { next: nextProps.data, curr: this.props.data });
-      //   console.log("WQUA??", nextProps.data === this.props.data);
-      // }
-      return true;
-    } else {
-      return false;
-    }
+    return freshNode || lastClicked || unClicked || lockedNode;
   }
   componentDidUpdate() {
     if (this.props.data.id === "af0f8b50-dffd-47cf-a936-1b2627628e53") {
       console.log("node update:", this.props.data);
     }
     d3.select(ReactDOM.findDOMNode(this))
-      // won't update bg if uncommented
-      // .selectAll(".node")
       .datum(this.props.data)
       .call(enterNode(this.props.displayAttr, this.props.lastClickedNode));
   }
