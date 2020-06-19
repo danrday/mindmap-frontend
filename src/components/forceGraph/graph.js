@@ -126,21 +126,21 @@ class Graph extends React.Component {
 
     let self = this;
     // experiment for fixing phone issue with drag
-    d3.selectAll("g.node").each(function(d) {
-      d3.select(this).call(
-        d3
-          .drag()
-          .on("start", function(d) {
-            self.dragStarted(d, this);
-          })
-          .on("drag", function(d) {
-            self.dragging(d, this);
-          })
-          .on("end", function(d) {
-            self.dragEnded(d, this);
-          })
-      );
-    });
+    // d3.selectAll("g.node").each(function(d) {
+    //   d3.select(this).call(
+    //     d3
+    //       .drag()
+    //       .on("start", function(d) {
+    //         self.dragStarted(d, this);
+    //       })
+    //       .on("drag", function(d) {
+    //         self.dragging(d, this);
+    //       })
+    //       .on("end", function(d) {
+    //         self.dragEnded(d, this);
+    //       })
+    //   );
+    // });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -166,23 +166,23 @@ class Graph extends React.Component {
     //   window.force.alphaTarget(0);
     // }, 3000);
 
-    const lastClicked = this.props.lastClickedNode;
-    if (lastClicked) {
-      let self = this;
-      d3.selectAll("circle")
-        .filter(function(d, i) {
-          return d.id === self.props.lastClickedNode;
-        })
-        .style("stroke-width", function(d) {
-          // return getAttributeValue(d, attr)
-          // TO DO: MAKE THIS GOOD
-          let test = 0.05 * d.tempCustomAttrs.radius;
-          return test;
-        })
-        .style("stroke", function(d) {
-          return "red";
-        });
-    }
+    // const lastClicked = this.props.lastClickedNode;
+    // if (lastClicked) {
+    //   let self = this;
+    //   d3.selectAll("circle")
+    //     .filter(function(d, i) {
+    //       return d.id === self.props.lastClickedNode;
+    //     })
+    //     .style("stroke-width", function(d) {
+    //       // return getAttributeValue(d, attr)
+    //       // TO DO: MAKE THIS GOOD
+    //       let test = 0.05 * d.tempCustomAttrs.radius;
+    //       return test;
+    //     })
+    //     .style("stroke", function(d) {
+    //       return "red";
+    //     });
+    // }
 
     const lastClickedLink = this.props.lastClickedLink;
     if (lastClickedLink) {
@@ -200,79 +200,10 @@ class Graph extends React.Component {
         });
     }
 
-    // original code
-    // d3.selectAll("g.node").call(
-    //   d3
-    //     .drag()
-    //     .on("start", dragStarted)
-    //     .on("drag", dragging)
-    //     .on("end", dragEnded)
-    // );
-
-    // let self = this;
-    // // experiment for fixing phone issue with drag
-    // d3.selectAll("g.node").each(function(d) {
-    //   d3.select(this).call(
-    //     d3
-    //       .drag()
-    //       .on("start", function(d) {
-    //         self.dragStarted(d, this);
-    //       })
-    //       .on("drag", function(d) {
-    //         self.dragging(d, this);
-    //       })
-    //       .on("end", function(d) {
-    //         self.dragEnded(d, this);
-    //       })
-    //   );
-    // });
-
     // PDF EXPERIMENT
     let canvas = d3.select("svg").node();
     let config = { filename: "testing" };
     // savePdf.save(canvas, config)
-  }
-
-  dragStarted(d, self) {
-    // (fires on any mousedown)
-    if (!d3.event.active) this.state.force.alphaTarget(0.3).restart();
-    if (d.fx) {
-      d.sticky = true;
-    }
-  }
-
-  dragging(d, self) {
-    console.log("self", self);
-
-    // if (mobile_phone or  single_user?) {
-    //   d3.select(self)
-    //       .attr("cx", (d.x = d3.event.x))
-    //       .attr("cy", (d.y = d3.event.y));
-    //   d.fx = d.x;
-    //   d.fy = d.y;
-    // } else
-
-    if (d.sticky && this.props.lastClickedNode === d.id) {
-      // console.log('select Sticky node, then start to drag it: Unstick and Unselect node.', )
-      this.props.handleClick(d.id);
-      d.sticky = false;
-    }
-    this.props.dragNode(d.id, d3.event.x, d3.event.y, d.sticky); //EMIT TO OTHER USERS
-  }
-
-  dragEnded(d, self) {
-    // (fires on any mouseup)
-    if (!d3.event.active) this.state.force.alphaTarget(0);
-    if (this.props.lastClickedNode && this.props.lastClickedNode === d.id) {
-      // console.log('select an unsticky node and drag it, make it stick there', )
-    } else {
-      if (!d.sticky) {
-        // console.log(' finish drag a selected sticky node, Unstick', )
-        this.props.dragNode(d.id, null, null, false); //EMIT TO OTHER USERS
-      } else {
-        // console.log('finish drag an unselected node', )
-      }
-    }
   }
 
   getCategory(cat) {
@@ -320,6 +251,9 @@ class Graph extends React.Component {
       }
       return (
         <Node
+          force={this.state.force}
+          lastClickedNode={this.props.lastClickedNode}
+          dragNode={this.props.dragNode}
           data={node}
           name={node.name}
           displayAttr={this.displayAttr}

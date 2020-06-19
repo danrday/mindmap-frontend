@@ -4,24 +4,112 @@ import ReactDOM from "react-dom";
 const color = d3.scaleOrdinal(d3.schemeCategory10);
 
 class Node extends React.Component {
+  dragStarted(d, self) {
+    // (fires on any mousedown)
+    if (!d3.event.active) this.props.force.alphaTarget(0.3).restart();
+    if (d.fx) {
+      d.sticky = true;
+    }
+  }
+
+  dragging(d, self) {
+    console.log("self", self);
+
+    // if (mobile_phone or  single_user?) {
+    //   d3.select(self)
+    //       .attr("cx", (d.x = d3.event.x))
+    //       .attr("cy", (d.y = d3.event.y));
+    //   d.fx = d.x;
+    //   d.fy = d.y;
+    // } else
+
+    if (d.sticky && this.props.lastClickedNode === d.id) {
+      // console.log('select Sticky node, then start to drag it: Unstick and Unselect node.', )
+      this.props.handleClick(d.id);
+      d.sticky = false;
+    }
+    this.props.dragNode(d.id, d3.event.x, d3.event.y, d.sticky); //EMIT TO OTHER USERS
+  }
+
+  dragEnded(d, self) {
+    // (fires on any mouseup)
+    if (!d3.event.active) this.props.force.alphaTarget(0);
+    if (this.props.lastClickedNode && this.props.lastClickedNode === d.id) {
+      // console.log('select an unsticky node and drag it, make it stick there', )
+    } else {
+      if (!d.sticky) {
+        // console.log(' finish drag a selected sticky node, Unstick', )
+        this.props.dragNode(d.id, null, null, false); //EMIT TO OTHER USERS
+      } else {
+        // console.log('finish drag an unselected node', )
+      }
+    }
+  }
+
   componentDidMount() {
     d3.select(ReactDOM.findDOMNode(this))
       .datum(this.props.data)
       .call(enterNode(this.props.displayAttr));
+
+    // DRAG STUFF
+    // original code
+    // d3.selectAll("g.node").call(
+    //   d3
+    //     .drag()
+    //     .on("start", dragStarted)
+    //     .on("drag", dragging)
+    //     .on("end", dragEnded)
+    // );
+
+    // let self = this;
+    // // experiment for fixing phone issue with drag
+    // d3.selectAll("g.node").each(function(d) {
+    //   d3.select(this).call(
+    //     d3
+    //       .drag()
+    //       .on("start", function(d) {
+    //         self.dragStarted(d, this);
+    //       })
+    //       .on("drag", function(d) {
+    //         self.dragging(d, this);
+    //       })
+    //       .on("end", function(d) {
+    //         self.dragEnded(d, this);
+    //       })
+    //   );
+    // });
+
+    let self = this;
+    d3.select(ReactDOM.findDOMNode(this)).call(
+      d3
+        .drag()
+        .on("start", function(d) {
+          self.dragStarted(d, this);
+        })
+        .on("drag", function(d) {
+          self.dragging(d, this);
+        })
+        .on("end", function(d) {
+          self.dragEnded(d, this);
+        })
+    );
   }
   shouldComponentUpdate(nextProps) {
-    // if (this.props.data.id === "2fc4ce12-b49c-4590-a6dc-afc361320e85") {
-    if (nextProps.data != this.props.data) {
-      console.log("WQUA??", { next: nextProps.data, curr: this.props.data });
-      console.log("WQUA??", nextProps.data === this.props.data);
+    console.log("this.props", this.props);
+    const freshNode = nextProps.data != this.props.data;
+    const lastClicked = nextProps.lastClickedNode === this.props.data.id;
+    const unClicked =
+      this.props.lastClickedNode === this.props.data.id &&
+      nextProps.lastClickedNode !== this.props.lastClickedNode;
+    if (freshNode || lastClicked || unClicked) {
+      // if (this.props.data.id === "2fc4ce12-b49c-4590-a6dc-afc361320e85") {
+      //   console.log("WQUA??", { next: nextProps.data, curr: this.props.data });
+      //   console.log("WQUA??", nextProps.data === this.props.data);
+      // }
       return true;
     } else {
       return false;
     }
-    //   return false;
-    // } else {
-    //   return true;
-    // }
   }
   componentDidUpdate() {
     if (this.props.data.id === "af0f8b50-dffd-47cf-a936-1b2627628e53") {
@@ -31,7 +119,7 @@ class Node extends React.Component {
       // won't update bg if uncommented
       // .selectAll(".node")
       .datum(this.props.data)
-      .call(enterNode(this.props.displayAttr));
+      .call(enterNode(this.props.displayAttr, this.props.lastClickedNode));
   }
   render() {
     let lockedNode = this.props.lockedNodes[this.props.data.id];
@@ -61,7 +149,25 @@ class Node extends React.Component {
   }
 }
 
-const enterNode = displayAttr => {
+// const lastClicked = this.props.lastClickedNode;
+// if (lastClicked) {
+//   let self = this;
+//   d3.selectAll("circle")
+//       .filter(function(d, i) {
+//         return d.id === self.props.lastClickedNode;
+//       })
+//       .style("stroke-width", function(d) {
+//         // return getAttributeValue(d, attr)
+//         // TO DO: MAKE THIS GOOD
+//         let test = 0.05 * d.tempCustomAttrs.radius;
+//         return test;
+//       })
+//       .style("stroke", function(d) {
+//         return "red";
+//       });
+// }
+
+const enterNode = (displayAttr, lastClickedNode) => {
   return selection => {
     selection
       .select("circle")
@@ -69,11 +175,16 @@ const enterNode = displayAttr => {
         return displayAttr(d, "radius");
       })
       .style("stroke-width", function(d) {
-        return "1";
+        if (d.id === lastClickedNode) {
+          let test = 0.05 * d.tempCustomAttrs.radius;
+          return test;
+        } else {
+          return "1";
+        }
       })
       .style("stroke", function(d) {
-        if (d.fx) {
-          return "black";
+        if (d.id === lastClickedNode) {
+          return "red";
         } else {
           return "purple";
         }
