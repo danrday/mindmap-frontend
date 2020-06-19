@@ -4,7 +4,7 @@ import ReactQuill from "react-quill";
 import styled from "styled-components";
 import Button from "../reusable/button"; // ES6
 import { saveTextFile, saveEdits } from "../../redux/actions/document";
-import { editName } from "../../redux/actions/liveNodeEdit";
+import { editNodeValue } from "../../redux/actions/liveNodeEdit";
 
 class RichText extends Component {
   state = {
@@ -66,7 +66,10 @@ class RichText extends Component {
             this.props.globalEdit.node.name.defaultValue
           }
           onChange={event =>
-            this.props.editName(event.target.value, this.props.selNodeId)
+            this.props.editNodeValue(
+              { key: "name", value: event.target.value },
+              this.props.selNodeId
+            )
           }
         />
         <ReactQuill
@@ -86,8 +89,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  editNodeValue: (keyAndValue, selNodeId) =>
+    dispatch(editNodeValue(keyAndValue, selNodeId)),
   saveEdits: edits => dispatch(saveEdits(edits)),
-  saveTextFile: textAndNodeId => dispatch(saveTextFile(textAndNodeId)),
-  editName: (name, selNodeId) => dispatch(editName(name, selNodeId))
+  saveTextFile: textAndNodeId => dispatch(saveTextFile(textAndNodeId))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(RichText);

@@ -10,14 +10,12 @@ function returnGlobalSetting(setting, section, globalSettings) {
     ? globalSettings[section][setting].customValue
     : globalSettings[section][setting].defaultValue;
 }
-const color = d3.scaleOrdinal(d3.schemeCategory10);
 
 class Graph extends React.Component {
-  handleContextMenu(e) {
-    // always prevent default behavior
-    e.preventDefault();
+  state = {};
 
-    // Don't forget to pass the id and the event and voila!
+  handleContextMenu(e) {
+    e.preventDefault();
     contextMenu.show({
       id: "contextMenu",
       event: e,
@@ -31,159 +29,9 @@ class Graph extends React.Component {
     });
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    const charge = returnGlobalSetting(
-      "chargeStrength",
-      "general",
-      this.props.globalSettings
-    );
-    const dist = returnGlobalSetting(
-      "linkDistance",
-      "general",
-      this.props.globalSettings
-    );
-
-    console.log("DIST", dist);
-
-    window.force
-      .nodes(this.props.data.nodes) //if a node is updated, we need it to point to the new object
-      .force("charge", d3.forceManyBody().strength(charge || -60))
-      .force("link", d3.forceLink(this.props.data.links).distance(dist))
-      .alphaTarget(0.5)
-      .velocityDecay(0.7)
-      .restart();
-
-    // setTimeout(function() {
-    //   window.force.alphaTarget(0);
-    // }, 3000);
-
-    /*put this first since it will repaint prev selected node
-        if you click 'new node' more than once*/
-    d3.selectAll("circle")
-      .style("fill", function(d) {
-        console.log("d", d);
-        return color(d.id);
-      })
-      .style("stroke-width", function(d) {
-        return "1";
-      })
-      .style("stroke-dasharray", function(d) {
-        return "0,0";
-      });
-
-    const lastClicked = this.props.lastClickedNode;
-    if (lastClicked) {
-      let self = this;
-      d3.selectAll("circle")
-        .filter(function(d, i) {
-          return d.id === self.props.lastClickedNode;
-        })
-        .style("stroke-width", function(d) {
-          // return getAttributeValue(d, attr)
-          return "30";
-        })
-        .style("stroke", function(d) {
-          return "red";
-        });
-    }
-
-    const lastClickedLink = this.props.lastClickedLink;
-    if (lastClickedLink) {
-      let self = this;
-
-      let hi = d3.selectAll("line");
-
-      console.log("hi", hi);
-      d3.selectAll("line")
-        .filter(function(d, i) {
-          if (d) {
-            return d.id === self.props.lastClickedLink;
-          } else {
-            return false;
-          }
-        })
-        .style("stroke", function(d) {
-          return "red";
-        });
-    }
-
-    // d3 force related
-
-    let force = window.force;
-
-    let dragStarted = (d, self) => {
-      console.log("self", self);
-      // (fires on any mousedown)
-      if (!d3.event.active) force.alphaTarget(0.3).restart();
-      if (d.fx) {
-        d.sticky = true;
-      }
-    };
-
-    let dragging = (d, self) => {
-      console.log("self", self);
-
-      // if (mobile_phone or  single_user?) {
-      //   d3.select(self)
-      //       .attr("cx", (d.x = d3.event.x))
-      //       .attr("cy", (d.y = d3.event.y));
-      //   d.fx = d.x;
-      //   d.fy = d.y;
-      // } else
-
-      if (d.sticky && this.props.lastClickedNode === d.id) {
-        // console.log('select Sticky node, then start to drag it: Unstick and Unselect node.', )
-        this.props.handleClick(d.id);
-        d.sticky = false;
-      }
-      this.props.dragNode(d.id, d3.event.x, d3.event.y, d.sticky); //EMIT TO OTHER USERS
-    };
-
-    let dragEnded = (d, self) => {
-      // (fires on any mouseup)
-      if (!d3.event.active) force.alphaTarget(0);
-      if (this.props.lastClickedNode && this.props.lastClickedNode === d.id) {
-        // console.log('select an unsticky node and drag it, make it stick there', )
-      } else {
-        if (!d.sticky) {
-          // console.log(' finish drag a selected sticky node, Unstick', )
-          this.props.dragNode(d.id, null, null, false); //EMIT TO OTHER USERS
-        } else {
-          // console.log('finish drag an unselected node', )
-        }
-      }
-    };
-
-    // d3.selectAll("g.node").call(
-    //   d3
-    //     .drag()
-    //     .on("start", dragStarted)
-    //     .on("drag", dragging)
-    //     .on("end", dragEnded)
-    // );
-
-    d3.selectAll("g.node").each(function(d) {
-      d3.select(this).call(
-        d3
-          .drag()
-          .on("start", function(d) {
-            dragStarted(d, this);
-          })
-          .on("drag", function(d) {
-            dragging(d, this);
-          })
-          .on("end", function(d) {
-            dragEnded(d, this);
-          })
-      );
-    });
-
-    let canvas = d3.select("svg").node();
-    let config = { filename: "testing" };
-    // savePdf.save(canvas, config)
-  }
-
   componentDidMount() {
+    let globalSettings = this.props.globalSettings;
+
     const updateGraph = selection => {
       selection.selectAll(".node").call(updateNode);
       selection.selectAll(".link").call(updateLink);
@@ -204,22 +52,18 @@ class Graph extends React.Component {
     };
 
     // set initial zoom frame from saved value
+    let initialZoom = this.props.initialZoom;
     d3.select(".frameForZoom").attr(
       "transform",
-      `translate(${this.props.initialZoom.x}, ${this.props.initialZoom.y})scale(${this.props.initialZoom.k})`
+      `translate(${initialZoom.x}, ${initialZoom.y})scale(${initialZoom.k})`
     );
 
-    // React doesn't know much about d3's event system firing off. We can add custom dispatch methods onto d3 events.
-    // otherwise, we aren't aware of updates being performed by d3.
-
+    // transmit mouse coords to other users
     const domNode = ReactDOM.findDOMNode(this);
     this.d3Graph = d3.select(domNode).on("mousemove", e => {
       const transform = d3.zoomTransform(d3.select(".frameForZoom").node());
       const xy = d3.mouse(domNode);
       const xyTransform = transform.invert(xy); // relative to zoom
-
-      console.log("username", this.props.user);
-
       this.props.handleMouseMove({
         coords: {
           x: xyTransform[0],
@@ -231,13 +75,12 @@ class Graph extends React.Component {
     });
 
     // view / zoom related:
-
     this.d3Graph.call(
       d3.zoom().transform,
       d3.zoomIdentity
         // set 'zoom identity' so d3 knows what zoom level you are at from the initialized value
-        .translate(this.props.initialZoom.x, this.props.initialZoom.y)
-        .scale(this.props.initialZoom.k)
+        .translate(initialZoom.x, initialZoom.y)
+        .scale(initialZoom.k)
     );
 
     this.d3Graph
@@ -247,7 +90,6 @@ class Graph extends React.Component {
       });
 
     function handleZoom(self) {
-      // console.log('Zoom:', {x, y, k})
       let { x, y, k } = d3.event.transform;
       d3.select(".frameForZoom").attr("transform", d3.event.transform);
       self.props.handleZoom(d3.event.transform);
@@ -261,11 +103,7 @@ class Graph extends React.Component {
         d3
           .forceManyBody()
           .strength(
-            returnGlobalSetting(
-              "chargeStrength",
-              "general",
-              this.props.globalSettings
-            )
+            returnGlobalSetting("chargeStrength", "general", globalSettings)
           )
       )
       .force(
@@ -275,7 +113,7 @@ class Graph extends React.Component {
           .id(function(d) {
             /*reference by id, not index */ return d.id;
           })
-          .distance(this.props.globalSettings.linkDistance || 900)
+          .distance(globalSettings.linkDistance || 900)
       )
       .force("collide", d3.forceCollide([65]).iterations([60]))
       .on("tick", () => {
@@ -283,7 +121,37 @@ class Graph extends React.Component {
       });
 
     // set force function on window object to easily access it from React's update lifecyle method
-    window.force = force;
+    this.setState({ ...this.state, force: force });
+    // window.force = force;
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    let globalSettings = this.props.globalSettings;
+    const charge = returnGlobalSetting(
+      "chargeStrength",
+      "general",
+      globalSettings
+    );
+    const dist = returnGlobalSetting("linkDistance", "general", globalSettings);
+
+    // let force = window.force;
+    let force = this.state.force;
+    force
+      .nodes(this.props.data.nodes) //if a node is updated, we need it to point to the new object
+      .force("charge", d3.forceManyBody().strength(charge || -60))
+      .force("link", d3.forceLink(this.props.data.links).distance(dist))
+      .alphaTarget(0.5)
+      .velocityDecay(0.7)
+      .restart();
+
+    // setTimeout(function() {
+    //   window.force.alphaTarget(0);
+    // }, 3000);
+
+    // PDF EXPERIMENT
+    let canvas = d3.select("svg").node();
+    let config = { filename: "testing" };
+    // savePdf.save(canvas, config)
   }
 
   getCategory(cat) {
@@ -291,7 +159,6 @@ class Graph extends React.Component {
   }
 
   displayAttr(d, value) {
-    console.log("DISPLAY ATTR", d, value);
     const {
       tempCustomAttrs,
       customAttrs,
@@ -324,14 +191,17 @@ class Graph extends React.Component {
   render() {
     const nodes = this.props.data.nodes.map(node => {
       if (node.category) {
-        let cat = this.getCategory(node.category);
-        if (cat) {
-          /*check if it exists*/
-          node.categoryAttrs = cat;
+        let category = this.getCategory(node.category);
+        if (category) {
+          // check if it exists
+          node.categoryAttrs = category;
         }
       }
       return (
         <Node
+          force={this.state.force}
+          lastClickedNode={this.props.lastClickedNode}
+          dragNode={this.props.dragNode}
           data={node}
           name={node.name}
           displayAttr={this.displayAttr}
@@ -346,7 +216,8 @@ class Graph extends React.Component {
     });
     const links = this.props.data.links.map((link, i) => (
       <Link
-        key={i}
+        key={link.id}
+        lastClickedLink={this.props.lastClickedLink}
         data={link}
         displayAttr={this.displayAttr}
         lockedLinks={this.props.lockedLinks}
