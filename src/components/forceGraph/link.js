@@ -15,7 +15,7 @@ class Link extends React.Component {
     const unClicked =
       this.props.lastClickedLink === this.props.data.id &&
       nextProps.lastClickedLink !== this.props.lastClickedLink;
-    return freshLink || lastClicked || unClicked || lockedLink;
+    return freshLink || lastClicked || unClicked || lockedLink || false;
   }
   componentDidUpdate() {
     d3.select(ReactDOM.findDOMNode(this))
