@@ -36,7 +36,7 @@ class Link extends React.Component {
             d3.event.preventDefault();
           } else {
             this.props.handleClick(this.props.data.id);
-            this.props.selectPage(5);
+            this.props.selectPage("/link");
           }
         }}
       />

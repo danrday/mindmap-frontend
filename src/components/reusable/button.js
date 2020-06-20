@@ -6,7 +6,7 @@ class Button extends Component {
       <button
         style={{ margin: "5px" }}
         onClick={this.props.click}
-        className="button is-success is-rounded is-light"
+        className="button is-success is-rounded is-light is-small"
       >
         {this.props.children}
       </button>

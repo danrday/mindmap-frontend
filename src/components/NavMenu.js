@@ -14,8 +14,8 @@ import { selectNode } from "../redux/actions/liveNodeEdit";
 import { selectPage } from "../redux/actions/ui";
 
 class NavMenu extends Component {
-  handleSelected(i) {
-    this.props.selectPage(i, this.props.selectedPage);
+  handleSelected(path) {
+    this.props.selectPage(path, this.props.selectedPage);
   }
   render() {
     return (
@@ -47,7 +47,7 @@ class NavMenu extends Component {
                       this.props.document.present.editedFile
                     );
                   } else {
-                    this.handleSelected(i);
+                    this.handleSelected(item.link);
                   }
                 }}
                 isSelected={isSelected}
@@ -104,7 +104,7 @@ const NavItemsFrame = styled.div`
   ${({ openNav, hoverNav }) =>
     (openNav || hoverNav) &&
     `
-        background: yellow;
+        background: darkorange;
       `}
 `;
 

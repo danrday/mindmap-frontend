@@ -15,8 +15,12 @@ import { selectNode } from "../redux/actions/liveNodeEdit";
 
 class PageOptions extends Component {
   selectedMenu() {
-    if (this.props.selectedPage) {
-      return navLinks[this.props.selectedPage].component();
+    if (this.props.selectedPage && this.props.selectedPage !== "/open") {
+      let link = navLinks.find(navlink => {
+        return navlink.link === this.props.selectedPage;
+      });
+      console.log("hi", this.props.selectedPage);
+      return link.component();
     } else {
       return (
         <div>
@@ -72,7 +76,7 @@ const Test = styled.div`
   display: relative;
   height: calc(100vh - 60px);
   overflow-y: scroll;
-  background-color: purple;
+  background-color: brown;
 
   ${({ openNav, hoverNav }) =>
     (openNav || hoverNav) &&

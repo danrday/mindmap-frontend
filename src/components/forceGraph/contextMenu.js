@@ -11,7 +11,7 @@ const ContextMenu = props => {
             e.props.selectNode(e.props.currSelNode);
           }
           e.props.addNodeAtCoords(e.props.coords);
-          e.props.selectPage(3);
+          e.props.selectPage("/node");
         }}
       >
         <span>🔵</span>
