@@ -71,15 +71,15 @@ const navLinks = [
   //     }
   //   ]
   // },
-  {
-    link: "/richText",
-    className: "icon ion-ios-book-outline",
-    navItemText: "",
-    component: props => {
-      const customProps = props;
-      return <SubMenuShell {...customProps} />;
-    }
-  },
+  // {
+  //   link: "/richText",
+  //   className: "icon ion-ios-book-outline",
+  //   navItemText: "",
+  //   component: props => {
+  //     const customProps = props;
+  //     return <SubMenuShell {...customProps} />;
+  //   }
+  // },
   {
     link: "/settings",
     className: "icon ion-android-globe",

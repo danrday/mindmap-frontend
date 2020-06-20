@@ -26,7 +26,15 @@ class NavMenu extends Component {
         onMouseLeave={() => this.props.hover(false)}
       >
         {navLinks.map((item, i) => {
-          const isSelected = i === this.props.selectedPage;
+          const isSelected = item.link === this.props.selectedPage;
+
+          if (
+            (item.link === "/node" && !this.props.currSelNode) ||
+            (item.link === "/link" && !this.props.currSelLink)
+          ) {
+            return;
+          }
+
           const subItems = item.subItems;
 
           const isNodeItem = item.link === "/node";
@@ -156,6 +164,7 @@ const NavItem = styled.div`
 const mapStateToProps = state => ({
   ...state,
   currSelNode: state.liveNodeEdit.selNodeId,
+  currSelLink: state.liveLinkEdit.selLinkId,
   currZoomLevel: state.document.editedFile
     ? state.document.editedFile.globalSettings.zoom
     : { x: 0, y: 0 },

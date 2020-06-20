@@ -12,6 +12,7 @@ import {
   deleteAction
 } from "../redux/actions/document";
 import { selectNode } from "../redux/actions/liveNodeEdit";
+import { ActionCreators } from "redux-undo";
 
 class PageOptions extends Component {
   selectedMenu() {
@@ -19,7 +20,6 @@ class PageOptions extends Component {
       let link = navLinks.find(navlink => {
         return navlink.link === this.props.selectedPage;
       });
-      console.log("hi", this.props.selectedPage);
       return link.component();
     } else {
       return (
@@ -41,6 +41,7 @@ class PageOptions extends Component {
             Save a copy
           </Button>
           <Button click={this.addAction}>Add Node</Button>
+          <div onClick={this.props.undo}>UNDO</div>
         </div>
       );
     }
@@ -124,7 +125,8 @@ const mapDispatchToProps = (dispatch, props) => ({
   postAction: file => dispatch(postAction(file, props.channel)),
   addAction: zoomLevel => dispatch(addAction(zoomLevel)),
   selectNode: node => dispatch(selectNode(node)),
-  postSaveAsAction: file => dispatch(postSaveAsAction(file, props.channel))
+  postSaveAsAction: file => dispatch(postSaveAsAction(file, props.channel)),
   // deleteAction: nodeId => dispatch(deleteAction(nodeId))
+  undo: () => dispatch(ActionCreators.undo())
 });
 export default connect(mapStateToProps, mapDispatchToProps)(PageOptions);
