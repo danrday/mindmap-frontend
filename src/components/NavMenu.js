@@ -14,8 +14,8 @@ import { selectNode } from "../redux/actions/liveNodeEdit";
 import { selectPage } from "../redux/actions/ui";
 
 class NavMenu extends Component {
-  handleSelected(i) {
-    this.props.selectPage(i, this.props.selectedPage);
+  handleSelected(path) {
+    this.props.selectPage(path, this.props.selectedPage);
   }
   render() {
     return (
@@ -26,7 +26,15 @@ class NavMenu extends Component {
         onMouseLeave={() => this.props.hover(false)}
       >
         {navLinks.map((item, i) => {
-          const isSelected = i === this.props.selectedPage;
+          const isSelected = item.link === this.props.selectedPage;
+
+          if (
+            (item.link === "/node" && !this.props.currSelNode) ||
+            (item.link === "/link" && !this.props.currSelLink)
+          ) {
+            return;
+          }
+
           const subItems = item.subItems;
 
           const isNodeItem = item.link === "/node";
@@ -47,7 +55,7 @@ class NavMenu extends Component {
                       this.props.document.present.editedFile
                     );
                   } else {
-                    this.handleSelected(i);
+                    this.handleSelected(item.link);
                   }
                 }}
                 isSelected={isSelected}
@@ -104,7 +112,7 @@ const NavItemsFrame = styled.div`
   ${({ openNav, hoverNav }) =>
     (openNav || hoverNav) &&
     `
-        background: yellow;
+        background: darkorange;
       `}
 `;
 
@@ -156,6 +164,7 @@ const NavItem = styled.div`
 const mapStateToProps = state => ({
   ...state,
   currSelNode: state.liveNodeEdit.selNodeId,
+  currSelLink: state.liveLinkEdit.selLinkId,
   currZoomLevel: state.document.editedFile
     ? state.document.editedFile.globalSettings.zoom
     : { x: 0, y: 0 },

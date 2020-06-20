@@ -12,11 +12,15 @@ import {
   deleteAction
 } from "../redux/actions/document";
 import { selectNode } from "../redux/actions/liveNodeEdit";
+import { ActionCreators } from "redux-undo";
 
 class PageOptions extends Component {
   selectedMenu() {
-    if (this.props.selectedPage) {
-      return navLinks[this.props.selectedPage].component();
+    if (this.props.selectedPage && this.props.selectedPage !== "/open") {
+      let link = navLinks.find(navlink => {
+        return navlink.link === this.props.selectedPage;
+      });
+      return link.component();
     } else {
       return (
         <div>
@@ -27,16 +31,17 @@ class PageOptions extends Component {
           >
             Save
           </Button>
-          <Button
-            click={() =>
-              this.props.postSaveAsAction(
-                this.props.document.present.editedFile
-              )
-            }
-          >
-            Save a copy
-          </Button>
-          <Button click={this.addAction}>Add Node</Button>
+          {/*<Button*/}
+          {/*  click={() =>*/}
+          {/*    this.props.postSaveAsAction(*/}
+          {/*      this.props.document.present.editedFile*/}
+          {/*    )*/}
+          {/*  }*/}
+          {/*>*/}
+          {/*  Save a copy*/}
+          {/*</Button>*/}
+          {/*<Button click={this.addAction}>Add Node</Button>*/}
+          <Button click={this.props.undo}>Undo</Button>
         </div>
       );
     }
@@ -72,7 +77,7 @@ const Test = styled.div`
   display: relative;
   height: calc(100vh - 60px);
   overflow-y: scroll;
-  background-color: purple;
+  background-color: brown;
 
   ${({ openNav, hoverNav }) =>
     (openNav || hoverNav) &&
@@ -120,7 +125,8 @@ const mapDispatchToProps = (dispatch, props) => ({
   postAction: file => dispatch(postAction(file, props.channel)),
   addAction: zoomLevel => dispatch(addAction(zoomLevel)),
   selectNode: node => dispatch(selectNode(node)),
-  postSaveAsAction: file => dispatch(postSaveAsAction(file, props.channel))
+  postSaveAsAction: file => dispatch(postSaveAsAction(file, props.channel)),
   // deleteAction: nodeId => dispatch(deleteAction(nodeId))
+  undo: () => dispatch(ActionCreators.undo())
 });
 export default connect(mapStateToProps, mapDispatchToProps)(PageOptions);

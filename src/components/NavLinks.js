@@ -8,8 +8,8 @@ import SubMenuShell from "./pages/subMenuShell";
 
 const navLinks = [
   {
-    link: "/open",
-    className: "icon ion-android-folder-open",
+    link: "/save",
+    className: "icon ion-ios-upload-outline",
     navItemText: "",
     component: props => {
       const customProps = props;
@@ -17,8 +17,8 @@ const navLinks = [
     }
   },
   {
-    link: "/save",
-    className: "icon ion-disc",
+    link: "/open",
+    className: "icon ion-android-folder-open",
     navItemText: "",
     component: props => {
       const customProps = props;
@@ -34,17 +34,6 @@ const navLinks = [
   //     return <div {...customProps} />;
   //   }
   // },
-  {
-    link: "/node",
-    className: "icon ion-android-add-circle",
-    altClassName: "icon ion-android-create",
-    navItemText: "",
-    altNavItemText: "",
-    component: props => {
-      const customProps = props;
-      return <SubMenuShell {...customProps} />;
-    }
-  },
   // {
   //   link: "/categories",
   //   className: "icon ion-ios-albums-outline",
@@ -71,15 +60,15 @@ const navLinks = [
   //     }
   //   ]
   // },
-  {
-    link: "/richText",
-    className: "icon ion-ios-book-outline",
-    navItemText: "",
-    component: props => {
-      const customProps = props;
-      return <SubMenuShell {...customProps} />;
-    }
-  },
+  // {
+  //   link: "/richText",
+  //   className: "icon ion-ios-book-outline",
+  //   navItemText: "",
+  //   component: props => {
+  //     const customProps = props;
+  //     return <SubMenuShell {...customProps} />;
+  //   }
+  // },
   {
     link: "/settings",
     className: "icon ion-android-globe",
@@ -98,6 +87,17 @@ const navLinks = [
   //     return <div {...customProps} />;
   //   }
   // },
+  {
+    link: "/node",
+    className: "icon ion-android-add-circle",
+    altClassName: "icon ion-planet",
+    navItemText: "",
+    altNavItemText: "",
+    component: props => {
+      const customProps = props;
+      return <SubMenuShell {...customProps} />;
+    }
+  },
   {
     link: "/link",
     className: "icon ion-android-share-alt",

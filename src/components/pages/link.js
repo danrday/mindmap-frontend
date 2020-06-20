@@ -81,9 +81,9 @@ class Link extends Component {
         <Button click={this.save.bind(this)}>Apply</Button>
         {/*<Button click={this.save.bind(this)}>save and unselect</Button>*/}
         {/*<Button click={this.cancel.bind(this)}>Cancel</Button>*/}
-        <Button click={() => this.props.deleteAction(this.props.selLinkId)}>
-          Delete Link
-        </Button>
+        {/*<Button click={() => this.props.deleteAction(this.props.selLinkId)}>*/}
+        {/*  Delete Link*/}
+        {/*</Button>*/}
         <hr />
         {/*<div>heading</div>*/}
         {/*<input*/}
