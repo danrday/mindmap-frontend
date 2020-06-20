@@ -3,7 +3,11 @@ import { connect } from "react-redux";
 import ReactQuill from "react-quill";
 import styled from "styled-components";
 import Button from "../reusable/button"; // ES6
-import { saveTextFile, saveEdits } from "../../redux/actions/document";
+import {
+  saveTextFile,
+  saveEdits,
+  deleteAction
+} from "../../redux/actions/document";
 import { editNodeValue } from "../../redux/actions/liveNodeEdit";
 
 class RichText extends Component {
@@ -53,7 +57,10 @@ class RichText extends Component {
   render() {
     return (
       <div>
-        <Button click={this.save.bind(this)}>Apply changes</Button>
+        <Button click={this.save.bind(this)}>Apply</Button>
+        <Button click={() => this.props.deleteAction(this.props.selNodeId)}>
+          Delete
+        </Button>
         <div>heading</div>
         <input
           ref={input => {
@@ -92,6 +99,7 @@ const mapDispatchToProps = dispatch => ({
   editNodeValue: (keyAndValue, selNodeId) =>
     dispatch(editNodeValue(keyAndValue, selNodeId)),
   saveEdits: edits => dispatch(saveEdits(edits)),
-  saveTextFile: textAndNodeId => dispatch(saveTextFile(textAndNodeId))
+  saveTextFile: textAndNodeId => dispatch(saveTextFile(textAndNodeId)),
+  deleteAction: nodeId => dispatch(deleteAction(nodeId))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(RichText);

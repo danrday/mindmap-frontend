@@ -31,17 +31,17 @@ class PageOptions extends Component {
           >
             Save
           </Button>
-          <Button
-            click={() =>
-              this.props.postSaveAsAction(
-                this.props.document.present.editedFile
-              )
-            }
-          >
-            Save a copy
-          </Button>
-          <Button click={this.addAction}>Add Node</Button>
-          <div onClick={this.props.undo}>UNDO</div>
+          {/*<Button*/}
+          {/*  click={() =>*/}
+          {/*    this.props.postSaveAsAction(*/}
+          {/*      this.props.document.present.editedFile*/}
+          {/*    )*/}
+          {/*  }*/}
+          {/*>*/}
+          {/*  Save a copy*/}
+          {/*</Button>*/}
+          {/*<Button click={this.addAction}>Add Node</Button>*/}
+          <Button click={this.props.undo}>Undo</Button>
         </div>
       );
     }
