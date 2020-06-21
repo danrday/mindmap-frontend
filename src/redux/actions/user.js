@@ -8,7 +8,6 @@ export const getUser = channel => dispatch => {
       });
     })
     .receive("error", e => {
-      console.log("USER INFO ERROR", msg);
       dispatch({
         type: "user/SET_USER_ERROR",
         payload: e

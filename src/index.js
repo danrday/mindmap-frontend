@@ -7,6 +7,7 @@ import { transitions, positions, Provider as AlertProvider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
 import { Provider } from "react-redux";
 import configureStore from "./redux/store";
+import * as Sentry from "@sentry/browser";
 
 const { store, doc_channel } = configureStore();
 
@@ -21,6 +22,11 @@ const alertOptions = {
     zIndex: 5000
   }
 };
+
+Sentry.init({
+  dsn:
+    "https://a6e9d5ff5ab546b6be9bee647b60d377@o410595.ingest.sentry.io/5284690"
+});
 
 ReactDOM.render(
   <Provider store={store}>
