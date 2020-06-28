@@ -54,7 +54,7 @@ class Shell extends Component {
             hover={this.handleHoverNav}
             channel={this.props.channel}
           />
-          <SplitterLayout vertical={this.state.mobileView}>
+          <SplitterLayout primaryMinSize={60} vertical={this.state.mobileView}>
             <PageOptions
               navIsOpen={this.state.navIsOpen}
               navIsHovered={this.state.navIsHovered}

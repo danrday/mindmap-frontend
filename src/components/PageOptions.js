@@ -72,14 +72,7 @@ class PageOptions extends Component {
 }
 const Test = styled.div`
   @media (max-width: 768px) {
-    margin-left: 0;
-    margin-top: 60px;
-    width: 100%;
-    height: inherit;
   }
-  margin-left: 60px;
-  display: relative;
-  height: calc(100vh - 60px);
   overflow-y: scroll;
   background-color: brown;
 
@@ -94,12 +87,6 @@ const SelectedMenuFrame = styled.div`
   @media (max-width: 768px) {
     width: 100%;
   }
-  width: 0px;
-  display: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
 
   text-align: center;
   padding-top: 15px;

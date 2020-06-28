@@ -101,9 +101,6 @@ const NavItemsFrame = styled.div`
     padding-bottom: 15px;
   }
   flex-direction: column;
-  top: 60px;
-  left: 0px;
-  bottom: 0;
   z-index: 100;
   width: 60px;
   background-color: #d1e8e3;
