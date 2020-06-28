@@ -29,11 +29,7 @@ class App extends Component {
     }
   }
   render() {
-    return (
-      <Shell channel={this.props.channel}>
-        <F4 />
-      </Shell>
-    );
+    return <Shell channel={this.props.channel}></Shell>;
   }
 }
 

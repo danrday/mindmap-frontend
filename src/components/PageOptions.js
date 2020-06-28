@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import navLinks from "./NavLinks";
 import Button from "./reusable/button.js";
+import ReactDOM from "react-dom";
 
 import { connect } from "react-redux";
 import {
@@ -71,9 +72,12 @@ class PageOptions extends Component {
 }
 const Test = styled.div`
   @media (max-width: 768px) {
-    height: calc(35vh);
+    margin-left: 0;
+    margin-top: 60px;
     width: 100%;
+    height: inherit;
   }
+  margin-left: 60px;
   display: relative;
   height: calc(100vh - 60px);
   overflow-y: scroll;
@@ -106,7 +110,7 @@ const SelectedMenuFrame = styled.div`
   ${({ openNav, hoverNav }) =>
     (openNav || hoverNav) &&
     `
-        width: 200px;
+        width: 100%;
         background-color: #9bccff;
          box-shadow: inset -4px 0px 2px -2px purple;
       `}
