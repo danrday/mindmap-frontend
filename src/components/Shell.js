@@ -54,24 +54,31 @@ class Shell extends Component {
             hover={this.handleHoverNav}
             channel={this.props.channel}
           />
-          <SplitterLayout primaryMinSize={60} vertical={this.state.mobileView}>
-            <PageOptions
-              navIsOpen={this.state.navIsOpen}
-              navIsHovered={this.state.navIsHovered}
-              toggle={this.handleToggleNav}
-              hover={this.handleHoverNav}
-              channel={this.props.channel}
-            />
+          <RelativeFrame>
+            <SplitterLayout
+              primaryMinSize={60}
+              vertical={this.state.mobileView}
+            >
+              <PageOptions
+                navIsOpen={this.state.navIsOpen}
+                navIsHovered={this.state.navIsHovered}
+                toggle={this.handleToggleNav}
+                hover={this.handleHoverNav}
+                channel={this.props.channel}
+              />
 
-            <F4 />
-          </SplitterLayout>
+              <F4 />
+            </SplitterLayout>
+          </RelativeFrame>
         </MainFrame>
       </StyledPage>
     );
   }
 }
 
-const Test = styled.div``;
+const RelativeFrame = styled.div`
+  display: relative;
+`;
 
 const StyledPage = styled.div`
   display: flex;
