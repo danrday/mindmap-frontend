@@ -100,6 +100,9 @@ const NavItemsFrame = styled.div`
     width: 100%;
     padding-bottom: 15px;
   }
+  // top: 60px;
+  // left: 0px;
+  // bottom: 0;
   flex-direction: column;
   z-index: 100;
   width: 60px;
