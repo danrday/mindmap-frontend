@@ -71,18 +71,16 @@ class PageOptions extends Component {
 }
 const Test = styled.div`
   @media (max-width: 768px) {
-    height: calc(35vh);
-    width: 100%;
   }
-  display: relative;
-  height: calc(100vh - 60px);
+  // display: relative;
+  // height: calc(100vh - 60px);
   overflow-y: scroll;
   background-color: brown;
 
   ${({ openNav, hoverNav }) =>
     (openNav || hoverNav) &&
     `
-        
+          
       `};
 `;
 
@@ -90,12 +88,12 @@ const SelectedMenuFrame = styled.div`
   @media (max-width: 768px) {
     width: 100%;
   }
-  width: 0px;
-  display: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  // width: 0px;
+  // display: absolute;
+  // top: 0;
+  // left: 0;
+  // right: 0;
+  // bottom: 0;
 
   text-align: center;
   padding-top: 15px;
@@ -106,7 +104,7 @@ const SelectedMenuFrame = styled.div`
   ${({ openNav, hoverNav }) =>
     (openNav || hoverNav) &&
     `
-        width: 200px;
+        width: 100%;
         background-color: #9bccff;
          box-shadow: inset -4px 0px 2px -2px purple;
       `}

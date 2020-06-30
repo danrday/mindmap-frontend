@@ -23,10 +23,10 @@ const alertOptions = {
   }
 };
 
-Sentry.init({
-  dsn:
-    "https://a6e9d5ff5ab546b6be9bee647b60d377@o410595.ingest.sentry.io/5284690"
-});
+// Sentry.init({
+//   dsn:
+//     "https://a6e9d5ff5ab546b6be9bee647b60d377@o410595.ingest.sentry.io/5284690"
+// });
 
 ReactDOM.render(
   <Provider store={store}>
