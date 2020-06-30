@@ -5,7 +5,7 @@ import NavMenu from "./NavMenu";
 import PageOptions from "./PageOptions";
 import styled from "styled-components";
 // import SplitPane from "react-split-pane";
-import SplitterLayout from "react-splitter-layout";
+import SplitterLayout from "./react-splitter-layout/SplitterLayout";
 import "react-splitter-layout/lib/index.css";
 import "./styles/splitPaneOverride.css";
 
@@ -57,7 +57,12 @@ class Shell extends Component {
           />
           <RelativeFrame>
             <SplitterLayout
-              primaryMinSize={60}
+              navIsOpen={this.state.navIsOpen}
+              navIsHovered={this.state.navIsHovered}
+              percentage={false}
+              primaryIndex={1}
+              secondaryMinSize={200}
+              secondaryInitialSize={this.state.navIsOpen ? 200 : 0}
               vertical={this.state.mobileView}
             >
               <PageOptions

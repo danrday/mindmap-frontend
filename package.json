@@ -11,6 +11,7 @@
     "d3": "^5.16.0",
     "d3-save-pdf": "0.0.3",
     "lodash.clonedeep": "^4.5.0",
+    "lodash.isequal": "^4.5.0",
     "phoenix": "^1.4.15",
     "prettier": "^1.19.1",
     "prop-types": "^15.7.2",
