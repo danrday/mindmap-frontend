@@ -4,14 +4,9 @@ import Header from "./Header";
 import NavMenu from "./NavMenu";
 import PageOptions from "./PageOptions";
 import styled from "styled-components";
-// import SplitPane from "react-split-pane";
 import SplitterLayout from "./react-splitter-layout/SplitterLayout";
 import "react-splitter-layout/lib/index.css";
-import "./styles/splitPaneOverride.css";
-
 import F4 from "./forceGraph/f4";
-
-import SplitWrapper from "./splitPane";
 
 class Shell extends Component {
   state = {
@@ -34,7 +29,6 @@ class Shell extends Component {
   }
 
   updateView() {
-    console.log("UPDTE VIEW", window.innerWidth);
     this.setState({ mobileView: window.innerWidth < 768 });
   }
 
@@ -82,11 +76,9 @@ class Shell extends Component {
   }
 }
 
+// needed for resize panel positioning
 const RelativeFrame = styled.div`
   display: relative;
-  background-color: yellow;
-  height: 600px
-  width: 600px
 `;
 
 const StyledPage = styled.div`

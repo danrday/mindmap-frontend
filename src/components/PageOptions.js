@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import navLinks from "./NavLinks";
 import Button from "./reusable/button.js";
-import ReactDOM from "react-dom";
 
 import { connect } from "react-redux";
 import {
