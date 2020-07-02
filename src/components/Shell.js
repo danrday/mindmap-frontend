@@ -6,6 +6,8 @@ import PageOptions from "./PageOptions";
 import styled from "styled-components";
 import SplitterLayout from "./react-splitter-layout/SplitterLayout";
 import "react-splitter-layout/lib/index.css";
+import "./styles/splitPaneOverride.css";
+
 import F4 from "./forceGraph/f4";
 
 class Shell extends Component {

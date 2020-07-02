@@ -1,0 +1,5 @@
+/*SPLIT PANEL MOD*/
+
+.splitter-layout {
+    height: calc(100vh - 60px);
+}
